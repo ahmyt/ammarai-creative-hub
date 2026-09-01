@@ -24,15 +24,26 @@ export function Footer() {
               </h2>
               <ul className="mt-4 flex flex-col gap-2.5">
                 {group.links.map((link) => (
-                  <li key={link.to}>
-                    <Link
-                      to={link.to}
-                      className="text-sm text-muted-foreground transition-colors hover:text-foreground"
-                    >
-                      {link.label}
-                    </Link>
+                  <li key={link.label}>
+                    {"slug" in link ? (
+                      <Link
+                        to="/$slug"
+                        params={{ slug: link.slug }}
+                        className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                      >
+                        {link.label}
+                      </Link>
+                    ) : (
+                      <Link
+                        to={link.to}
+                        className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                      >
+                        {link.label}
+                      </Link>
+                    )}
                   </li>
                 ))}
+
               </ul>
             </nav>
           ))}

@@ -14,7 +14,22 @@ export const primaryNav = [
   { label: "Resources", to: "/resources" },
 ] as const;
 
-export const footerNav: { heading: string; links: { label: string; to: string }[] }[] = [
+export type StaticPath =
+  | "/"
+  | "/ai-tools"
+  | "/features"
+  | "/use-cases"
+  | "/pricing"
+  | "/resources"
+  | "/blog"
+  | "/faq"
+  | "/about"
+  | "/contact";
+
+export type SiteLink = { label: string; to: StaticPath } | { label: string; slug: string };
+
+export const footerNav: { heading: string; links: SiteLink[] }[] = [
+
   {
     heading: "Platform",
     links: [
@@ -27,23 +42,24 @@ export const footerNav: { heading: string; links: { label: string; to: string }[
   {
     heading: "Create",
     links: [
-      { label: "AI Writer", to: "/ai-writer" },
-      { label: "AI Image Generator", to: "/ai-image-generator" },
-      { label: "AI Video Generator", to: "/ai-video-generator" },
-      { label: "AI Voice Generator", to: "/ai-voice-generator" },
-      { label: "AI Code Generator", to: "/ai-code-generator" },
+      { label: "AI Writer", slug: "ai-writer" },
+      { label: "AI Image Generator", slug: "ai-image-generator" },
+      { label: "AI Video Generator", slug: "ai-video-generator" },
+      { label: "AI Voice Generator", slug: "ai-voice-generator" },
+      { label: "AI Code Generator", slug: "ai-code-generator" },
     ],
   },
   {
     heading: "Use cases",
     links: [
-      { label: "AI for Marketing", to: "/ai-for-marketing" },
-      { label: "AI for Content Creators", to: "/ai-for-content-creators" },
-      { label: "AI for Small Business", to: "/ai-for-small-business" },
-      { label: "AI for SEO", to: "/ai-for-seo" },
-      { label: "AI for Students", to: "/ai-for-students" },
+      { label: "AI for Marketing", slug: "ai-for-marketing" },
+      { label: "AI for Content Creators", slug: "ai-for-content-creators" },
+      { label: "AI for Small Business", slug: "ai-for-small-business" },
+      { label: "AI for SEO", slug: "ai-for-seo" },
+      { label: "AI for Students", slug: "ai-for-students" },
     ],
   },
+
   {
     heading: "Company",
     links: [
