@@ -16,7 +16,7 @@ export const coreToolsB: Tool[] = [
     featured: true,
     what: [
       "The AI Avatar Video Generator turns a still image or an existing video into an animated talking clip. You supply a face — a photo, an illustrated character, a product mascot or a frame from footage — then add a script or an audio recording, and the AI animates the mouth, jaw and face so the delivery reads as natural speech rather than a pasted-on effect.",
-      "You can start from your own upload or pick from hundreds of avatar image and video templates covering presenters, spokespeople,教 educators, customer-service faces and stylised characters. Type a script and the platform can voice it for you, or upload your own voiceover and the avatar will match it line for line.",
+      "You can start from your own upload or pick from hundreds of avatar image and video templates covering presenters, spokespeople, educators, customer-service faces and stylised characters. Type a script and the platform can voice it for you, or upload your own voiceover and the avatar will match it line for line.",
       "The output is a finished, attention-grabbing video suited to marketing, education, social media, onboarding, product explainers, announcements and localisation — produced in minutes without a camera, studio, lighting or on-screen talent.",
     ],
     canDo: [
