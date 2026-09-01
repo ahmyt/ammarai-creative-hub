@@ -21,6 +21,21 @@ function usePrefersReducedMotion() {
   return reduced;
 }
 
+/** Bold inline labels like "Hook:" / "Step 1:" so streamed output reads with structure. */
+function renderOutput(text: string) {
+  const parts = text.split(/((?:^|\s)[A-Z][A-Za-z0-9 ]{1,14}:)/g);
+  return parts.map((part, i) => {
+    const match = part.match(/^(\s*)([A-Z][A-Za-z0-9 ]{1,14}:)$/);
+    if (!match) return <span key={i}>{part}</span>;
+    return (
+      <span key={i}>
+        {match[1]}
+        <strong className="font-semibold text-foreground">{match[2]}</strong>
+      </span>
+    );
+  });
+}
+
 /**
  * Replays a tool's example as a live-looking session: the prompt types itself in,
  * the model "thinks", then the output streams out word by word.
@@ -114,48 +129,53 @@ export function AnimatedExample({
   return (
     <div
       ref={containerRef}
-      className={cn("overflow-hidden rounded-2xl bg-card ring-1 ring-border", className)}
+      className={cn(
+        "overflow-hidden rounded-2xl bg-card shadow-[0_2px_24px_-8px_rgba(0,0,0,0.08)] ring-1 ring-border",
+        className,
+      )}
     >
-      <div className="flex flex-wrap items-center gap-3 border-b border-border px-5 py-3.5">
+      <div className="flex flex-wrap items-center gap-3 border-b border-border bg-secondary/40 px-4 py-3 sm:px-5">
         <span className="flex gap-1.5" aria-hidden="true">
           <span className="h-2.5 w-2.5 rounded-full bg-border" />
           <span className="h-2.5 w-2.5 rounded-full bg-border" />
-          <span className="h-2.5 w-2.5 rounded-full bg-accent/60" />
+          <span className="h-2.5 w-2.5 rounded-full bg-accent/70" />
         </span>
-        <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-          {toolName} · live example
+        <p className="text-xs font-semibold tracking-tight text-foreground/80">
+          {toolName}
+          <span className="ml-2 font-normal text-muted-foreground">live example</span>
         </p>
-        <button
-          type="button"
-          onClick={() => setPlaying((p) => !p)}
-          className="ml-auto rounded-full px-2.5 py-1 text-[11px] font-semibold text-muted-foreground ring-1 ring-border transition-colors hover:text-foreground"
-        >
-          {playing ? "Pause" : "Play"}
-        </button>
+        <span className="ml-auto flex items-center gap-2">
+          {examples.length > 1 ? (
+            <span className="text-xs font-medium tabular-nums text-muted-foreground">
+              {index + 1} of {examples.length}
+            </span>
+          ) : null}
+          <button
+            type="button"
+            onClick={() => setPlaying((p) => !p)}
+            className="rounded-full px-3 py-1.5 text-xs font-semibold text-foreground/70 ring-1 ring-border transition-colors hover:bg-secondary hover:text-foreground"
+          >
+            {playing ? "Pause" : "Play"}
+          </button>
+        </span>
       </div>
 
-      <div className="px-5 py-6 sm:px-6">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-          {example.label}
-        </p>
-
-        <div className="mt-4">
-          <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
-            Your input
-          </p>
-          <p className="mt-1.5 min-h-[3rem] text-pretty font-mono text-[13px] leading-relaxed text-foreground">
-            {typed}
-            {phase === "typing" ? (
-              <span className="ml-0.5 inline-block h-4 w-[2px] translate-y-0.5 animate-pulse bg-accent align-middle" />
-            ) : null}
-          </p>
+      <div className="px-4 py-5 sm:px-6 sm:py-6">
+        <div>
+          <p className="text-xs font-semibold text-foreground/70">You type</p>
+          <div className="mt-2 rounded-xl rounded-tl-sm bg-secondary/60 px-4 py-3 ring-1 ring-border/60">
+            <p className="min-h-[3rem] text-pretty font-mono text-[13px] leading-relaxed text-foreground">
+              {typed}
+              {phase === "typing" ? (
+                <span className="ml-0.5 inline-block h-4 w-[2px] translate-y-0.5 animate-pulse bg-accent align-middle" />
+              ) : null}
+            </p>
+          </div>
         </div>
 
-        <div className="mt-5 border-t border-border pt-5">
+        <div className="mt-4">
           <div className="flex items-center gap-2">
-            <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
-              AmmarAI output
-            </p>
+            <p className="text-xs font-semibold text-foreground/70">AmmarAI writes</p>
             {phase === "thinking" ? (
               <span className="flex gap-1" aria-label="Generating">
                 <Dot delay="0ms" />
@@ -164,30 +184,33 @@ export function AnimatedExample({
               </span>
             ) : null}
           </div>
-          <p
-            aria-live="polite"
-            className="mt-1.5 min-h-[5rem] text-pretty text-sm leading-relaxed text-muted-foreground"
-          >
-            {written}
-            {phase === "writing" ? (
-              <span className="ml-0.5 inline-block h-4 w-[2px] translate-y-0.5 animate-pulse bg-accent align-middle" />
-            ) : null}
-          </p>
+          <div className="mt-2 rounded-xl rounded-tr-sm bg-accent/[0.06] px-4 py-3 ring-1 ring-accent/15">
+            <p
+              aria-live="polite"
+              className="min-h-[5rem] text-pretty text-sm leading-relaxed text-foreground/85"
+            >
+              {renderOutput(written)}
+              {phase === "writing" ? (
+                <span className="ml-0.5 inline-block h-4 w-[2px] translate-y-0.5 animate-pulse bg-accent align-middle" />
+              ) : null}
+            </p>
+          </div>
         </div>
 
         {examples.length > 1 ? (
-          <div className="mt-6 flex flex-wrap gap-2">
+          <div className="mt-5 flex gap-2 overflow-x-auto pb-1 sm:flex-wrap sm:overflow-visible">
             {examples.map((ex, i) => (
               <button
                 key={ex.label}
                 type="button"
                 onClick={() => setIndex(i)}
                 aria-pressed={i === index}
-                className={
+                className={cn(
+                  "shrink-0 rounded-full px-3.5 py-1.5 text-xs font-semibold transition-colors",
                   i === index
-                    ? "rounded-full bg-ink px-3 py-1.5 text-[11px] font-semibold text-ink-foreground"
-                    : "rounded-full px-3 py-1.5 text-[11px] font-semibold text-muted-foreground ring-1 ring-border transition-colors hover:text-foreground"
-                }
+                    ? "bg-ink text-ink-foreground"
+                    : "text-foreground/70 ring-1 ring-border hover:bg-secondary hover:text-foreground",
+                )}
               >
                 {ex.label}
               </button>
