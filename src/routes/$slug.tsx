@@ -65,6 +65,7 @@ function Json({ data }: { data: unknown }) {
 }
 
 function ToolPage({ tool }: { tool: Tool }) {
+  const toolMap = useToolMap();
   return (
     <article>
       <Json data={softwareApplicationJsonLd(tool.name, tool.description, `/${tool.slug}`)} />
@@ -239,7 +240,7 @@ function ToolPage({ tool }: { tool: Tool }) {
         <Container>
           <SectionHeading eyebrow="Related" title="Tools that pair well with this" />
           <div className="mt-8">
-            <RelatedTools slugs={tool.related} tools={toolBySlug} />
+            <RelatedTools slugs={tool.related} tools={toolMap} />
           </div>
         </Container>
       </Section>
@@ -265,8 +266,9 @@ function ToolPage({ tool }: { tool: Tool }) {
 }
 
 function UseCasePage({ useCase }: { useCase: UseCase }) {
+  const toolMap = useToolMap();
   const toolkit = useCase.toolkit
-    .map((t) => ({ tool: toolBySlug.get(t.slug), why: t.why }))
+    .map((t) => ({ tool: toolMap.get(t.slug), why: t.why }))
     .filter((t): t is { tool: Tool; why: string } => Boolean(t.tool));
 
   return (
