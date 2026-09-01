@@ -62,6 +62,11 @@ export interface Tool {
   faqs: Faq[];
   /** Slugs of related tools */
   related: string[];
+  /** Optional sample output video shown in the animated example (CMS-editable) */
+  demoVideoUrl?: string;
+  demoVideoCaption?: string;
+  /** Hide the built-in sample video for this tool */
+  hideDemoVideo?: boolean;
 }
 
 export interface UseCase {
