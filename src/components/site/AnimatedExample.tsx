@@ -48,7 +48,7 @@ export function AnimatedExample({
 }: {
   examples: Example[];
   toolName: string;
-  demoVideo?: { url: string; caption: string };
+  demoVideo?: { url: string; caption: string } | undefined;
   className?: string;
 }) {
 
