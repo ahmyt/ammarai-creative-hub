@@ -35,6 +35,9 @@ export const fieldSpecs: Record<ContentKind, FieldSpec[]> = {
     { name: "mistakes", label: "Mistakes to avoid", type: "json", hint: '["mistake"]' },
     { name: "faqs", label: "FAQs", type: "json", hint: '[{"q":"","a":""}]' },
     { name: "related", label: "Related tool slugs", type: "json", hint: '["ai-writer"]' },
+    { name: "demoVideoUrl", label: "Sample video URL", type: "text" },
+    { name: "demoVideoCaption", label: "Sample video caption", type: "text" },
+    { name: "hideDemoVideo", label: "Hide sample video", type: "boolean" },
   ],
   use_case: [
     { name: "name", label: "Name", type: "text" },
