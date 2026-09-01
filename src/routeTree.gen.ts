@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SlugRouteImport } from './routes/$slug'
 import { Route as AiToolsRouteImport } from './routes/ai-tools'
+import { Route as UseCasesRouteImport } from './routes/use-cases'
 import { Route as FeaturesIndexRouteImport } from './routes/features.index'
 import { Route as FeaturesSlugRouteImport } from './routes/features.$slug'
 
@@ -30,6 +31,11 @@ const AiToolsRoute = AiToolsRouteImport.update({
   path: '/ai-tools',
   getParentRoute: () => rootRouteImport,
 } as any)
+const UseCasesRoute = UseCasesRouteImport.update({
+  id: '/use-cases',
+  path: '/use-cases',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const FeaturesIndexRoute = FeaturesIndexRouteImport.update({
   id: '/features/',
   path: '/features/',
@@ -45,6 +51,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$slug': typeof SlugRoute
   '/ai-tools': typeof AiToolsRoute
+  '/use-cases': typeof UseCasesRoute
   '/features/$slug': typeof FeaturesSlugRoute
   '/features/': typeof FeaturesIndexRoute
 }
@@ -52,6 +59,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$slug': typeof SlugRoute
   '/ai-tools': typeof AiToolsRoute
+  '/use-cases': typeof UseCasesRoute
   '/features/$slug': typeof FeaturesSlugRoute
   '/features': typeof FeaturesIndexRoute
 }
@@ -60,22 +68,42 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/$slug': typeof SlugRoute
   '/ai-tools': typeof AiToolsRoute
+  '/use-cases': typeof UseCasesRoute
   '/features/$slug': typeof FeaturesSlugRoute
   '/features/': typeof FeaturesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/$slug' | '/ai-tools' | '/features/$slug' | '/features/'
+  fullPaths:
+    | '/'
+    | '/$slug'
+    | '/ai-tools'
+    | '/use-cases'
+    | '/features/$slug'
+    | '/features/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/$slug' | '/ai-tools' | '/features/$slug' | '/features'
+  to:
+    | '/'
+    | '/$slug'
+    | '/ai-tools'
+    | '/use-cases'
+    | '/features/$slug'
+    | '/features'
   id:
-    '__root__' | '/' | '/$slug' | '/ai-tools' | '/features/$slug' | '/features/'
+    | '__root__'
+    | '/'
+    | '/$slug'
+    | '/ai-tools'
+    | '/use-cases'
+    | '/features/$slug'
+    | '/features/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   SlugRoute: typeof SlugRoute
   AiToolsRoute: typeof AiToolsRoute
+  UseCasesRoute: typeof UseCasesRoute
   FeaturesSlugRoute: typeof FeaturesSlugRoute
   FeaturesIndexRoute: typeof FeaturesIndexRoute
 }
@@ -103,6 +131,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AiToolsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/use-cases': {
+      id: '/use-cases'
+      path: '/use-cases'
+      fullPath: '/use-cases'
+      preLoaderRoute: typeof UseCasesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/features/': {
       id: '/features/'
       path: '/features'
@@ -124,6 +159,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   SlugRoute: SlugRoute,
   AiToolsRoute: AiToolsRoute,
+  UseCasesRoute: UseCasesRoute,
   FeaturesSlugRoute: FeaturesSlugRoute,
   FeaturesIndexRoute: FeaturesIndexRoute,
 }
