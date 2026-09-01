@@ -97,23 +97,15 @@ function AdminLayout() {
           <div className="mt-8 rounded-xl bg-card p-6 ring-1 ring-border">
             <h2 className="text-lg font-semibold">No editing access yet</h2>
             <p className="mt-2 text-sm text-muted-foreground">
-              Your account has no editor role. An admin can grant access, or you can claim the first
-              admin seat from the Overview tab if nobody has done so yet.
+              Your account has no editor role{isAdmin ? "" : ""}. An admin can grant access, or you
+              can claim the first admin seat from the Overview tab if nobody has done so yet.
             </p>
-          </div>
-        ) : (
-          <div className="mt-8">
-            <Outlet />
-          </div>
-        )}
-
-        {!isEditor ? (
-          <div className="mt-8">
-            <Outlet />
           </div>
         ) : null}
 
-        {isAdmin ? null : null}
+        <div className="mt-8">
+          <Outlet />
+        </div>
       </Container>
     </Section>
   );

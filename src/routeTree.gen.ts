@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SlugRouteImport } from './routes/$slug'
 import { Route as AboutRouteImport } from './routes/about'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AiToolsRouteImport } from './routes/ai-tools'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ContactRouteImport } from './routes/contact'
@@ -37,6 +38,11 @@ const SlugRoute = SlugRouteImport.update({
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AiToolsRoute = AiToolsRouteImport.update({
@@ -99,6 +105,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$slug': typeof SlugRoute
   '/about': typeof AboutRoute
+  '/admin': typeof AdminRoute
   '/ai-tools': typeof AiToolsRoute
   '/auth': typeof AuthRoute
   '/contact': typeof ContactRoute
@@ -115,6 +122,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$slug': typeof SlugRoute
   '/about': typeof AboutRoute
+  '/admin': typeof AdminRoute
   '/ai-tools': typeof AiToolsRoute
   '/auth': typeof AuthRoute
   '/contact': typeof ContactRoute
@@ -132,6 +140,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/$slug': typeof SlugRoute
   '/about': typeof AboutRoute
+  '/admin': typeof AdminRoute
   '/ai-tools': typeof AiToolsRoute
   '/auth': typeof AuthRoute
   '/contact': typeof ContactRoute
@@ -150,6 +159,7 @@ export interface FileRouteTypes {
     | '/'
     | '/$slug'
     | '/about'
+    | '/admin'
     | '/ai-tools'
     | '/auth'
     | '/contact'
@@ -166,6 +176,7 @@ export interface FileRouteTypes {
     | '/'
     | '/$slug'
     | '/about'
+    | '/admin'
     | '/ai-tools'
     | '/auth'
     | '/contact'
@@ -182,6 +193,7 @@ export interface FileRouteTypes {
     | '/'
     | '/$slug'
     | '/about'
+    | '/admin'
     | '/ai-tools'
     | '/auth'
     | '/contact'
@@ -199,6 +211,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   SlugRoute: typeof SlugRoute
   AboutRoute: typeof AboutRoute
+  AdminRoute: typeof AdminRoute
   AiToolsRoute: typeof AiToolsRoute
   AuthRoute: typeof AuthRoute
   ContactRoute: typeof ContactRoute
@@ -233,6 +246,13 @@ declare module '@tanstack/react-router' {
       path: '/about'
       fullPath: '/about'
       preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/ai-tools': {
@@ -319,6 +339,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   SlugRoute: SlugRoute,
   AboutRoute: AboutRoute,
+  AdminRoute: AdminRoute,
   AiToolsRoute: AiToolsRoute,
   AuthRoute: AuthRoute,
   ContactRoute: ContactRoute,
