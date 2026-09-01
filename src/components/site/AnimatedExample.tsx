@@ -108,6 +108,11 @@ export function AnimatedExample({
       return () => clearTimeout(t);
     }
 
+    if (phase === "writing" && demoVideo) {
+      const t = setTimeout(() => setPhase("resting"), 5200);
+      return () => clearTimeout(t);
+    }
+
     if (phase === "writing") {
       const count = written ? written.split(" ").length : 0;
       if (count >= outputWords.length) {
