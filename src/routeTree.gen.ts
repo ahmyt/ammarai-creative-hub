@@ -14,6 +14,7 @@ import { Route as SlugRouteImport } from './routes/$slug'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as AiToolsRouteImport } from './routes/ai-tools'
 import { Route as ContactRouteImport } from './routes/contact'
+import { Route as FaqRouteImport } from './routes/faq'
 import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as ResourcesRouteImport } from './routes/resources'
 import { Route as UseCasesRouteImport } from './routes/use-cases'
@@ -45,6 +46,11 @@ const AiToolsRoute = AiToolsRouteImport.update({
 const ContactRoute = ContactRouteImport.update({
   id: '/contact',
   path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FaqRoute = FaqRouteImport.update({
+  id: '/faq',
+  path: '/faq',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PricingRoute = PricingRouteImport.update({
@@ -89,6 +95,7 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/ai-tools': typeof AiToolsRoute
   '/contact': typeof ContactRoute
+  '/faq': typeof FaqRoute
   '/pricing': typeof PricingRoute
   '/resources': typeof ResourcesRoute
   '/use-cases': typeof UseCasesRoute
@@ -103,6 +110,7 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/ai-tools': typeof AiToolsRoute
   '/contact': typeof ContactRoute
+  '/faq': typeof FaqRoute
   '/pricing': typeof PricingRoute
   '/resources': typeof ResourcesRoute
   '/use-cases': typeof UseCasesRoute
@@ -118,6 +126,7 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/ai-tools': typeof AiToolsRoute
   '/contact': typeof ContactRoute
+  '/faq': typeof FaqRoute
   '/pricing': typeof PricingRoute
   '/resources': typeof ResourcesRoute
   '/use-cases': typeof UseCasesRoute
@@ -134,6 +143,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/ai-tools'
     | '/contact'
+    | '/faq'
     | '/pricing'
     | '/resources'
     | '/use-cases'
@@ -148,6 +158,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/ai-tools'
     | '/contact'
+    | '/faq'
     | '/pricing'
     | '/resources'
     | '/use-cases'
@@ -162,6 +173,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/ai-tools'
     | '/contact'
+    | '/faq'
     | '/pricing'
     | '/resources'
     | '/use-cases'
@@ -177,6 +189,7 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   AiToolsRoute: typeof AiToolsRoute
   ContactRoute: typeof ContactRoute
+  FaqRoute: typeof FaqRoute
   PricingRoute: typeof PricingRoute
   ResourcesRoute: typeof ResourcesRoute
   UseCasesRoute: typeof UseCasesRoute
@@ -221,6 +234,13 @@ declare module '@tanstack/react-router' {
       path: '/contact'
       fullPath: '/contact'
       preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/faq': {
+      id: '/faq'
+      path: '/faq'
+      fullPath: '/faq'
+      preLoaderRoute: typeof FaqRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/pricing': {
@@ -281,6 +301,7 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   AiToolsRoute: AiToolsRoute,
   ContactRoute: ContactRoute,
+  FaqRoute: FaqRoute,
   PricingRoute: PricingRoute,
   ResourcesRoute: ResourcesRoute,
   UseCasesRoute: UseCasesRoute,
