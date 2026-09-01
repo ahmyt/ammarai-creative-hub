@@ -5,7 +5,9 @@ import { cn } from "@/lib/utils";
 export function ToolCard({ tool, className }: { tool: Tool; className?: string }) {
   return (
     <Link
-      to={`/${tool.slug}`}
+      to="/$slug"
+      params={{ slug: tool.slug }}
+
       className={cn(
         "group flex flex-col rounded-xl bg-card p-5 ring-1 ring-border transition-all duration-200 hover:-translate-y-0.5 hover:ring-accent/50",
         className,
