@@ -130,7 +130,7 @@ export function AnimatedExample({
       setIndex((i) => (i + 1) % examples.length);
     }, REST_MS);
     return () => clearTimeout(t);
-  }, [active, reduced, phase, typed, written, example, outputWords, examples.length]);
+  }, [active, reduced, phase, typed, written, example, outputWords, examples.length, demoVideo]);
 
   if (!example) return null;
 
