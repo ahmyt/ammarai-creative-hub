@@ -14,7 +14,22 @@ export const primaryNav = [
   { label: "Resources", to: "/resources" },
 ] as const;
 
-export const footerNav: { heading: string; links: { label: string; to: string }[] }[] = [
+export type StaticPath =
+  | "/"
+  | "/ai-tools"
+  | "/features"
+  | "/use-cases"
+  | "/pricing"
+  | "/resources"
+  | "/blog"
+  | "/faq"
+  | "/about"
+  | "/contact";
+
+export type SiteLink = { label: string; to: StaticPath } | { label: string; slug: string };
+
+export const footerNav: { heading: string; links: SiteLink[] }[] = [
+
   {
     heading: "Platform",
     links: [
