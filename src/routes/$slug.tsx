@@ -8,6 +8,7 @@ import { FaqAccordion, faqJsonLd } from "@/components/site/Faq";
 import { Breadcrumbs, breadcrumbJsonLd } from "@/components/site/Breadcrumbs";
 import { ExternalButton, ButtonLink } from "@/components/site/Button";
 import { RelatedTools, ToolCard } from "@/components/site/ToolCard";
+import { AnimatedExample } from "@/components/site/AnimatedExample";
 
 function useToolMap() {
   const { data } = useSuspenseQuery(siteContentQuery);
