@@ -14,6 +14,7 @@ const description =
   "Browse every AmmarAI tool: writing, chat, images, video, voice, transcription, vision, documents, SEO, e-commerce and code.";
 
 export const Route = createFileRoute("/ai-tools")({
+  loader: ({ context }) => context.queryClient.ensureQueryData(siteContentQuery),
   head: () => ({
     meta: [
       { title },
@@ -28,15 +29,27 @@ export const Route = createFileRoute("/ai-tools")({
 });
 
 function ToolsDirectory() {
+  const { data: content } = useSuspenseQuery(siteContentQuery);
+  const tools = content.tools;
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState<string>("All");
 
-  const suggestions = useMemo(() => suggestTools(query), [query]);
+  const usedCategories = useMemo(
+    () => categoryOrder.filter((c) => tools.some((t) => t.category === c)),
+    [tools],
+  );
+
+  const suggestions = useMemo(() => {
+    const bySlug = new Map(tools.map((t) => [t.slug, t]));
+    return suggestTools(query)
+      .map((t) => bySlug.get(t.slug))
+      .filter((t): t is (typeof tools)[number] => Boolean(t));
+  }, [query, tools]);
 
   const filtered = useMemo(() => {
     if (query.trim()) return suggestions;
     return category === "All" ? tools : tools.filter((t) => t.category === category);
-  }, [query, category, suggestions]);
+  }, [query, category, suggestions, tools]);
 
   return (
     <div>
