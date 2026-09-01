@@ -1,5 +1,5 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
-import { featureBySlug } from "@/data/features";
+import { siteContentQuery } from "@/lib/content";
 import { toolBySlug } from "@/data/tools";
 import { Container, Section, SectionHeading, Card } from "@/components/site/primitives";
 import { Breadcrumbs, breadcrumbJsonLd } from "@/components/site/Breadcrumbs";
@@ -9,8 +9,9 @@ import { ExternalButton, ButtonLink } from "@/components/site/Button";
 import { SITE } from "@/lib/site";
 
 export const Route = createFileRoute("/features/$slug")({
-  loader: ({ params }) => {
-    const feature = featureBySlug.get(params.slug);
+  loader: async ({ params, context }) => {
+    const content = await context.queryClient.ensureQueryData(siteContentQuery);
+    const feature = content.features.find((f) => f.slug === params.slug);
     if (!feature) throw notFound();
     return { feature };
   },

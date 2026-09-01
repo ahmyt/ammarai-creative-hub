@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { posts } from "@/data/posts";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { siteContentQuery } from "@/lib/content";
 import { Container, Section } from "@/components/site/primitives";
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 
@@ -18,10 +19,13 @@ export const Route = createFileRoute("/blog/")({
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
+  loader: ({ context }) => context.queryClient.ensureQueryData(siteContentQuery),
   component: BlogIndex,
 });
 
 function BlogIndex() {
+  const { data: content } = useSuspenseQuery(siteContentQuery);
+  const posts = content.posts;
   return (
     <div>
       <Section className="pb-8 pt-10 sm:pt-14">

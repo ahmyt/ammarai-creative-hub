@@ -12,16 +12,21 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SlugRouteImport } from './routes/$slug'
 import { Route as AboutRouteImport } from './routes/about'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AiToolsRouteImport } from './routes/ai-tools'
+import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as FaqRouteImport } from './routes/faq'
 import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as ResourcesRouteImport } from './routes/resources'
 import { Route as UseCasesRouteImport } from './routes/use-cases'
+import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as FeaturesIndexRouteImport } from './routes/features.index'
 import { Route as FeaturesSlugRouteImport } from './routes/features.$slug'
+import { Route as AdminKindIndexRouteImport } from './routes/admin.$kind.index'
+import { Route as AdminKindSlugRouteImport } from './routes/admin.$kind.$slug'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -38,9 +43,19 @@ const AboutRoute = AboutRouteImport.update({
   path: '/about',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AiToolsRoute = AiToolsRouteImport.update({
   id: '/ai-tools',
   path: '/ai-tools',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContactRoute = ContactRouteImport.update({
@@ -68,6 +83,11 @@ const UseCasesRoute = UseCasesRouteImport.update({
   path: '/use-cases',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRoute,
+} as any)
 const BlogIndexRoute = BlogIndexRouteImport.update({
   id: '/blog/',
   path: '/blog/',
@@ -88,12 +108,24 @@ const FeaturesSlugRoute = FeaturesSlugRouteImport.update({
   path: '/features/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminKindIndexRoute = AdminKindIndexRouteImport.update({
+  id: '/$kind/',
+  path: '/$kind/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminKindSlugRoute = AdminKindSlugRouteImport.update({
+  id: '/$kind/$slug',
+  path: '/$kind/$slug',
+  getParentRoute: () => AdminRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$slug': typeof SlugRoute
   '/about': typeof AboutRoute
+  '/admin': typeof AdminRouteWithChildren
   '/ai-tools': typeof AiToolsRoute
+  '/auth': typeof AuthRoute
   '/contact': typeof ContactRoute
   '/faq': typeof FaqRoute
   '/pricing': typeof PricingRoute
@@ -101,14 +133,18 @@ export interface FileRoutesByFullPath {
   '/use-cases': typeof UseCasesRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/features/$slug': typeof FeaturesSlugRoute
+  '/admin/': typeof AdminIndexRoute
   '/blog/': typeof BlogIndexRoute
   '/features/': typeof FeaturesIndexRoute
+  '/admin/$kind/$slug': typeof AdminKindSlugRoute
+  '/admin/$kind/': typeof AdminKindIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$slug': typeof SlugRoute
   '/about': typeof AboutRoute
   '/ai-tools': typeof AiToolsRoute
+  '/auth': typeof AuthRoute
   '/contact': typeof ContactRoute
   '/faq': typeof FaqRoute
   '/pricing': typeof PricingRoute
@@ -116,15 +152,20 @@ export interface FileRoutesByTo {
   '/use-cases': typeof UseCasesRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/features/$slug': typeof FeaturesSlugRoute
+  '/admin': typeof AdminIndexRoute
   '/blog': typeof BlogIndexRoute
   '/features': typeof FeaturesIndexRoute
+  '/admin/$kind/$slug': typeof AdminKindSlugRoute
+  '/admin/$kind': typeof AdminKindIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/$slug': typeof SlugRoute
   '/about': typeof AboutRoute
+  '/admin': typeof AdminRouteWithChildren
   '/ai-tools': typeof AiToolsRoute
+  '/auth': typeof AuthRoute
   '/contact': typeof ContactRoute
   '/faq': typeof FaqRoute
   '/pricing': typeof PricingRoute
@@ -132,8 +173,11 @@ export interface FileRoutesById {
   '/use-cases': typeof UseCasesRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/features/$slug': typeof FeaturesSlugRoute
+  '/admin/': typeof AdminIndexRoute
   '/blog/': typeof BlogIndexRoute
   '/features/': typeof FeaturesIndexRoute
+  '/admin/$kind/$slug': typeof AdminKindSlugRoute
+  '/admin/$kind/': typeof AdminKindIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -141,7 +185,9 @@ export interface FileRouteTypes {
     | '/'
     | '/$slug'
     | '/about'
+    | '/admin'
     | '/ai-tools'
+    | '/auth'
     | '/contact'
     | '/faq'
     | '/pricing'
@@ -149,14 +195,18 @@ export interface FileRouteTypes {
     | '/use-cases'
     | '/blog/$slug'
     | '/features/$slug'
+    | '/admin/'
     | '/blog/'
     | '/features/'
+    | '/admin/$kind/$slug'
+    | '/admin/$kind/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/$slug'
     | '/about'
     | '/ai-tools'
+    | '/auth'
     | '/contact'
     | '/faq'
     | '/pricing'
@@ -164,14 +214,19 @@ export interface FileRouteTypes {
     | '/use-cases'
     | '/blog/$slug'
     | '/features/$slug'
+    | '/admin'
     | '/blog'
     | '/features'
+    | '/admin/$kind/$slug'
+    | '/admin/$kind'
   id:
     | '__root__'
     | '/'
     | '/$slug'
     | '/about'
+    | '/admin'
     | '/ai-tools'
+    | '/auth'
     | '/contact'
     | '/faq'
     | '/pricing'
@@ -179,15 +234,20 @@ export interface FileRouteTypes {
     | '/use-cases'
     | '/blog/$slug'
     | '/features/$slug'
+    | '/admin/'
     | '/blog/'
     | '/features/'
+    | '/admin/$kind/$slug'
+    | '/admin/$kind/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   SlugRoute: typeof SlugRoute
   AboutRoute: typeof AboutRoute
+  AdminRoute: typeof AdminRouteWithChildren
   AiToolsRoute: typeof AiToolsRoute
+  AuthRoute: typeof AuthRoute
   ContactRoute: typeof ContactRoute
   FaqRoute: typeof FaqRoute
   PricingRoute: typeof PricingRoute
@@ -222,11 +282,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/ai-tools': {
       id: '/ai-tools'
       path: '/ai-tools'
       fullPath: '/ai-tools'
       preLoaderRoute: typeof AiToolsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contact': {
@@ -264,6 +338,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof UseCasesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/blog/': {
       id: '/blog/'
       path: '/blog'
@@ -292,14 +373,44 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FeaturesSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/$kind/': {
+      id: '/admin/$kind/'
+      path: '/$kind'
+      fullPath: '/admin/$kind/'
+      preLoaderRoute: typeof AdminKindIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/$kind/$slug': {
+      id: '/admin/$kind/$slug'
+      path: '/$kind/$slug'
+      fullPath: '/admin/$kind/$slug'
+      preLoaderRoute: typeof AdminKindSlugRouteImport
+      parentRoute: typeof AdminRoute
+    }
   }
 }
+
+interface AdminRouteChildren {
+  AdminIndexRoute: typeof AdminIndexRoute
+  AdminKindSlugRoute: typeof AdminKindSlugRoute
+  AdminKindIndexRoute: typeof AdminKindIndexRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminIndexRoute: AdminIndexRoute,
+  AdminKindSlugRoute: AdminKindSlugRoute,
+  AdminKindIndexRoute: AdminKindIndexRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   SlugRoute: SlugRoute,
   AboutRoute: AboutRoute,
+  AdminRoute: AdminRouteWithChildren,
   AiToolsRoute: AiToolsRoute,
+  AuthRoute: AuthRoute,
   ContactRoute: ContactRoute,
   FaqRoute: FaqRoute,
   PricingRoute: PricingRoute,

@@ -1,7 +1,7 @@
 import { createFileRoute, notFound, Link } from "@tanstack/react-router";
-import { getTool, toolBySlug } from "@/data/tools";
-import { useCases } from "@/data/use-cases";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import type { Tool, UseCase } from "@/data/types";
+import { siteContentQuery } from "@/lib/content";
 import { SITE, softwareApplicationJsonLd } from "@/lib/site";
 import { Container, Section, SectionHeading, Card, NumberedList, BulletList } from "@/components/site/primitives";
 import { FaqAccordion, faqJsonLd } from "@/components/site/Faq";
@@ -9,13 +9,17 @@ import { Breadcrumbs, breadcrumbJsonLd } from "@/components/site/Breadcrumbs";
 import { ExternalButton, ButtonLink } from "@/components/site/Button";
 import { RelatedTools, ToolCard } from "@/components/site/ToolCard";
 
-const useCaseBySlug = new Map(useCases.map((u) => [u.slug, u]));
+function useToolMap() {
+  const { data } = useSuspenseQuery(siteContentQuery);
+  return new Map(data.tools.map((t) => [t.slug, t]));
+}
 
 export const Route = createFileRoute("/$slug")({
-  loader: ({ params }) => {
-    const tool = getTool(params.slug);
+  loader: async ({ params, context }) => {
+    const content = await context.queryClient.ensureQueryData(siteContentQuery);
+    const tool = content.tools.find((t) => t.slug === params.slug);
     if (tool) return { kind: "tool" as const, tool };
-    const useCase = useCaseBySlug.get(params.slug);
+    const useCase = content.useCases.find((u) => u.slug === params.slug);
     if (useCase) return { kind: "useCase" as const, useCase };
     throw notFound();
   },
@@ -61,6 +65,7 @@ function Json({ data }: { data: unknown }) {
 }
 
 function ToolPage({ tool }: { tool: Tool }) {
+  const toolMap = useToolMap();
   return (
     <article>
       <Json data={softwareApplicationJsonLd(tool.name, tool.description, `/${tool.slug}`)} />
@@ -235,7 +240,7 @@ function ToolPage({ tool }: { tool: Tool }) {
         <Container>
           <SectionHeading eyebrow="Related" title="Tools that pair well with this" />
           <div className="mt-8">
-            <RelatedTools slugs={tool.related} tools={toolBySlug} />
+            <RelatedTools slugs={tool.related} tools={toolMap} />
           </div>
         </Container>
       </Section>
@@ -261,8 +266,9 @@ function ToolPage({ tool }: { tool: Tool }) {
 }
 
 function UseCasePage({ useCase }: { useCase: UseCase }) {
+  const toolMap = useToolMap();
   const toolkit = useCase.toolkit
-    .map((t) => ({ tool: toolBySlug.get(t.slug), why: t.why }))
+    .map((t) => ({ tool: toolMap.get(t.slug), why: t.why }))
     .filter((t): t is { tool: Tool; why: string } => Boolean(t.tool));
 
   return (

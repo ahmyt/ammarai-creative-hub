@@ -1,15 +1,17 @@
 import { createFileRoute, notFound, Link } from "@tanstack/react-router";
-import { posts } from "@/data/posts";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import type { Post } from "@/data/types";
+import { siteContentQuery } from "@/lib/content";
 import { Container, Section, BulletList } from "@/components/site/primitives";
 import { Breadcrumbs, breadcrumbJsonLd } from "@/components/site/Breadcrumbs";
 import { ExternalButton } from "@/components/site/Button";
 import { SITE } from "@/lib/site";
 
-const postBySlug = new Map(posts.map((p) => [p.slug, p]));
 
 export const Route = createFileRoute("/blog/$slug")({
-  loader: ({ params }) => {
-    const post = postBySlug.get(params.slug);
+  loader: async ({ params, context }) => {
+    const content = await context.queryClient.ensureQueryData(siteContentQuery);
+    const post = content.posts.find((p) => p.slug === params.slug);
     if (!post) throw notFound();
     return { post };
   },
@@ -34,9 +36,11 @@ export const Route = createFileRoute("/blog/$slug")({
 
 function BlogPost() {
   const { post } = Route.useLoaderData();
+  const { data: content } = useSuspenseQuery(siteContentQuery);
+  const postBySlug = new Map(content.posts.map((p) => [p.slug, p]));
   const related = post.related
     .map((slug) => postBySlug.get(slug))
-    .filter((p): p is (typeof posts)[number] => Boolean(p) && p!.slug !== post.slug)
+    .filter((p): p is Post => Boolean(p) && p!.slug !== post.slug)
     .slice(0, 3);
 
   const articleJsonLd = {

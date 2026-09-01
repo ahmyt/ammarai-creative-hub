@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useCases } from "@/data/use-cases";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { siteContentQuery } from "@/lib/content";
 import { Container, Section, Card } from "@/components/site/primitives";
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { ExternalButton } from "@/components/site/Button";
@@ -20,10 +21,13 @@ export const Route = createFileRoute("/use-cases")({
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
+  loader: ({ context }) => context.queryClient.ensureQueryData(siteContentQuery),
   component: UseCasesIndex,
 });
 
 function UseCasesIndex() {
+  const { data: content } = useSuspenseQuery(siteContentQuery);
+  const useCases = content.useCases;
   return (
     <div>
       <Section className="pb-8 pt-10 sm:pt-14">

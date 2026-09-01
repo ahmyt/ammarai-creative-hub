@@ -24,7 +24,8 @@ export type StaticPath =
   | "/blog"
   | "/faq"
   | "/about"
-  | "/contact";
+  | "/contact"
+  | "/auth";
 
 export type SiteLink = { label: string; to: StaticPath } | { label: string; slug: string };
 
@@ -67,6 +68,7 @@ export const footerNav: { heading: string; links: SiteLink[] }[] = [
       { label: "Blog", to: "/blog" },
       { label: "Resources", to: "/resources" },
       { label: "Contact", to: "/contact" },
+      { label: "Content studio", to: "/auth" },
     ],
   },
 ];
