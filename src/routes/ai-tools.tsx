@@ -1,7 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
-import { tools, usedCategories, suggestTools } from "@/data/tools";
-import { Container, Section, SectionHeading } from "@/components/site/primitives";
+import { categoryOrder, suggestTools } from "@/data/tools";
+import { siteContentQuery } from "@/lib/content";
+import { Container, Section } from "@/components/site/primitives";
 import { ToolCard } from "@/components/site/ToolCard";
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { ExternalButton } from "@/components/site/Button";
