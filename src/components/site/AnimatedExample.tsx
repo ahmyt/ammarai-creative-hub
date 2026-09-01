@@ -43,12 +43,15 @@ function renderOutput(text: string) {
 export function AnimatedExample({
   examples,
   toolName,
+  demoVideo,
   className,
 }: {
   examples: Example[];
   toolName: string;
+  demoVideo?: { url: string; caption: string };
   className?: string;
 }) {
+
   const reduced = usePrefersReducedMotion();
   const [index, setIndex] = useState(0);
   const [phase, setPhase] = useState<Phase>("typing");
