@@ -8,6 +8,7 @@ import { FaqAccordion, faqJsonLd } from "@/components/site/Faq";
 import { Breadcrumbs, breadcrumbJsonLd } from "@/components/site/Breadcrumbs";
 import { ExternalButton, ButtonLink } from "@/components/site/Button";
 import { RelatedTools, ToolCard } from "@/components/site/ToolCard";
+import { AnimatedExample } from "@/components/site/AnimatedExample";
 
 function useToolMap() {
   const { data } = useSuspenseQuery(siteContentQuery);
@@ -145,6 +146,11 @@ function ToolPage({ tool }: { tool: Tool }) {
       <Section>
         <Container>
           <SectionHeading eyebrow="Examples" title="What good input and output look like" />
+          <AnimatedExample
+            examples={tool.examples}
+            toolName={tool.name}
+            className="mt-8 max-w-3xl"
+          />
           <div className="mt-8 grid gap-5 md:grid-cols-2">
             {tool.examples.map((ex) => (
               <Card key={ex.label} className="p-6">
