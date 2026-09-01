@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SlugRouteImport } from './routes/$slug'
 import { Route as AiToolsRouteImport } from './routes/ai-tools'
+import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as UseCasesRouteImport } from './routes/use-cases'
 import { Route as FeaturesIndexRouteImport } from './routes/features.index'
 import { Route as FeaturesSlugRouteImport } from './routes/features.$slug'
@@ -29,6 +30,11 @@ const SlugRoute = SlugRouteImport.update({
 const AiToolsRoute = AiToolsRouteImport.update({
   id: '/ai-tools',
   path: '/ai-tools',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PricingRoute = PricingRouteImport.update({
+  id: '/pricing',
+  path: '/pricing',
   getParentRoute: () => rootRouteImport,
 } as any)
 const UseCasesRoute = UseCasesRouteImport.update({
@@ -51,6 +57,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$slug': typeof SlugRoute
   '/ai-tools': typeof AiToolsRoute
+  '/pricing': typeof PricingRoute
   '/use-cases': typeof UseCasesRoute
   '/features/$slug': typeof FeaturesSlugRoute
   '/features/': typeof FeaturesIndexRoute
@@ -59,6 +66,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$slug': typeof SlugRoute
   '/ai-tools': typeof AiToolsRoute
+  '/pricing': typeof PricingRoute
   '/use-cases': typeof UseCasesRoute
   '/features/$slug': typeof FeaturesSlugRoute
   '/features': typeof FeaturesIndexRoute
@@ -68,6 +76,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/$slug': typeof SlugRoute
   '/ai-tools': typeof AiToolsRoute
+  '/pricing': typeof PricingRoute
   '/use-cases': typeof UseCasesRoute
   '/features/$slug': typeof FeaturesSlugRoute
   '/features/': typeof FeaturesIndexRoute
@@ -78,6 +87,7 @@ export interface FileRouteTypes {
     | '/'
     | '/$slug'
     | '/ai-tools'
+    | '/pricing'
     | '/use-cases'
     | '/features/$slug'
     | '/features/'
@@ -86,6 +96,7 @@ export interface FileRouteTypes {
     | '/'
     | '/$slug'
     | '/ai-tools'
+    | '/pricing'
     | '/use-cases'
     | '/features/$slug'
     | '/features'
@@ -94,6 +105,7 @@ export interface FileRouteTypes {
     | '/'
     | '/$slug'
     | '/ai-tools'
+    | '/pricing'
     | '/use-cases'
     | '/features/$slug'
     | '/features/'
@@ -103,6 +115,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   SlugRoute: typeof SlugRoute
   AiToolsRoute: typeof AiToolsRoute
+  PricingRoute: typeof PricingRoute
   UseCasesRoute: typeof UseCasesRoute
   FeaturesSlugRoute: typeof FeaturesSlugRoute
   FeaturesIndexRoute: typeof FeaturesIndexRoute
@@ -129,6 +142,13 @@ declare module '@tanstack/react-router' {
       path: '/ai-tools'
       fullPath: '/ai-tools'
       preLoaderRoute: typeof AiToolsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pricing': {
+      id: '/pricing'
+      path: '/pricing'
+      fullPath: '/pricing'
+      preLoaderRoute: typeof PricingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/use-cases': {
@@ -159,6 +179,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   SlugRoute: SlugRoute,
   AiToolsRoute: AiToolsRoute,
+  PricingRoute: PricingRoute,
   UseCasesRoute: UseCasesRoute,
   FeaturesSlugRoute: FeaturesSlugRoute,
   FeaturesIndexRoute: FeaturesIndexRoute,
