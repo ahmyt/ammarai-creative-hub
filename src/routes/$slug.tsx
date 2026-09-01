@@ -9,6 +9,7 @@ import { Breadcrumbs, breadcrumbJsonLd } from "@/components/site/Breadcrumbs";
 import { ExternalButton, ButtonLink } from "@/components/site/Button";
 import { RelatedTools, ToolCard } from "@/components/site/ToolCard";
 import { AnimatedExample } from "@/components/site/AnimatedExample";
+import { toolDemoVideos } from "@/data/tool-demos";
 
 function useToolMap() {
   const { data } = useSuspenseQuery(siteContentQuery);
