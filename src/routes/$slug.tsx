@@ -149,8 +149,10 @@ function ToolPage({ tool }: { tool: Tool }) {
           <AnimatedExample
             examples={tool.examples}
             toolName={tool.name}
+            demoVideo={toolDemoVideos[tool.slug]}
             className="mt-8 max-w-3xl"
           />
+
           <div className="mt-8 grid gap-5 md:grid-cols-2">
             {tool.examples.map((ex) => (
               <Card key={ex.label} className="p-6">
