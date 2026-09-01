@@ -178,7 +178,9 @@ export function AnimatedExample({
 
         <div className="mt-4">
           <div className="flex items-center gap-2">
-            <p className="text-xs font-semibold text-foreground/70">AmmarAI writes</p>
+            <p className="text-xs font-semibold text-foreground/70">
+              {demoVideo ? "AmmarAI renders" : "AmmarAI writes"}
+            </p>
             {phase === "thinking" ? (
               <span className="flex gap-1" aria-label="Generating">
                 <Dot delay="0ms" />
@@ -188,17 +190,40 @@ export function AnimatedExample({
             ) : null}
           </div>
           <div className="mt-2 rounded-xl rounded-tr-sm bg-accent/[0.06] px-4 py-3 ring-1 ring-accent/15">
-            <p
-              aria-live="polite"
-              className="min-h-[5rem] text-pretty text-sm leading-relaxed text-foreground/85"
-            >
-              {renderOutput(written)}
-              {phase === "writing" ? (
-                <span className="ml-0.5 inline-block h-4 w-[2px] translate-y-0.5 animate-pulse bg-accent align-middle" />
-              ) : null}
-            </p>
+            {demoVideo ? (
+              <div>
+                <video
+                  key={demoVideo.url}
+                  src={demoVideo.url}
+                  className="w-full rounded-lg bg-secondary ring-1 ring-border/60"
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  preload="metadata"
+                  aria-label={`${toolName} sample output video`}
+                />
+                <p className="mt-3 text-pretty text-sm leading-relaxed text-foreground/85">
+                  {demoVideo.caption}
+                </p>
+                <p className="mt-2 text-pretty text-xs leading-relaxed text-muted-foreground">
+                  {example.output}
+                </p>
+              </div>
+            ) : (
+              <p
+                aria-live="polite"
+                className="min-h-[5rem] text-pretty text-sm leading-relaxed text-foreground/85"
+              >
+                {renderOutput(written)}
+                {phase === "writing" ? (
+                  <span className="ml-0.5 inline-block h-4 w-[2px] translate-y-0.5 animate-pulse bg-accent align-middle" />
+                ) : null}
+              </p>
+            )}
           </div>
         </div>
+
 
         {examples.length > 1 ? (
           <div className="mt-5 flex gap-2 overflow-x-auto pb-1 sm:flex-wrap sm:overflow-visible">
