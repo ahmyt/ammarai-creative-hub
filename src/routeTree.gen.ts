@@ -15,6 +15,7 @@ import { Route as AiToolsRouteImport } from './routes/ai-tools'
 import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as ResourcesRouteImport } from './routes/resources'
 import { Route as UseCasesRouteImport } from './routes/use-cases'
+import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as FeaturesIndexRouteImport } from './routes/features.index'
 import { Route as FeaturesSlugRouteImport } from './routes/features.$slug'
 
@@ -48,6 +49,11 @@ const UseCasesRoute = UseCasesRouteImport.update({
   path: '/use-cases',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BlogIndexRoute = BlogIndexRouteImport.update({
+  id: '/blog/',
+  path: '/blog/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const FeaturesIndexRoute = FeaturesIndexRouteImport.update({
   id: '/features/',
   path: '/features/',
@@ -67,6 +73,7 @@ export interface FileRoutesByFullPath {
   '/resources': typeof ResourcesRoute
   '/use-cases': typeof UseCasesRoute
   '/features/$slug': typeof FeaturesSlugRoute
+  '/blog/': typeof BlogIndexRoute
   '/features/': typeof FeaturesIndexRoute
 }
 export interface FileRoutesByTo {
@@ -77,6 +84,7 @@ export interface FileRoutesByTo {
   '/resources': typeof ResourcesRoute
   '/use-cases': typeof UseCasesRoute
   '/features/$slug': typeof FeaturesSlugRoute
+  '/blog': typeof BlogIndexRoute
   '/features': typeof FeaturesIndexRoute
 }
 export interface FileRoutesById {
@@ -88,6 +96,7 @@ export interface FileRoutesById {
   '/resources': typeof ResourcesRoute
   '/use-cases': typeof UseCasesRoute
   '/features/$slug': typeof FeaturesSlugRoute
+  '/blog/': typeof BlogIndexRoute
   '/features/': typeof FeaturesIndexRoute
 }
 export interface FileRouteTypes {
@@ -100,6 +109,7 @@ export interface FileRouteTypes {
     | '/resources'
     | '/use-cases'
     | '/features/$slug'
+    | '/blog/'
     | '/features/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -110,6 +120,7 @@ export interface FileRouteTypes {
     | '/resources'
     | '/use-cases'
     | '/features/$slug'
+    | '/blog'
     | '/features'
   id:
     | '__root__'
@@ -120,6 +131,7 @@ export interface FileRouteTypes {
     | '/resources'
     | '/use-cases'
     | '/features/$slug'
+    | '/blog/'
     | '/features/'
   fileRoutesById: FileRoutesById
 }
@@ -131,6 +143,7 @@ export interface RootRouteChildren {
   ResourcesRoute: typeof ResourcesRoute
   UseCasesRoute: typeof UseCasesRoute
   FeaturesSlugRoute: typeof FeaturesSlugRoute
+  BlogIndexRoute: typeof BlogIndexRoute
   FeaturesIndexRoute: typeof FeaturesIndexRoute
 }
 
@@ -178,6 +191,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof UseCasesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/blog/': {
+      id: '/blog/'
+      path: '/blog'
+      fullPath: '/blog/'
+      preLoaderRoute: typeof BlogIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/features/': {
       id: '/features/'
       path: '/features'
@@ -203,6 +223,7 @@ const rootRouteChildren: RootRouteChildren = {
   ResourcesRoute: ResourcesRoute,
   UseCasesRoute: UseCasesRoute,
   FeaturesSlugRoute: FeaturesSlugRoute,
+  BlogIndexRoute: BlogIndexRoute,
   FeaturesIndexRoute: FeaturesIndexRoute,
 }
 export const routeTree = rootRouteImport
