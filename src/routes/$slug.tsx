@@ -11,6 +11,19 @@ import { RelatedTools, ToolCard } from "@/components/site/ToolCard";
 import { AnimatedExample } from "@/components/site/AnimatedExample";
 import { toolDemoVideos } from "@/data/tool-demos";
 
+/** CMS override wins; built-in sample is the fallback and can be hidden per tool. */
+function resolveDemoVideo(tool: Tool) {
+  if (tool.hideDemoVideo) return undefined;
+  const fallback = toolDemoVideos[tool.slug];
+  const url = tool.demoVideoUrl?.trim() || fallback?.url;
+  if (!url) return undefined;
+  return {
+    url,
+    caption:
+      tool.demoVideoCaption?.trim() || fallback?.caption || `Sample output from the ${tool.name}.`,
+  };
+}
+
 function useToolMap() {
   const { data } = useSuspenseQuery(siteContentQuery);
   return new Map(data.tools.map((t) => [t.slug, t]));
