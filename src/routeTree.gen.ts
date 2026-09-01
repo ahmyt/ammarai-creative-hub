@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SlugRouteImport } from './routes/$slug'
 import { Route as AiToolsRouteImport } from './routes/ai-tools'
+import { Route as FeaturesIndexRouteImport } from './routes/features.index'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -28,35 +29,44 @@ const AiToolsRoute = AiToolsRouteImport.update({
   path: '/ai-tools',
   getParentRoute: () => rootRouteImport,
 } as any)
+const FeaturesIndexRoute = FeaturesIndexRouteImport.update({
+  id: '/features/',
+  path: '/features/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$slug': typeof SlugRoute
   '/ai-tools': typeof AiToolsRoute
+  '/features/': typeof FeaturesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$slug': typeof SlugRoute
   '/ai-tools': typeof AiToolsRoute
+  '/features': typeof FeaturesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/$slug': typeof SlugRoute
   '/ai-tools': typeof AiToolsRoute
+  '/features/': typeof FeaturesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/$slug' | '/ai-tools'
+  fullPaths: '/' | '/$slug' | '/ai-tools' | '/features/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/$slug' | '/ai-tools'
-  id: '__root__' | '/' | '/$slug' | '/ai-tools'
+  to: '/' | '/$slug' | '/ai-tools' | '/features'
+  id: '__root__' | '/' | '/$slug' | '/ai-tools' | '/features/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   SlugRoute: typeof SlugRoute
   AiToolsRoute: typeof AiToolsRoute
+  FeaturesIndexRoute: typeof FeaturesIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -82,6 +92,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AiToolsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/features/': {
+      id: '/features/'
+      path: '/features'
+      fullPath: '/features/'
+      preLoaderRoute: typeof FeaturesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -89,6 +106,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   SlugRoute: SlugRoute,
   AiToolsRoute: AiToolsRoute,
+  FeaturesIndexRoute: FeaturesIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
