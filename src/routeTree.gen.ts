@@ -19,7 +19,6 @@ import { Route as ContactRouteImport } from './routes/contact'
 import { Route as FaqRouteImport } from './routes/faq'
 import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as ResourcesRouteImport } from './routes/resources'
-import { Route as ThemePreviewRouteImport } from './routes/theme-preview'
 import { Route as UseCasesRouteImport } from './routes/use-cases'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as BlogIndexRouteImport } from './routes/blog.index'
@@ -79,11 +78,6 @@ const ResourcesRoute = ResourcesRouteImport.update({
   path: '/resources',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ThemePreviewRoute = ThemePreviewRouteImport.update({
-  id: '/theme-preview',
-  path: '/theme-preview',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const UseCasesRoute = UseCasesRouteImport.update({
   id: '/use-cases',
   path: '/use-cases',
@@ -136,7 +130,6 @@ export interface FileRoutesByFullPath {
   '/faq': typeof FaqRoute
   '/pricing': typeof PricingRoute
   '/resources': typeof ResourcesRoute
-  '/theme-preview': typeof ThemePreviewRoute
   '/use-cases': typeof UseCasesRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/features/$slug': typeof FeaturesSlugRoute
@@ -156,7 +149,6 @@ export interface FileRoutesByTo {
   '/faq': typeof FaqRoute
   '/pricing': typeof PricingRoute
   '/resources': typeof ResourcesRoute
-  '/theme-preview': typeof ThemePreviewRoute
   '/use-cases': typeof UseCasesRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/features/$slug': typeof FeaturesSlugRoute
@@ -178,7 +170,6 @@ export interface FileRoutesById {
   '/faq': typeof FaqRoute
   '/pricing': typeof PricingRoute
   '/resources': typeof ResourcesRoute
-  '/theme-preview': typeof ThemePreviewRoute
   '/use-cases': typeof UseCasesRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/features/$slug': typeof FeaturesSlugRoute
@@ -201,7 +192,6 @@ export interface FileRouteTypes {
     | '/faq'
     | '/pricing'
     | '/resources'
-    | '/theme-preview'
     | '/use-cases'
     | '/blog/$slug'
     | '/features/$slug'
@@ -221,7 +211,6 @@ export interface FileRouteTypes {
     | '/faq'
     | '/pricing'
     | '/resources'
-    | '/theme-preview'
     | '/use-cases'
     | '/blog/$slug'
     | '/features/$slug'
@@ -242,7 +231,6 @@ export interface FileRouteTypes {
     | '/faq'
     | '/pricing'
     | '/resources'
-    | '/theme-preview'
     | '/use-cases'
     | '/blog/$slug'
     | '/features/$slug'
@@ -264,7 +252,6 @@ export interface RootRouteChildren {
   FaqRoute: typeof FaqRoute
   PricingRoute: typeof PricingRoute
   ResourcesRoute: typeof ResourcesRoute
-  ThemePreviewRoute: typeof ThemePreviewRoute
   UseCasesRoute: typeof UseCasesRoute
   BlogSlugRoute: typeof BlogSlugRoute
   FeaturesSlugRoute: typeof FeaturesSlugRoute
@@ -342,13 +329,6 @@ declare module '@tanstack/react-router' {
       path: '/resources'
       fullPath: '/resources'
       preLoaderRoute: typeof ResourcesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/theme-preview': {
-      id: '/theme-preview'
-      path: '/theme-preview'
-      fullPath: '/theme-preview'
-      preLoaderRoute: typeof ThemePreviewRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/use-cases': {
@@ -435,7 +415,6 @@ const rootRouteChildren: RootRouteChildren = {
   FaqRoute: FaqRoute,
   PricingRoute: PricingRoute,
   ResourcesRoute: ResourcesRoute,
-  ThemePreviewRoute: ThemePreviewRoute,
   UseCasesRoute: UseCasesRoute,
   BlogSlugRoute: BlogSlugRoute,
   FeaturesSlugRoute: FeaturesSlugRoute,
