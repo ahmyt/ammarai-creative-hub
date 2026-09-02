@@ -1,18 +1,20 @@
 import { queryOptions } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import type { Feature, Post, Tool, UseCase } from "@/data/types";
+import type { Feature, Page, Post, Tool, UseCase } from "@/data/types";
 import { tools as staticTools } from "@/data/tools";
 import { useCases as staticUseCases } from "@/data/use-cases";
 import { features as staticFeatures } from "@/data/features";
 import { posts as staticPosts } from "@/data/posts";
+import { pages as staticPages } from "@/data/pages";
 
-export type ContentKind = "tool" | "use_case" | "feature" | "post";
+export type ContentKind = "tool" | "use_case" | "feature" | "post" | "page";
 
 export const contentKinds: { kind: ContentKind; label: string; singular: string }[] = [
   { kind: "tool", label: "Tools", singular: "Tool" },
   { kind: "use_case", label: "Use cases", singular: "Use case" },
   { kind: "feature", label: "Features", singular: "Feature" },
   { kind: "post", label: "Blog posts", singular: "Blog post" },
+  { kind: "page", label: "Pages", singular: "Page" },
 ];
 
 export interface ContentRow {
@@ -28,6 +30,7 @@ export interface SiteContent {
   useCases: UseCase[];
   features: Feature[];
   posts: Post[];
+  pages: Page[];
 }
 
 export const staticContent: SiteContent = {
@@ -35,6 +38,7 @@ export const staticContent: SiteContent = {
   useCases: staticUseCases,
   features: staticFeatures,
   posts: staticPosts,
+  pages: staticPages,
 };
 
 export function staticItems(kind: ContentKind): Record<string, unknown>[] {
@@ -47,6 +51,8 @@ export function staticItems(kind: ContentKind): Record<string, unknown>[] {
       return staticFeatures as unknown as Record<string, unknown>[];
     case "post":
       return staticPosts as unknown as Record<string, unknown>[];
+    case "page":
+      return staticPages as unknown as Record<string, unknown>[];
   }
 }
 
@@ -84,6 +90,7 @@ export function mergeContent(rows: ContentRow[]): SiteContent {
     useCases: mergeKind(staticUseCases, rows, "use_case"),
     features: mergeKind(staticFeatures, rows, "feature"),
     posts: mergeKind(staticPosts, rows, "post"),
+    pages: mergeKind(staticPages, rows, "page"),
   };
 }
 
