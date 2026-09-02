@@ -48,7 +48,12 @@ export function AnimatedExample({
 }: {
   examples: Example[];
   toolName: string;
-  demoVideos?: ({ url: string; caption: string } | undefined)[] | undefined;
+  demoVideos?:
+    | (
+        | { url: string; caption: string; inputImage?: string; inputImageAlt?: string }
+        | undefined
+      )[]
+    | undefined;
   className?: string;
 }) {
 
@@ -171,8 +176,28 @@ export function AnimatedExample({
 
       <div className="px-4 py-5 sm:px-6 sm:py-6">
         <div>
-          <p className="text-xs font-semibold text-foreground/70">You type</p>
+          <p className="text-xs font-semibold text-foreground/70">
+            {demoVideo?.inputImage ? "You upload + type" : "You type"}
+          </p>
           <div className="mt-2 rounded-xl rounded-tl-sm bg-secondary/60 px-4 py-3 ring-1 ring-border/60">
+            {demoVideo?.inputImage ? (
+              <div className="mb-3 flex items-center gap-3 rounded-lg bg-card/80 p-2 ring-1 ring-border/60">
+                <img
+                  src={demoVideo.inputImage}
+                  alt={demoVideo.inputImageAlt ?? "Source image for the sample clip"}
+                  loading="lazy"
+                  className="h-14 w-20 shrink-0 rounded-md object-cover ring-1 ring-border/60"
+                />
+                <span className="min-w-0">
+                  <span className="block text-xs font-semibold text-foreground">
+                    Source image attached
+                  </span>
+                  <span className="block truncate text-xs text-muted-foreground">
+                    {demoVideo.inputImageAlt ?? "Uploaded still"}
+                  </span>
+                </span>
+              </div>
+            ) : null}
             <p className="min-h-[3rem] text-pretty font-mono text-[13px] leading-relaxed text-foreground">
               {typed}
               {phase === "typing" ? (
