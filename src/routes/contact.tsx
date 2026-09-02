@@ -140,7 +140,11 @@ function Contact() {
                 </Card>
               ))}
               <p className="text-xs text-muted-foreground">
-                Already have an account? Sign in at {SITE.appUrl.replace("https://", "")}.
+                Already have an account?{" "}
+                <Link to="/auth" className="text-accent underline underline-offset-4">
+                  Sign in
+                </Link>
+                .
               </p>
             </div>
           </div>
