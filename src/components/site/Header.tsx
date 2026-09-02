@@ -2,11 +2,22 @@ import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { primaryNav, SITE } from "@/lib/site";
 import { ButtonLink } from "./Button";
+import logoAsset from "@/assets/ammarai-logo.png.asset.json";
 
 export function Wordmark({ className }: { className?: string }) {
   return (
-    <span className={className ?? "font-display text-2xl font-semibold tracking-tight"}>
-      Ammar<span className="text-accent">.</span>
+    <span className="flex items-center gap-2">
+      <span className={className ?? "font-display text-2xl font-semibold tracking-tight"}>
+        Ammar<span className="text-accent">AI</span>
+      </span>
+      <img
+        src={logoAsset.url}
+        alt=""
+        aria-hidden="true"
+        width={32}
+        height={32}
+        className="rounded-md size-7 sm:size-8"
+      />
     </span>
   );
 }
