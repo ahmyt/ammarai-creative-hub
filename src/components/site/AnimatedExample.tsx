@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { Example } from "@/data/types";
+import type { ToolDemoMedia } from "@/data/tool-demos";
 import { cn } from "@/lib/utils";
+
 
 type Phase = "typing" | "thinking" | "writing" | "resting";
 
@@ -48,17 +50,7 @@ export function AnimatedExample({
 }: {
   examples: Example[];
   toolName: string;
-  demoVideos?:
-    | (
-        | {
-            url: string;
-            caption: string;
-            inputImage?: string | undefined;
-            inputImageAlt?: string | undefined;
-          }
-        | undefined
-      )[]
-    | undefined;
+  demoVideos?: (ToolDemoMedia | undefined)[] | undefined;
   className?: string;
 }) {
 
@@ -72,8 +64,10 @@ export function AnimatedExample({
   const [inView, setInView] = useState(false);
 
   const example = examples[index];
-  const demoVideo = demoVideos?.[index];
+  const media = demoVideos?.[index];
+  const demoVideo = media?.url ? media : undefined;
   const outputWords = useMemo(() => (example?.output ?? "").split(" "), [example?.output]);
+
 
   useEffect(() => {
     const node = containerRef.current;
@@ -120,9 +114,11 @@ export function AnimatedExample({
     }
 
     if (phase === "writing" && demoVideo) {
-      const t = setTimeout(() => setPhase("resting"), 5200);
+      const hold = demoVideo.kind === "audio" ? 12000 : demoVideo.kind === "image" ? 4200 : 5200;
+      const t = setTimeout(() => setPhase("resting"), hold);
       return () => clearTimeout(t);
     }
+
 
     if (phase === "writing") {
       const count = written ? written.split(" ").length : 0;
@@ -182,14 +178,20 @@ export function AnimatedExample({
       <div className="px-4 py-5 sm:px-6 sm:py-6">
         <div>
           <p className="text-xs font-semibold text-foreground/70">
-            {demoVideo?.inputImage ? "You upload + type" : "You type"}
+            {media?.inputImage
+              ? "You upload + type"
+              : media?.inputAudio
+                ? "You record"
+                : media?.inputFileLabel
+                  ? "You attach + ask"
+                  : "You type"}
           </p>
           <div className="mt-2 rounded-xl rounded-tl-sm bg-secondary/60 px-4 py-3 ring-1 ring-border/60">
-            {demoVideo?.inputImage ? (
+            {media?.inputImage ? (
               <div className="mb-3 flex items-center gap-3 rounded-lg bg-card/80 p-2 ring-1 ring-border/60">
                 <img
-                  src={demoVideo.inputImage}
-                  alt={demoVideo.inputImageAlt ?? "Source image for the sample clip"}
+                  src={media.inputImage}
+                  alt={media.inputImageAlt ?? "Source image for the sample"}
                   loading="lazy"
                   className="h-14 w-20 shrink-0 rounded-md object-cover ring-1 ring-border/60"
                 />
@@ -198,10 +200,31 @@ export function AnimatedExample({
                     Source image attached
                   </span>
                   <span className="block truncate text-xs text-muted-foreground">
-                    {demoVideo.inputImageAlt ?? "Uploaded still"}
+                    {media.inputImageAlt ?? "Uploaded still"}
                   </span>
                 </span>
               </div>
+            ) : null}
+            {media?.inputAudio ? (
+              <div className="mb-3 rounded-lg bg-card/80 p-2 ring-1 ring-border/60">
+                <p className="mb-2 truncate text-xs font-semibold text-foreground">
+                  {media.inputAudioLabel ?? "Recording attached"}
+                </p>
+                <audio
+                  key={media.inputAudio}
+                  src={media.inputAudio}
+                  controls
+                  preload="none"
+                  className="w-full"
+                  aria-label={`${toolName} sample input recording`}
+                />
+              </div>
+            ) : null}
+            {media?.inputFileLabel ? (
+              <p className="mb-3 inline-flex items-center gap-2 rounded-lg bg-card/80 px-2.5 py-1.5 text-xs font-semibold text-foreground ring-1 ring-border/60">
+                <span aria-hidden="true">📄</span>
+                {media.inputFileLabel}
+              </p>
             ) : null}
             <p className="min-h-[3rem] text-pretty font-mono text-[13px] leading-relaxed text-foreground">
               {typed}
@@ -215,7 +238,13 @@ export function AnimatedExample({
         <div className="mt-4">
           <div className="flex items-center gap-2">
             <p className="text-xs font-semibold text-foreground/70">
-              {demoVideo ? "AmmarAI renders" : "AmmarAI writes"}
+              {demoVideo?.kind === "audio"
+                ? "AmmarAI speaks"
+                : demoVideo?.kind === "image"
+                  ? "AmmarAI renders"
+                  : demoVideo
+                    ? "AmmarAI renders"
+                    : "AmmarAI writes"}
             </p>
             {phase === "thinking" ? (
               <span className="flex gap-1" aria-label="Generating">
@@ -228,17 +257,36 @@ export function AnimatedExample({
           <div className="mt-2 rounded-xl rounded-tr-sm bg-accent/[0.06] px-4 py-3 ring-1 ring-accent/15">
             {demoVideo ? (
               <div>
-                <video
-                  key={demoVideo.url}
-                  src={demoVideo.url}
-                  className="w-full rounded-lg bg-secondary ring-1 ring-border/60"
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                  preload="metadata"
-                  aria-label={`${toolName} sample output video`}
-                />
+                {demoVideo.kind === "audio" ? (
+                  <audio
+                    key={demoVideo.url}
+                    src={demoVideo.url}
+                    controls
+                    preload="metadata"
+                    className="w-full"
+                    aria-label={`${toolName} sample output audio`}
+                  />
+                ) : demoVideo.kind === "image" ? (
+                  <img
+                    key={demoVideo.url}
+                    src={demoVideo.url}
+                    alt={demoVideo.caption ?? `${toolName} sample output image`}
+                    loading="lazy"
+                    className="w-full rounded-lg bg-secondary object-cover ring-1 ring-border/60"
+                  />
+                ) : (
+                  <video
+                    key={demoVideo.url}
+                    src={demoVideo.url}
+                    className="w-full rounded-lg bg-secondary ring-1 ring-border/60"
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    preload="metadata"
+                    aria-label={`${toolName} sample output video`}
+                  />
+                )}
                 <p className="mt-3 text-pretty text-sm leading-relaxed text-foreground/85">
                   {demoVideo.caption}
                 </p>
@@ -259,6 +307,7 @@ export function AnimatedExample({
             )}
           </div>
         </div>
+
 
 
         {examples.length > 1 ? (

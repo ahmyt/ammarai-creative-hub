@@ -9,15 +9,15 @@ import { Breadcrumbs, breadcrumbJsonLd } from "@/components/site/Breadcrumbs";
 import { ExternalButton, ButtonLink } from "@/components/site/Button";
 import { RelatedTools, ToolCard } from "@/components/site/ToolCard";
 import { AnimatedExample } from "@/components/site/AnimatedExample";
-import { toolDemoVideos } from "@/data/tool-demos";
+import { toolDemoMedia, type ToolDemoMedia } from "@/data/tool-demos";
 
 /**
- * One sample clip per example. CMS overrides win: `demoVideoUrl` / `demoVideoCaption`
+ * One sample per example. CMS overrides win: `demoVideoUrl` / `demoVideoCaption`
  * accept a newline- or comma-separated list mapped to examples in order.
  */
-function resolveDemoVideos(tool: Tool) {
+function resolveDemoVideos(tool: Tool): (ToolDemoMedia | undefined)[] | undefined {
   if (tool.hideDemoVideo) return undefined;
-  const fallback = toolDemoVideos[tool.slug] ?? [];
+  const fallback = toolDemoMedia[tool.slug] ?? [];
   const split = (value?: string) =>
     (value ?? "")
       .split(/[\n,]+/)
@@ -29,18 +29,22 @@ function resolveDemoVideos(tool: Tool) {
   if (count === 0) return undefined;
 
   const resolved = Array.from({ length: count }, (_, i) => {
-    const url = urls[i] ?? (urls.length === 1 && fallback.length === 0 ? urls[0] : fallback[i]?.url);
-    if (!url) return undefined;
-    return {
-      url,
-      caption:
-        captions[i] ?? fallback[i]?.caption ?? `Sample output from the ${tool.name}.`,
-      inputImage: fallback[i]?.inputImage,
-      inputImageAlt: fallback[i]?.inputImageAlt,
-    };
+    const base = fallback[i];
+    const override = urls[i];
+    if (!override && !base) return undefined;
+    const media: ToolDemoMedia = { ...base };
+    if (override) {
+      media.url = override;
+      media.kind = base?.kind ?? (/\.(mp3|wav|m4a|ogg)$/i.test(override) ? "audio" : /\.(png|jpe?g|webp|avif|gif)$/i.test(override) ? "image" : "video");
+    }
+    const caption = captions[i] ?? base?.caption;
+    if (caption) media.caption = caption;
+    else if (media.url) media.caption = `Sample output from the ${tool.name}.`;
+    return media;
   });
   return resolved.some(Boolean) ? resolved : undefined;
 }
+
 
 
 function useToolMap() {
