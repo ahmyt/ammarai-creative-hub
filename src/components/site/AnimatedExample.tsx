@@ -50,7 +50,12 @@ export function AnimatedExample({
   toolName: string;
   demoVideos?:
     | (
-        | { url: string; caption: string; inputImage?: string; inputImageAlt?: string }
+        | {
+            url: string;
+            caption: string;
+            inputImage?: string | undefined;
+            inputImageAlt?: string | undefined;
+          }
         | undefined
       )[]
     | undefined;
