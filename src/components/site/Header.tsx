@@ -36,12 +36,12 @@ export function Header() {
         </nav>
 
         <div className="hidden items-center gap-3 md:flex">
-          <a
-            href={`${SITE.appUrl}/login`}
+          <Link
+            to="/auth"
             className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
           >
             Login
-          </a>
+          </Link>
           <ButtonLink to="/pricing" variant="ink" size="sm">
             Start Free
           </ButtonLink>
@@ -77,12 +77,13 @@ export function Header() {
               <ButtonLink to="/pricing" variant="primary" size="sm" onClick={() => setOpen(false)}>
                 Start Creating Free
               </ButtonLink>
-              <a
-                href={`${SITE.appUrl}/login`}
+              <Link
+                to="/auth"
+                onClick={() => setOpen(false)}
                 className="text-sm font-medium text-muted-foreground"
               >
                 Login
-              </a>
+              </Link>
             </div>
           </nav>
         </div>

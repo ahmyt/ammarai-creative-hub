@@ -72,7 +72,7 @@ function FeatureDetail() {
               {feature.lede}
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <ExternalButton href={`${SITE.appUrl}/signup`} size="lg">
+              <ExternalButton href={"/auth"} size="lg">
                 Start creating free
               </ExternalButton>
               <ButtonLink to="/features" variant="outline" size="lg">

@@ -139,7 +139,7 @@ function FaqPage() {
             {SITE.tagline} The free plan answers most questions faster than we can.
           </p>
           <div className="mt-8">
-            <ExternalButton href={`${SITE.appUrl}/signup`} variant="onInk" size="lg">
+            <ExternalButton href={"/auth"} variant="onInk" size="lg">
               Start creating free
             </ExternalButton>
           </div>
