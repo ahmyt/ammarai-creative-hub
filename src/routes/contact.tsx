@@ -1,9 +1,8 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { Container, Section, Card } from "@/components/site/primitives";
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { ActionButton, ButtonLink } from "@/components/site/Button";
-import { SITE } from "@/lib/site";
 
 const title = "Contact AmmarAI: Sales, Support and Partnerships | AmmarAI";
 const description =
