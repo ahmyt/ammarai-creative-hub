@@ -11,18 +11,35 @@ import { RelatedTools, ToolCard } from "@/components/site/ToolCard";
 import { AnimatedExample } from "@/components/site/AnimatedExample";
 import { toolDemoVideos } from "@/data/tool-demos";
 
-/** CMS override wins; built-in sample is the fallback and can be hidden per tool. */
-function resolveDemoVideo(tool: Tool) {
+/**
+ * One sample clip per example. CMS overrides win: `demoVideoUrl` / `demoVideoCaption`
+ * accept a newline- or comma-separated list mapped to examples in order.
+ */
+function resolveDemoVideos(tool: Tool) {
   if (tool.hideDemoVideo) return undefined;
-  const fallback = toolDemoVideos[tool.slug];
-  const url = tool.demoVideoUrl?.trim() || fallback?.url;
-  if (!url) return undefined;
-  return {
-    url,
-    caption:
-      tool.demoVideoCaption?.trim() || fallback?.caption || `Sample output from the ${tool.name}.`,
-  };
+  const fallback = toolDemoVideos[tool.slug] ?? [];
+  const split = (value?: string) =>
+    (value ?? "")
+      .split(/[\n,]+/)
+      .map((v) => v.trim())
+      .filter(Boolean);
+  const urls = split(tool.demoVideoUrl);
+  const captions = split(tool.demoVideoCaption);
+  const count = Math.max(fallback.length, urls.length);
+  if (count === 0) return undefined;
+
+  const resolved = Array.from({ length: count }, (_, i) => {
+    const url = urls[i] ?? (urls.length === 1 && fallback.length === 0 ? urls[0] : fallback[i]?.url);
+    if (!url) return undefined;
+    return {
+      url,
+      caption:
+        captions[i] ?? fallback[i]?.caption ?? `Sample output from the ${tool.name}.`,
+    };
+  });
+  return resolved.some(Boolean) ? resolved : undefined;
 }
+
 
 function useToolMap() {
   const { data } = useSuspenseQuery(siteContentQuery);
