@@ -94,7 +94,7 @@ function About() {
             </p>
           </div>
           <div className="mt-8 flex flex-wrap gap-3">
-            <ExternalButton href={`${SITE.appUrl}/signup`} size="lg">
+            <ExternalButton href={"/auth"} size="lg">
               Start creating free
             </ExternalButton>
             <ButtonLink to="/contact" variant="outline" size="lg">

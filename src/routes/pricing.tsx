@@ -105,7 +105,7 @@ function Pricing() {
                   ))}
                 </ul>
                 <ExternalButton
-                  href={`${SITE.appUrl}/signup`}
+                  href={"/auth"}
                   variant={plan.highlight ? "primary" : "outline"}
                   className="mt-7 w-full"
                 >

@@ -87,7 +87,7 @@ function Home() {
                 and your history in one place.
               </p>
               <div className="mt-9 flex flex-wrap items-center gap-3">
-                <ExternalButton href={`${SITE.appUrl}/signup`} size="lg">
+                <ExternalButton href={"/auth"} size="lg">
                   Start creating free
                 </ExternalButton>
                 <ButtonLink to="/ai-tools" variant="outline" size="lg">
@@ -363,7 +363,7 @@ function Home() {
             it.
           </p>
           <div className="mt-9 flex flex-wrap justify-center gap-3">
-            <ExternalButton href={`${SITE.appUrl}/signup`} variant="onInk" size="lg">
+            <ExternalButton href={"/auth"} variant="onInk" size="lg">
               Start creating free
             </ExternalButton>
             <ButtonLink to="/pricing" variant="ghost" size="lg" className="text-ink-foreground">
