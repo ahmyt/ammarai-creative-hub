@@ -32,7 +32,7 @@ export const posts: Post[] = [
       {
         heading: "Use AI for the first draft, not the final word",
         paragraphs: [
-          "AI writing tools are strongest at getting you from a blank page to a workable draft quickly. They're weakest at judgment calls: what to cut, what's actually true, and what will resonate with a specific reader. A workable pattern is to generate a draft, then edit it as if a junior writer had handed it to you — because functionally, that's what happened.",
+          "AI writing tools are strongest at turning a rough idea into a workable draft quickly. They're weakest at judgment calls: what to cut, what's actually true, and what will resonate with a specific reader. A workable pattern is to generate a draft, then edit it as if a junior writer had handed it to you — because functionally, that's what happened.",
           "Tools like AmmarAI's AI Writer are useful here for turning a brief into structured prose fast, but the editing pass is where the piece becomes yours. Read it aloud. Cut any sentence that could appear in ten other articles.",
         ],
       },

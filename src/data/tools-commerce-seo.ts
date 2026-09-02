@@ -7,7 +7,7 @@ export const commerceSeoTools: Tool[] = [
     category: "AI E-commerce",
     summary: "Turn a handful of product specs into persuasive, on-brand product page copy.",
     title: "AI Product Description Generator | AmmarAI",
-    description: "Generate persuasive product descriptions from specs and keywords. Adjust tone, length, and audience for any storefront in seconds.",
+    description: "Generate persuasive product descriptions from specs and keywords. Adjust tone, length, and audience for any storefront.",
     h1: "Write product descriptions that actually sell",
     lede: "Feed AmmarAI your product's specs, materials, and target buyer, and get a draft description that reads like it was written by your best copywriter — not a spec sheet.",
     ctaLabel: "Generate a product description",
@@ -110,7 +110,7 @@ export const commerceSeoTools: Tool[] = [
       { title: "A+ content drafting", body: "Produces short copy blocks suited to enhanced content modules, not just the base listing." }
     ],
     audiences: [
-      { who: "Amazon third-party sellers", why: "Draft new listings or refresh underperforming ones faster than writing from a blank page." },
+      { who: "Amazon third-party sellers", why: "Draft new listings or rewrite the ones quietly losing to page-two competitors." },
       { who: "Brand managers running A+ Content", why: "Get starting copy for feature and lifestyle modules." },
       { who: "Agencies managing multiple seller accounts", why: "Standardize listing structure across many client catalogs." }
     ],
@@ -646,7 +646,7 @@ export const commerceSeoTools: Tool[] = [
     ],
     examples: [
       { label: "How-to post outline + intro", input: "Keyword: 'how to start composting at home', audience: apartment dwellers with limited space", output: "Title: How to Start Composting at Home (Even in a Small Apartment)\n\nIntro: You don't need a backyard to start composting — a countertop bin, a balcony setup, or even a small worm bin can turn food scraps into usable compost without taking over your kitchen. This guide walks through the apartment-friendly methods that actually work, what to compost (and what to avoid), and how to keep the process smell-free.\n\nSection headings: Why apartment composting is different from backyard composting / The 3 best small-space composting methods / What you can and can't compost indoors / Troubleshooting smell and pests / What to do with finished compost if you don't have a garden" },
-      { label: "Comparison-intent post intro", input: "Keyword: 'renting vs buying a home in your 30s', audience: first-time buyers weighing the decision", output: "Title: Renting vs. Buying in Your 30s: How to Actually Decide\n\nIntro: The 'rent vs. buy' advice you'll find online often assumes a level of certainty about your finances and location that most people in their 30s don't have yet. Instead of a one-size-fits-all rule, this guide breaks the decision into the handful of factors that actually move the math — how long you plan to stay, your local price-to-rent ratio, and what you'd otherwise do with a down payment." }
+      { label: "Comparison-intent post intro", input: "Keyword: 'renting vs buying a home in your 30s', audience: first-time buyers weighing the decision", output: "Title: Renting vs. Buying in Your 30s: How to Actually Decide\n\nIntro: The 'rent vs. buy' advice you'll find online often assumes a level of certainty about your finances and location that most people in their 30s don't have yet. Rather than a one-size-fits-all rule, this guide breaks the decision into the handful of factors that actually move the math — how long you plan to stay, your local price-to-rent ratio, and what you'd otherwise do with a down payment." }
     ],
     capabilities: [
       { title: "End-to-end drafting", body: "Covers title, outline, intro, body sections, and conclusion in one structured workflow." },

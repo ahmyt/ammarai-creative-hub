@@ -7,13 +7,13 @@ export const marketingTools: Tool[] = [
     category: "AI Marketing",
     summary: "Generate ad copy for any channel from a single product description.",
     title: "AI Ad Generator: Multi-Channel Ad Copy | AmmarAI",
-    description: "Create headlines, descriptions, and CTAs for search, social, and display ads in seconds with AmmarAI's AI ad generator.",
+    description: "Create headlines, descriptions, and CTAs for search, social, and display ads with AmmarAI's AI ad generator.",
     h1: "Write ads that fit any channel, fast",
     lede: "Turn one product idea into ready-to-test ad variations for search, social, and display — matched to each platform's format.",
     ctaLabel: "Generate Ads Free",
     popular: true,
     what: [
-      "The AI Ad Generator is a starting point for paid campaigns across formats you don't have time to write from scratch — search headlines, social carousels, display banners, native placements. Instead of staring at a blank doc, you describe your product, audience, and goal, and get a spread of angles: benefit-led, urgency-led, question-led, social-proof-led.",
+      "The AI Ad Generator is a starting point for paid campaigns across formats you don't have time to write from scratch — search headlines, social carousels, display banners, native placements. You describe the product, the audience and the goal, and get a spread of angles back: benefit-led, urgency-led, question-led, social-proof-led.",
       "It doesn't guess at your brand voice from nothing — you set the tone (playful, corporate, direct-response) and it keeps variations inside that register. Because ad copy lives or dies on constraints, the tool is built to respect format limits rather than produce generic paragraphs you then have to cut down by hand."
     ],
     canDo: [
@@ -22,7 +22,7 @@ export const marketingTools: Tool[] = [
       "Produce copy sized for search, social, and display formats",
       "Suggest multiple CTA options (Shop Now, Learn More, Get Started)",
       "Create angle variety: benefit, urgency, curiosity, social proof",
-      "Draft copy for A/B testing without starting from a blank page"
+      "Draft several variants at once for A/B testing"
     ],
     how: [
       { title: "Describe the offer", body: "Enter what you're advertising, the audience, and the single most important benefit." },
@@ -320,7 +320,7 @@ export const marketingTools: Tool[] = [
       { who: "Social media managers", why: "Draft captions quickly for client accounts across multiple brand voices." }
     ],
     useCases: [
-      { title: "Daily content posting", body: "Generate a caption in seconds for each day's post instead of starting from a blank caption box." },
+      { title: "Daily content posting", body: "Draft each day's caption from the photo and the point you want to make, then trim it yourself." },
       { title: "Product announcement posts", body: "Write a caption that leads with the hook and closes with a clear next step for followers." }
     ],
     tips: [
@@ -835,7 +835,7 @@ export const marketingTools: Tool[] = [
     ctaLabel: "Draft Newsletter",
     what: [
       "A newsletter issue is more than one piece of copy — it's a subject line that has to earn an open in a crowded inbox, an intro that sets context quickly, a body organized into scannable sections (updates, links, a featured story), and a sign-off that feels personal rather than corporate. Writing all of this well and consistently, issue after issue, is where most newsletter writers burn out.",
-      "This generator drafts a complete issue from a list of what you want to cover — new posts, product updates, curated links, a personal note — and organizes it into a readable structure. You keep editorial control over the actual content and facts; the tool handles structure, transitions, and phrasing so each issue doesn't start from a blank page."
+      "This generator drafts a complete issue from a list of what you want to cover — new posts, product updates, curated links, a personal note — and organizes it into a readable structure. You keep editorial control over the actual content and facts; the tool handles structure, transitions, and phrasing so each issue starts half-built."
     ],
     canDo: [
       "Generate a subject line and preview text pair for the issue",

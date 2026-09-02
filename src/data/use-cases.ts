@@ -22,7 +22,7 @@ export const useCases: UseCase[] = [
     ],
     workflows: [
       { title: "Campaign kickoff to first drafts", body: "Feed the campaign brief into AmmarAI, generate a blog announcement, then reuse the same core message to produce Facebook, Google, and LinkedIn ad variants, an email sequence, and a set of social captions — all before the first team meeting about the launch." },
-      { title: "Weekly content sprint", body: "Brief → outline → draft → meta description → social cutdowns. Run this sequence every week for always-on content so the team spends its meeting time on strategy, not staring at a blank page." },
+      { title: "Weekly content sprint", body: "Brief → outline → draft → meta description → social cutdowns. Run this sequence every week for always-on content so the Monday meeting is about what to say next, not who still owes a draft." },
       { title: "A/B testing at scale", body: "Generate five headline variants and three CTA angles for the same ad, ship all of them to the ad platform, and let real performance data pick the winner instead of internal debate." },
       { title: "Localization and repurposing", body: "Take one flagship piece of content and use AmmarAI to rewrite it into different tones for different channels — the same launch news written for a formal LinkedIn post and a casual Instagram caption." }
     ],
@@ -32,7 +32,7 @@ export const useCases: UseCase[] = [
       { slug: "social-media-post-generator", why: "Every campaign needs a social presence, and this turns one core message into platform-appropriate posts without a separate writer for each channel." },
       { slug: "meta-description-generator", why: "Landing pages and blog posts ship faster when the SEO metadata isn't an afterthought left for someone to remember later." },
       { slug: "ai-tone-changer", why: "Keeping brand voice consistent across contributors is easier when drafts can be adjusted to match a house tone before they go out." },
-      { slug: "ai-blog-generator", why: "Campaign announcements and thought-leadership posts need a first draft that a strategist can shape, not a blank page." }
+      { slug: "ai-blog-generator", why: "Campaign announcements and thought-leadership posts need a first draft a strategist can shape, not an empty doc and a deadline." }
     ],
     outcomes: [
       "Campaign briefs turn into a full set of assets — ads, email, social, landing copy — in one sitting instead of across a week of separate writing tasks.",
@@ -64,7 +64,7 @@ export const useCases: UseCase[] = [
     challenges: [
       { title: "One piece of content needs to become five", body: "A single video needs a YouTube description, a title, tags, a TikTok script cutdown, and Instagram captions. Writing each separately for every upload adds up to hours nobody budgeted for." },
       { title: "Titles and thumbnails decide whether anyone clicks", body: "Creators often spend as much time agonizing over a title as they did writing the actual script, because the title carries so much weight for discovery." },
-      { title: "Burnout from constant production", body: "Publishing consistently is the single biggest lever for growth, but it's also the fastest way to run out of energy when every piece requires starting from a blank page." },
+      { title: "Burnout from constant production", body: "Publishing consistently is the single biggest lever for growth, and also the fastest way to burn out when every piece starts from nothing." },
       { title: "Repurposing across platforms is manual and slow", body: "The same idea needs a different shape on YouTube, TikTok, and Instagram, and manually rewriting it for each platform's format eats into time that should go to the next idea." }
     ],
     workflows: [
@@ -106,7 +106,7 @@ export const useCases: UseCase[] = [
     summary: "Write website copy, ads, and customer emails yourself, without hiring an agency you can't yet afford.",
     intro: [
       "A small business owner doesn't have the luxury of a marketing team drafting the website copy, writing the seasonal email, or figuring out what to put in a Google ad. That work either gets done at 10pm after the shop closes, or it doesn't get done at all, and the business quietly loses the customers who would have found it through a slightly better product description or a follow-up email that never got sent.",
-      "AmmarAI is aimed squarely at that owner — someone who knows their business better than any agency ever will, but doesn't have hours to spend wrestling with a blank page for every piece of writing the business needs. It's meant to produce a solid draft fast enough that writing it yourself stops being the reason it doesn't get done."
+      "AmmarAI is aimed squarely at that owner — someone who knows their business better than any agency ever will, but doesn't have an afternoon to spend on every bit of writing the business needs. It's meant to produce a solid draft fast enough that writing it yourself stops being the reason it doesn't get done."
     ],
     challenges: [
       { title: "No time and no marketing budget", body: "Hiring an agency or a full-time marketer is out of reach for most small businesses, but the writing work — website, ads, emails — still needs to happen." },
@@ -194,7 +194,7 @@ export const useCases: UseCase[] = [
     title: "AI for Students: Study Smarter, Write Honestly | AmmarAI",
     description: "AmmarAI helps students summarize readings, brainstorm essay ideas, and check grammar, as a study aid, not a way to skip doing the work.",
     h1: "AI Tools to Help You Study, Not to Do Your Work For You",
-    lede: "Used honestly, AI can help you understand a dense reading faster, get past a blank page when brainstorming an essay, and catch grammar mistakes before you submit. It cannot and should not write your assignment for you.",
+    lede: "Used honestly, AI can help you understand a dense reading faster, get unstuck when you're brainstorming an essay, and catch grammar mistakes before you submit. It cannot and should not write your assignment for you.",
     summary: "Summarize readings, brainstorm outlines, and check grammar — as study support, not a way to submit work you didn't write.",
     intro: [
       "Studying is mostly a battle against time: too many readings, too little time before the essay is due, and a grammar checker that only catches half your mistakes. Most students aren't looking to cut corners — they're looking for a way to get through a dense chapter faster, or to stop staring at a blank document when an essay outline won't come together.",
@@ -202,7 +202,7 @@ export const useCases: UseCase[] = [
     ],
     challenges: [
       { title: "Too much reading, not enough time before class", body: "A single week can bring hundreds of pages of assigned reading across courses, and getting through all of it closely is often unrealistic before a lecture or seminar." },
-      { title: "Staring at a blank page for an essay outline", body: "Knowing roughly what you want to argue is different from having a structured outline, and the gap between the two can eat an entire evening." },
+      { title: "Turning a rough argument into an outline", body: "Knowing roughly what you want to argue is different from having a structured outline, and the gap between the two can eat an entire evening." },
       { title: "Grammar and clarity mistakes that cost marks", body: "A strong argument can still lose marks for awkward phrasing, run-on sentences, or unclear transitions that are hard to catch in your own writing." },
       { title: "Academic integrity pressure and confusion about what's allowed", body: "Course policies on AI use vary widely, and it's easy to cross a line without meaning to if you're not clear on where the line between 'help understanding' and 'having it written for you' actually is." }
     ],
