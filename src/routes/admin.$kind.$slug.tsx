@@ -164,18 +164,24 @@ function ContentEditor() {
               </Field>
             );
           }
+          if (spec.type === "json") {
+            return (
+              <Field key={spec.name} label={spec.label} hint={spec.hint || undefined}>
+                <ListField
+                  value={values[spec.name] ?? "[]"}
+                  onChange={(next) => setValues({ ...values, [spec.name]: next })}
+                  item={spec.item}
+                  hint={spec.hint}
+                />
+              </Field>
+            );
+          }
           return (
-            <Field
-              key={spec.name}
-              label={spec.label}
-              hint={spec.type === "json" ? spec.hint : undefined}
-            >
-              <textarea
+            <Field key={spec.name} label={spec.label}>
+              <RichTextArea
                 value={values[spec.name] ?? ""}
-                onChange={(e) => setValues({ ...values, [spec.name]: e.target.value })}
-                rows={spec.type === "json" ? 8 : 3}
-                className="w-full rounded-md bg-card px-3 py-2.5 font-mono text-xs leading-relaxed ring-1 ring-border"
-                spellCheck={spec.type !== "json"}
+                onChange={(next) => setValues({ ...values, [spec.name]: next })}
+                rows={3}
               />
             </Field>
           );
