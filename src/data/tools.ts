@@ -1,6 +1,7 @@
 import type { Tool, ToolCategory } from "./types";
 import { coreToolsA } from "./tools-core-a";
 import { coreToolsB } from "./tools-core-b";
+import { chatbotTools } from "./tools-chatbots";
 import { writingTools } from "./tools-writing";
 import { marketingTools } from "./tools-marketing";
 import { commerceSeoTools } from "./tools-commerce-seo";
@@ -8,6 +9,7 @@ import { commerceSeoTools } from "./tools-commerce-seo";
 export const tools: Tool[] = [
   ...coreToolsA,
   ...coreToolsB,
+  ...chatbotTools,
   ...writingTools,
   ...marketingTools,
   ...commerceSeoTools,
