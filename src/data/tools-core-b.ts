@@ -507,16 +507,17 @@ export const coreToolsB: Tool[] = [
         input:
           "TypeScript function that groups an array of objects by a key selector, preserves insertion order, returns a Map, no dependencies. Include tests.",
         output:
-          "A typed generic implementation using a Map plus a small test file covering empty input, duplicate keys and key collisions on numeric strings.",
+          "A typed generic groupBy using a Map so insertion order is preserved, plus a Vitest file covering empty input, duplicate keys and numeric-string key collisions.",
       },
       {
         label: "SQL from a question",
         input:
           "Postgres: monthly active users for the last 12 months, counting a user active if they created at least one event. Tables: users(id, created_at), events(id, user_id, created_at).",
         output:
-          "A query using date_trunc and a distinct count, with a note about indexing events(user_id, created_at) for performance…",
+          "A date_trunc query with a distinct user count per month, plus a note to index events(user_id, created_at) so the scan stays cheap as the table grows.",
       },
     ],
+
     capabilities: [
       {
         title: "Explained output",
