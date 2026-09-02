@@ -7,7 +7,7 @@ export const commerceSeoTools: Tool[] = [
     category: "AI E-commerce",
     summary: "Turn a handful of product specs into persuasive, on-brand product page copy.",
     title: "AI Product Description Generator | AmmarAI",
-    description: "Generate persuasive product descriptions from specs and keywords. Adjust tone, length, and audience for any storefront in seconds.",
+    description: "Generate persuasive product descriptions from specs and keywords. Adjust tone, length, and audience for any storefront.",
     h1: "Write product descriptions that actually sell",
     lede: "Feed AmmarAI your product's specs, materials, and target buyer, and get a draft description that reads like it was written by your best copywriter — not a spec sheet.",
     ctaLabel: "Generate a product description",
@@ -110,7 +110,7 @@ export const commerceSeoTools: Tool[] = [
       { title: "A+ content drafting", body: "Produces short copy blocks suited to enhanced content modules, not just the base listing." }
     ],
     audiences: [
-      { who: "Amazon third-party sellers", why: "Draft new listings or refresh underperforming ones faster than writing from a blank page." },
+      { who: "Amazon third-party sellers", why: "Draft new listings or rewrite the ones quietly losing to page-two competitors." },
       { who: "Brand managers running A+ Content", why: "Get starting copy for feature and lifestyle modules." },
       { who: "Agencies managing multiple seller accounts", why: "Standardize listing structure across many client catalogs." }
     ],
@@ -158,7 +158,7 @@ export const commerceSeoTools: Tool[] = [
       "Generate a shorter alternate version for categories with tighter limits",
       "Avoid obvious promotional language (superlatives, pricing, all-caps words)",
       "Incorporate size, color, quantity, and model details in the order shoppers typically search",
-      "Produce a few title variants so you can pick the clearest one or A/B test"
+      "Produce a few title variants to compare or A/B test"
     ],
     how: [
       { title: "Enter brand and core product type", body: "e.g., 'Brand: Kavo, Product: stainless steel French press'" },
@@ -172,7 +172,7 @@ export const commerceSeoTools: Tool[] = [
     ],
     capabilities: [
       { title: "Convention-aware ordering", body: "Places brand, product type, and key attributes in the sequence shoppers and search typically expect." },
-      { title: "Length variants", body: "Generates both a full-length and shortened title so you can fit different category limits." },
+      { title: "Length variants", body: "Generates a full-length and a shortened title to fit different category limits." },
       { title: "Promotional-language avoidance", body: "Skips common restricted patterns like superlatives, pricing, and excessive capitalization." },
       { title: "Attribute prioritization", body: "Surfaces the specs shoppers filter by (size, color, quantity) early in the title." }
     ],
@@ -226,7 +226,7 @@ export const commerceSeoTools: Tool[] = [
       "Rank or group benefits by likely purchase importance for that audience",
       "Draft benefit-led headlines or intro lines for a product page",
       "Generate multiple benefit phrasings for the same feature to test which lands best",
-      "Flag features that don't have an obvious meaningful benefit, so you can decide whether to keep them"
+      "Flag features with no obvious benefit attached, and decide whether they earn their line"
     ],
     how: [
       { title: "List the product's raw features", body: "Materials, specs, included accessories, certifications — whatever is factually true." },
@@ -516,7 +516,7 @@ export const commerceSeoTools: Tool[] = [
       { title: "Length-aware drafting", body: "Targets the practical truncation range so the key message isn't cut off in results." },
       { title: "Value-first structure", body: "Puts the strongest hook early, since that's what's most likely to stay visible even if truncated." },
       { title: "Page-type adaptation", body: "Writes differently for a blog post, a product page, or a category page based on what drives clicks for each." },
-      { title: "Variant generation", body: "Produces multiple options so you can test which phrasing improves click-through rate." }
+      { title: "Variant generation", body: "Produces multiple options to test which phrasing lifts click-through." }
     ],
     audiences: [
       { who: "SEO practitioners", why: "Batch-write or refresh meta descriptions across many pages efficiently." },
@@ -646,7 +646,7 @@ export const commerceSeoTools: Tool[] = [
     ],
     examples: [
       { label: "How-to post outline + intro", input: "Keyword: 'how to start composting at home', audience: apartment dwellers with limited space", output: "Title: How to Start Composting at Home (Even in a Small Apartment)\n\nIntro: You don't need a backyard to start composting — a countertop bin, a balcony setup, or even a small worm bin can turn food scraps into usable compost without taking over your kitchen. This guide walks through the apartment-friendly methods that actually work, what to compost (and what to avoid), and how to keep the process smell-free.\n\nSection headings: Why apartment composting is different from backyard composting / The 3 best small-space composting methods / What you can and can't compost indoors / Troubleshooting smell and pests / What to do with finished compost if you don't have a garden" },
-      { label: "Comparison-intent post intro", input: "Keyword: 'renting vs buying a home in your 30s', audience: first-time buyers weighing the decision", output: "Title: Renting vs. Buying in Your 30s: How to Actually Decide\n\nIntro: The 'rent vs. buy' advice you'll find online often assumes a level of certainty about your finances and location that most people in their 30s don't have yet. Instead of a one-size-fits-all rule, this guide breaks the decision into the handful of factors that actually move the math — how long you plan to stay, your local price-to-rent ratio, and what you'd otherwise do with a down payment." }
+      { label: "Comparison-intent post intro", input: "Keyword: 'renting vs buying a home in your 30s', audience: first-time buyers weighing the decision", output: "Title: Renting vs. Buying in Your 30s: How to Actually Decide\n\nIntro: The 'rent vs. buy' advice you'll find online often assumes a level of certainty about your finances and location that most people in their 30s don't have yet. Rather than a one-size-fits-all rule, this guide breaks the decision into the handful of factors that actually move the math — how long you plan to stay, your local price-to-rent ratio, and what you'd otherwise do with a down payment." }
     ],
     capabilities: [
       { title: "End-to-end drafting", body: "Covers title, outline, intro, body sections, and conclusion in one structured workflow." },

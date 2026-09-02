@@ -13,7 +13,7 @@ export const writingTools: Tool[] = [
     ctaLabel: "Generate a Blog Post",
     popular: true,
     what: [
-      "The AI Blog Generator takes a topic, target audience, and desired tone and produces a full draft: a working title, an outline of H2 sections, an introduction, body paragraphs with supporting detail, and a closing section. It's built for people who need to go from a blank page to a structured post without spending an hour staring at a cursor.",
+      "The AI Blog Generator takes a topic, target audience, and desired tone and produces a full draft: a working title, an outline of H2 sections, an introduction, body paragraphs with supporting detail, and a closing section. It's built for people who need a structured post today, not an hour of throat-clearing before the first paragraph.",
       "It isn't meant to replace your editorial voice — it's meant to remove the blank-page problem. You still decide what stays, what gets rewritten, and what facts need checking. Think of it as a fast first draft that already has the shape of a real article: logical flow, headings that make sense, and a conclusion that actually concludes.",
     ],
     canDo: [
@@ -72,14 +72,14 @@ export const writingTools: Tool[] = [
     slug: "ai-blog-title-generator",
     name: "AI Blog Title Generator",
     category: "AI Writing",
-    summary: "Get multiple click-worthy blog title options for any topic in seconds.",
+    summary: "Get a spread of title options for any topic — direct, curiosity-led, number-based — and pick the one that fits.",
     title: "AI Blog Title Generator: Catchy Headlines Fast | AmmarAI",
     description: "Generate multiple blog title options from your topic — clear, curiosity-driven, and list-style headlines to choose from.",
     h1: "Generate Blog Titles That Make People Want to Click",
     lede: "Paste your topic or draft and get back a batch of title options in different styles, so you're picking, not guessing.",
     ctaLabel: "Generate Blog Titles",
     what: [
-      "The AI Blog Title Generator focuses on one narrow job: producing a set of strong title candidates for a post you're about to write or have already drafted. Instead of staring at your topic trying to phrase it well, you get several options at once — direct, curiosity-driven, number-based, and question-style — and pick or tweak the one that fits.",
+      "The AI Blog Title Generator focuses on one narrow job: producing a set of strong title candidates for a post you're about to write or have already drafted. Rather than rewriting one headline eight times, you get several angles at once — direct, curiosity-driven, number-based, and question-style — and pick or tweak the one that fits.",
       "Titles matter more than any single sentence in a blog post because they decide whether someone clicks at all. This tool is built to give you range: some safe and clear, some punchier, so you can match the title to your brand voice and the platform you're publishing on.",
     ],
     canDo: [
@@ -390,7 +390,7 @@ export const writingTools: Tool[] = [
     slug: "ai-summary-generator",
     name: "AI Summary Generator",
     category: "AI Writing",
-    summary: "Condense long text into a short, accurate summary in seconds.",
+    summary: "Condense long text into a short, accurate summary that keeps the substance.",
     title: "AI Summary Generator: Condense Long Text Fast | AmmarAI",
     description: "Turn long articles, reports, or notes into a short, clear summary that keeps the key points and drops the filler.",
     h1: "Turn Long Text Into a Summary That Keeps What Matters",
@@ -398,7 +398,7 @@ export const writingTools: Tool[] = [
     ctaLabel: "Summarize Text",
     popular: true,
     what: [
-      "The AI Summary Generator takes long-form text — articles, reports, meeting notes, research papers — and condenses it into a shorter version that keeps the essential points. Instead of skimming five pages hoping to catch what matters, you get a compressed version built around the actual substance of the piece.",
+      "The AI Summary Generator takes long-form text — articles, reports, meeting notes, research papers — and condenses it into a shorter version that keeps the essential points. You get the argument and the numbers, not a paraphrase of the first two paragraphs.",
       "It's tunable for different needs: a one-paragraph summary for a quick skim, a bullet-point summary for scanning key facts, or a slightly longer summary that preserves more nuance for something like a research paper. The goal throughout is compression without distortion — the summary should represent the source accurately, not just shorten it mechanically.",
     ],
     canDo: [
@@ -454,7 +454,7 @@ export const writingTools: Tool[] = [
     slug: "ai-email-generator",
     name: "AI Email Generator",
     category: "AI Email",
-    summary: "Write clear, professional emails for any purpose in seconds.",
+    summary: "Write clear, professional emails for any purpose — with the tone and length you choose.",
     title: "AI Email Generator: Write Emails in Seconds | AmmarAI",
     description: "Generate professional emails for any situation — from a short prompt to a full, ready-to-send message with the right tone.",
     h1: "Write Any Email in Seconds, Not Ten Minutes",
@@ -528,7 +528,7 @@ export const writingTools: Tool[] = [
     ctaLabel: "Generate a Cold Email",
     what: [
       "The AI Cold Email Generator is built specifically for outreach to people who have no prior relationship with you — prospects, potential partners, hiring contacts, or press. Cold email has different rules than internal or follow-up email: it has to earn attention in the first line, stay short, and make the ask easy to say yes to. This tool is structured around exactly that pattern.",
-      "It focuses on relevance over flattery. Instead of generic opener lines like 'I hope this finds you well,' it tries to lead with something specific to the recipient's situation, keep the body tight, and close with one clear, low-friction next step — a quick call, a reply, or a link — rather than a vague 'let me know your thoughts.'",
+      "It favours relevance over flattery. Rather than opener lines like 'I hope this finds you well,' it tries to lead with something specific to the recipient's situation, keep the body tight, and close with one clear, low-friction next step — a quick call, a reply, or a link — rather than a vague 'let me know your thoughts.'",
     ],
     canDo: [
       "Write a short, relevant cold email opener tied to the recipient's context",

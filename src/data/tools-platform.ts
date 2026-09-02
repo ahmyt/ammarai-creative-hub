@@ -35,7 +35,7 @@ export const platformTools: Tool[] = [
       },
       {
         title: "Review flagged passages",
-        body: "Each match shows the overlapping text and a link to the source, so you can judge it in context.",
+        body: "Each match shows the overlapping text and a link to the source — judged in context, not by a score.",
       },
       {
         title: "Fix and re-check",
@@ -60,7 +60,7 @@ export const platformTools: Tool[] = [
     capabilities: [
       {
         title: "Source-linked matches",
-        body: "Every flagged passage links to the page it matches, so you can verify instead of taking the score on faith.",
+        body: "Every flagged passage links to the page it matches, so nothing rests on the percentage alone.",
       },
       {
         title: "AI-content detection",
@@ -256,7 +256,7 @@ export const platformTools: Tool[] = [
     ctaLabel: "Build a deck",
     what: [
       "The AI Presentation Maker turns a topic or short brief into a complete slide deck. It handles the two slowest parts of presentation work at once: structuring the content into a logical sequence of slides, and applying professional layouts so the deck looks designed rather than defaulted.",
-      "The output is a real starting deck, not an outline you still have to build. Titles, body content, speaker-ready structure and visuals come together, and the whole thing exports to PPTX so you can refine it in the tools your company already uses.",
+      "The output is a real starting deck, not an outline you still have to build. Titles, body content, speaker-ready structure and visuals come together, and the whole thing exports to PPTX for refining in whatever your company already uses.",
     ],
     canDo: [
       "Generate a full deck from a topic, brief or pasted document",

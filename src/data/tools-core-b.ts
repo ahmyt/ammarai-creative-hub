@@ -521,7 +521,7 @@ export const coreToolsB: Tool[] = [
     capabilities: [
       {
         title: "Explained output",
-        body: "Every generation comes with reasoning, so you can evaluate the approach rather than trusting it.",
+        body: "Every generation comes with its reasoning, so the approach can be judged on merit rather than taken on faith.",
       },
       {
         title: "Test generation",
@@ -652,7 +652,7 @@ export const coreToolsB: Tool[] = [
       },
       {
         title: "Follow up",
-        body: "Vision runs inside a conversation, so you can drill into detail without re-uploading.",
+        body: "Vision runs inside a conversation — drill into a detail without uploading the image again.",
       },
       {
         title: "Use the output downstream",
@@ -783,7 +783,7 @@ export const coreToolsB: Tool[] = [
     lede: "Upload contracts, research, reports and statements, then ask questions and get answers pointing back to the exact section they came from.",
     ctaLabel: "Analyse a document",
     what: [
-      "AI Document Analyzer is built for structured, lengthy documents. You upload a PDF, a report, a contract, a policy or a spreadsheet, and it reads the whole thing so you can ask questions of it. Crucially, answers cite where they came from, so verification is a click rather than a search.",
+      "AI Document Analyzer is built for structured, lengthy documents. You upload a PDF, a report, a contract, a policy or a spreadsheet, and it reads the whole thing before you start asking questions. Answers cite where they came from, so verification is a click rather than a search.",
       "The distinction from AI Vision is about shape rather than file type. Vision looks at pictures and answers what is in the frame. The document analyzer follows layout and structure across many pages: sections, defined terms, tables, appendices and cross-references. It is the tool for the thirty-page agreement, not the photo of a receipt.",
       "Practical strengths are summarisation, targeted question answering, comparison between two versions, and pulling structured data out of prose. The honest weakness is that it is an aid to reading, not a substitute for professional judgement. It does not give legal, medical or financial advice, and consequential decisions still need a qualified human reading the source.",
     ],
@@ -834,7 +834,7 @@ export const coreToolsB: Tool[] = [
     capabilities: [
       {
         title: "Cited answers",
-        body: "Every answer points at the section it came from, so you can verify rather than trust.",
+        body: "Every answer points at the section it came from — no trust required.",
       },
       {
         title: "Multi-document questioning",
@@ -909,7 +909,7 @@ export const coreToolsB: Tool[] = [
       },
       {
         q: "Does it cite its answers?",
-        a: "Yes, answers reference the section they came from so you can verify quickly. Always follow the citation on anything consequential.",
+        a: "Yes, answers reference the section they came from, so checking one takes a moment. Always follow the citation on anything consequential.",
       },
       {
         q: "Can it give legal or financial advice?",
@@ -966,7 +966,7 @@ export const coreToolsB: Tool[] = [
       },
       {
         title: "Generate section by section",
-        body: "Write the piece in parts so you can keep the good sections and rework the weak ones without regenerating everything.",
+        body: "Write the piece in parts: keep the sections that landed, rework the weak ones, leave the rest alone.",
       },
       {
         title: "Add what only you have",

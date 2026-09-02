@@ -16,7 +16,7 @@ export const coreToolsA: Tool[] = [
     featured: true,
     popular: true,
     what: [
-      "AI Writer is the general-purpose text workspace inside AmmarAI. You open a blank document or paste something you already have, describe what you need, and work with the model directly in the page. Instead of generating one block of text and hoping it fits, you keep editing: highlight a weak paragraph and rewrite it, ask for a tighter version of a sentence, or push a section from three hundred words to five hundred without touching anything else.",
+      "AI Writer is the general-purpose text workspace inside AmmarAI. You open a blank document or paste something you already have, describe what you need, and work with the model directly in the page. It isn't one-shot generation: you keep editing in place — highlight a weak paragraph and rewrite it, ask for a tighter version of a sentence, or push a section from three hundred words to five hundred without touching anything else.",
       "It differs from the more specific generators in the library. The AI Article Generator is built around a full blog structure with headings and search intent. The AI Rewriter is built for reworking text you already have. AI Writer sits underneath both: it is the open surface you use when the format is not fixed, when you are writing a proposal, a landing page, an internal brief, a script outline or a piece of documentation.",
       "The output is a starting draft with your judgement applied on top. AmmarAI does not know your customer's objections, your legal constraints or last quarter's messaging unless you tell it, so the workflow that produces good writing is always the same: give it real context, generate, then edit hard.",
     ],
@@ -93,7 +93,7 @@ export const coreToolsA: Tool[] = [
     audiences: [
       {
         who: "Marketers",
-        why: "Turn a positioning doc into landing copy, emails and posts without starting from a blank page each time.",
+        why: "Feed it last quarter's positioning doc and get landing copy, emails and a week of posts back.",
       },
       {
         who: "Founders and operators",
@@ -246,7 +246,7 @@ export const coreToolsA: Tool[] = [
     ],
     audiences: [
       {
-        who: "Anyone facing a blank page",
+        who: "Anyone who writes reluctantly",
         why: "Talking through the problem produces a starting structure faster than staring at an empty document.",
       },
       {

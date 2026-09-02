@@ -16,7 +16,7 @@ export const chatbotTools: Tool[] = [
     ctaLabel: "Meet the assistants",
     popular: true,
     what: [
-      "AI Chat Bots are persona-based virtual assistants. Instead of one general-purpose chat, you choose from a gallery of specialists — each one shaped around a real profession: a Career Counselor who knows hiring, a Chef who thinks in ingredients and timing, a Financial Analyst who speaks in cash flow, a Personal Trainer who programs in sets and recovery windows. The persona is not a costume; it is a curated system of domain knowledge, tone and priorities that keeps the assistant on task.",
+      "AI Chat Bots are persona-based virtual assistants. Rather than one general-purpose chat, you choose from a gallery of specialists — each one shaped around a real profession: a Career Counselor who knows hiring, a Chef who thinks in ingredients and timing, a Financial Analyst who speaks in cash flow, a Personal Trainer who programs in sets and recovery windows. The persona is not a costume; it is a curated system of domain knowledge, tone and priorities that keeps the assistant on task.",
       "Every bot is trained with the knowledge of industry experts and conversion experts, so you can be confident it knows how to do its job: it answers your questions instantly, asks the clarifying questions a professional would ask, and provides the requested information in the format that profession actually uses — a plan, a checklist, a script, a breakdown — not a generic paragraph.",
       "Specialists sit alongside the general AI Chat. Use a bot when you want a professional's frame of reference; use open chat when the task does not fit any single role. Favorites let you pin the assistants you return to, and you can switch between bots mid-project without losing the thread of what you were doing.",
     ],
@@ -92,7 +92,7 @@ export const chatbotTools: Tool[] = [
     audiences: [
       {
         who: "Professionals who need a second brain",
-        why: "Get a financial read, a legal-style checklist or a marketing critique in seconds when there is no time to book a consultant.",
+        why: "Get a financial read, a legal-style checklist or a marketing critique when there's no time to book a consultant.",
       },
       {
         who: "Students and self-teachers",
