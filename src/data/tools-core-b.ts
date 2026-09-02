@@ -207,15 +207,16 @@ export const coreToolsB: Tool[] = [
       {
         label: "Product hero",
         input:
-          "Source: studio photo of a ceramic mug. Motion: very slow push in, steam rising gently, everything else static. 4 seconds.",
+          "Uploaded: studio photo of a matte black sneaker. Motion: hover and rotate slowly, light sweeps across the surface, smoke drifts underneath, gentle push in. 5 seconds.",
         output:
-          "A calm loopable clip usable as a hero background or the opening beat of a product ad.",
+          "A premium rotating hero shot from one photo — no turntable, no studio, no re-shoot.",
       },
       {
         label: "Landscape parallax",
         input:
-          "Source: wide coastal photo. Motion: lateral drift left to right with subtle depth separation between foreground rocks and horizon. 5 seconds.",
-        output: "A cinematic establishing shot for the opening of a short video.",
+          "Uploaded: sunrise mountain photo. Motion: slow aerial drift forward, mist rolling between ridges, real depth separation between foreground and distant peaks. 5 seconds.",
+        output:
+          "A cinematic establishing shot with genuine parallax, cut from a single still frame.",
       },
     ],
     capabilities: [
@@ -352,16 +353,18 @@ export const coreToolsB: Tool[] = [
     ],
     examples: [
       {
-        label: "Atmospheric B-roll",
+        label: "Luxury beauty shot",
         input:
-          "Static wide shot of rain hitting a city window at night, out-of-focus traffic lights beyond, cool colour grade, no people, 5 seconds.",
-        output: "A moody establishing clip usable under an opening voiceover.",
+          "Extreme macro, slow motion: a drop of molten gold falls into a black mirror pool and blooms into a glowing crown of light. Deep black background, cinematic rim light, slow push in. 5 seconds.",
+        output:
+          "A premium hero clip you can drop straight into an ad open or a product launch title card.",
       },
       {
-        label: "Concept visualisation",
+        label: "Neon city hyperlapse",
         input:
-          "Overhead shot of coloured sand pouring into three separate glass containers on a white surface, slow motion, soft even light.",
-        output: "An abstract metaphor clip for a video about splitting one idea into several outputs.",
+          "Cinematic hyperlapse gliding through a rain-slick neon Tokyo street at night, reflections in the asphalt, light trails, teal and magenta grade, anamorphic flares. 5 seconds.",
+        output:
+          "Scroll-stopping B-roll that would cost a location shoot, generated from one line of text.",
       },
     ],
     capabilities: [

@@ -35,6 +35,8 @@ function resolveDemoVideos(tool: Tool) {
       url,
       caption:
         captions[i] ?? fallback[i]?.caption ?? `Sample output from the ${tool.name}.`,
+      inputImage: fallback[i]?.inputImage,
+      inputImageAlt: fallback[i]?.inputImageAlt,
     };
   });
   return resolved.some(Boolean) ? resolved : undefined;

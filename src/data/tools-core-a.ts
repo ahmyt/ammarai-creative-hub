@@ -538,9 +538,10 @@ export const coreToolsA: Tool[] = [
       },
       {
         label: "Ad variants",
-        input: "Same script, three different opening hooks, 16:9 and 9:16.",
+        input:
+          "Same script, three punchy opening hooks. Kinetic captions, fast jump cuts, warm brand palette, 16:9 and 9:16.",
         output:
-          "Six exports covering three hooks in two ratios, ready to run against each other as a test.",
+          "Six polished ad cuts — three hooks in two ratios — with animated captions and matching pacing, ready to run against each other.",
       },
     ],
     capabilities: [
