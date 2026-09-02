@@ -1,3 +1,4 @@
+import { renderInline } from "@/components/cms/RichTextArea";
 import { createFileRoute, notFound, Link } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import type { Tool, UseCase } from "@/data/types";
@@ -129,7 +130,7 @@ function ToolPage({ tool }: { tool: Tool }) {
             <p className="eyebrow">{tool.category}</p>
             <h1 className="mt-4 text-balance text-4xl leading-[1.05] sm:text-5xl">{tool.h1}</h1>
             <p className="mt-5 text-pretty text-lg leading-relaxed text-muted-foreground">
-              {tool.lede}
+              {renderInline(tool.lede)}
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-3">
               <ExternalButton href={"/auth"} size="lg">
@@ -148,7 +149,7 @@ function ToolPage({ tool }: { tool: Tool }) {
           <SectionHeading title={`What is the ${tool.name}?`} />
           <div className="prose-editorial mt-6 max-w-3xl">
             {tool.what.map((p) => (
-              <p key={p.slice(0, 40)}>{p}</p>
+              <p key={p.slice(0, 40)}>{renderInline(p)}</p>
             ))}
           </div>
         </Container>
@@ -358,7 +359,7 @@ function UseCasePage({ useCase }: { useCase: UseCase }) {
         <Container>
           <div className="prose-editorial max-w-3xl">
             {useCase.intro.map((p) => (
-              <p key={p.slice(0, 40)}>{p}</p>
+              <p key={p.slice(0, 40)}>{renderInline(p)}</p>
             ))}
           </div>
         </Container>
