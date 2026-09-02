@@ -43,12 +43,12 @@ function renderOutput(text: string) {
 export function AnimatedExample({
   examples,
   toolName,
-  demoVideo,
+  demoVideos,
   className,
 }: {
   examples: Example[];
   toolName: string;
-  demoVideo?: { url: string; caption: string } | undefined;
+  demoVideos?: ({ url: string; caption: string } | undefined)[] | undefined;
   className?: string;
 }) {
 
@@ -62,6 +62,7 @@ export function AnimatedExample({
   const [inView, setInView] = useState(false);
 
   const example = examples[index];
+  const demoVideo = demoVideos?.[index];
   const outputWords = useMemo(() => (example?.output ?? "").split(" "), [example?.output]);
 
   useEffect(() => {

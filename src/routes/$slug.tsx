@@ -180,7 +180,7 @@ function ToolPage({ tool }: { tool: Tool }) {
           <AnimatedExample
             examples={tool.examples}
             toolName={tool.name}
-            demoVideo={resolveDemoVideo(tool)}
+            demoVideos={resolveDemoVideos(tool)}
             className="mt-8 max-w-3xl"
           />
 
