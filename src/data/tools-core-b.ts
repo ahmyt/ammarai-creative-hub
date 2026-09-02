@@ -661,14 +661,13 @@ export const coreToolsB: Tool[] = [
     examples: [
       {
         label: "Alt text generation",
-        input: "Upload: photo of a woman assembling a bike wheel in a workshop. Task: alt text.",
+        input: "Image attached. Task: write accessible alt text under 25 words.",
         output:
           "\"A mechanic in a green apron truing a bicycle wheel on a workstand in a daylit workshop, spoke wrench in hand.\"",
       },
       {
         label: "Chart explanation",
-        input:
-          "Upload: screenshot of a quarterly revenue bar chart. Question: what is the story here?",
+        input: "Screenshot attached. Question: what is the story in this chart?",
         output:
           "Revenue rose in each of the first three quarters and dipped in Q4. The Q4 decline is roughly the size of the Q2 gain, so the year ends close to where Q3 finished…",
       },

@@ -978,15 +978,15 @@ export const coreToolsA: Tool[] = [
     examples: [
       {
         label: "Dictated draft",
-        input: "Four minutes of spoken thinking about next quarter's priorities.",
+        input: "Recording attached. Clean up filler words and keep my paragraph breaks.",
         output:
-          "Roughly 600 words of punctuated, paragraphed text with sentence breaks where you paused, ready to restructure.",
+          "Okay, so for next quarter I think the priority is onboarding. Actually, no — retention first, then onboarding, because the churn we saw in March is still not explained.",
       },
       {
         label: "Voice memo to task list",
-        input: "A 90-second memo recorded while walking.",
+        input: "Memo attached. Turn it into text I can paste into my task list.",
         output:
-          "Clean text capturing each point, from which a task list can be extracted in a single follow-up step.",
+          "Quick memo: call the supplier back about the September order, move the design review to Thursday, and send Priya the pricing sheet.",
       },
     ],
     capabilities: [
@@ -1124,15 +1124,15 @@ export const coreToolsA: Tool[] = [
     examples: [
       {
         label: "Customer interview",
-        input: "48-minute recorded research call, two speakers.",
+        input: "Recording attached. Label speakers, add timestamps, then summarise the problems raised.",
         output:
-          "A labelled transcript with timestamps, plus a summary listing the three problems the participant raised and the exact moments they described each one.",
+          "[00:04:12] Participant: Honestly, the hardest part is the handoff. We finish a draft and then it just sits in someone's inbox for three days before anyone looks at it.",
       },
       {
         label: "Video subtitles",
-        input: "12-minute product walkthrough video.",
+        input: "Walkthrough audio attached. Transcribe it and export subtitles aligned to the narration.",
         output:
-          "A reviewed transcript and an exported subtitle file with timings aligned to the spoken audio.",
+          "[00:01:38] Now open the campaign tab. You'll see every variant listed here, and clicking one shows the exact version that ran, along with its results.",
       },
     ],
     capabilities: [
