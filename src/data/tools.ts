@@ -1,6 +1,7 @@
 import type { Tool, ToolCategory } from "./types";
 import { coreToolsA } from "./tools-core-a";
 import { coreToolsB } from "./tools-core-b";
+import { chatbotTools } from "./tools-chatbots";
 import { writingTools } from "./tools-writing";
 import { marketingTools } from "./tools-marketing";
 import { commerceSeoTools } from "./tools-commerce-seo";
@@ -8,6 +9,7 @@ import { commerceSeoTools } from "./tools-commerce-seo";
 export const tools: Tool[] = [
   ...coreToolsA,
   ...coreToolsB,
+  ...chatbotTools,
   ...writingTools,
   ...marketingTools,
   ...commerceSeoTools,
@@ -52,6 +54,10 @@ export const recentTools = tools.filter((t) => t.recent).slice(0, 6);
 
 /** Frontend-only intent matcher used by the discovery search. No AI backend. */
 const intentMap: { keywords: string[]; slugs: string[] }[] = [
+  {
+    keywords: ["chatbot", "chat bot", "assistant", "persona", "coach", "counselor", "advisor", "expert"],
+    slugs: ["ai-chat-bots", "ai-chat", "ai-writer", "ai-summary-generator", "ai-avatar-video-generator"],
+  },
   {
     keywords: ["social", "ad", "advert", "campaign", "promo"],
     slugs: [

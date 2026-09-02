@@ -312,11 +312,11 @@ export const coreToolsA: Tool[] = [
       },
     ],
     related: [
+      "ai-chat-bots",
       "ai-writer",
       "ai-document-analyzer",
       "ai-code-generator",
       "ai-vision",
-      "ai-summary-generator",
     ],
   },
   {
