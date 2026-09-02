@@ -4,6 +4,8 @@ import { useEffect, useMemo, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { contentKinds, contentRowsQuery, staticItems, type ContentKind } from "@/lib/content";
 import { emptyDraft, fieldSpecs } from "@/lib/cms-fields";
+import { ListField } from "@/components/cms/ListField";
+import { RichTextArea } from "@/components/cms/RichTextArea";
 
 export const Route = createFileRoute("/admin/$kind/$slug")({
   loader: ({ params }) => {
