@@ -47,7 +47,7 @@ export const Route = createFileRoute("/")({
   component: Home,
 });
 
-function Home() {
+export function Home() {
   const [query, setQuery] = useState("");
   const suggestions = useMemo(() => suggestTools(query).slice(0, 5), [query]);
 
