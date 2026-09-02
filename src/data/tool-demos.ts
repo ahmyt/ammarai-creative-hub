@@ -23,10 +23,14 @@ import visionRevenueChart from "@/assets/vision-in-revenue-chart.jpg";
 
 export type ToolDemoMedia = {
   /** Output media kind. Omit for tools whose real output is text. */
-  kind?: "video" | "audio" | "image";
-  /** Output media URL (video, audio or image). Omit for text output. */
+  kind?: "video" | "audio" | "image" | "code";
+  /** Output media URL (video, audio or image). Omit for text/code output. */
   url?: string;
   caption?: string;
+  /** Output source code, streamed into a code block (kind: "code"). */
+  code?: string;
+  /** Language label shown on the code block. */
+  language?: string;
   /** Optional source still shown alongside the prompt (image-led tools). */
   inputImage?: string;
   inputImageAlt?: string;
@@ -36,6 +40,7 @@ export type ToolDemoMedia = {
   /** Optional attached-file chip shown alongside the prompt (document tools). */
   inputFileLabel?: string;
 };
+
 
 /**
  * Sample media per tool, one entry per example in the same order as the tool's
