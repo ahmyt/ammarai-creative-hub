@@ -6,10 +6,10 @@ export const coreToolsA: Tool[] = [
     name: "AI Writer",
     category: "AI Writing",
     summary:
-      "A general-purpose writing surface for drafts, edits and rewrites, with your brand tone kept in place.",
+      "A flexible writing workspace for drafts, long-form articles, rewrites, and brand-consistent content. Includes templates, the Article Wizard, Smart Editor, and tone controls so every piece stays on-brand.",
     title: "AI Writer: Draft, Edit and Rewrite Faster | AmmarAI",
     description:
-      "Draft, restructure and polish any kind of writing in one editor. Keep your tone, control the structure, and edit the output in place.",
+      "A flexible writing workspace for drafts, long-form articles and rewrites, with templates, the Article Wizard, Smart Editor and tone controls that keep every piece on-brand.",
     h1: "The writing surface where drafts actually get finished",
     lede: "AmmarAI's AI Writer is a full editor, not a one-shot text box. Draft, select, rewrite, expand and trim until the piece reads the way you would have written it on a good day.",
     ctaLabel: "Try AI Writer",
@@ -170,10 +170,10 @@ export const coreToolsA: Tool[] = [
     name: "AI Chat",
     category: "AI Chat",
     summary:
-      "A conversational workspace that keeps context, reads your files and hands work off to the other tools.",
+      "A conversational AI that keeps context, answers questions, researches topics, and can hand work off to other tools in the platform. Supports multi-model chat and document-based conversations.",
     title: "AI Chat: Think, Plan and Solve With Context | AmmarAI",
     description:
-      "Chat with an AI assistant that remembers the thread, reads uploaded files and passes work to writing, image and code tools.",
+      "A conversational AI that keeps context, answers questions and researches topics, with multi-model chat, document-based conversations and handoff to the platform's writing, image and code tools.",
     h1: "A conversation that keeps everything you have already said",
     lede: "AI Chat is where you think out loud: plan a launch, debug an idea, interrogate a document, then push the result into the tool that finishes it.",
     ctaLabel: "Open AI Chat",
@@ -324,10 +324,10 @@ export const coreToolsA: Tool[] = [
     name: "AI Image Generator",
     category: "AI Image",
     summary:
-      "Turn a written description into usable visuals: product shots, editorial imagery, backgrounds and campaign assets.",
+      "Generate high-quality images from text prompts. Create product shots, marketing visuals, social graphics, and more — then edit, upscale, or vary them.",
     title: "AI Image Generator: Text to Image, On Brand | AmmarAI",
     description:
-      "Describe an image and get usable visuals in the aspect ratios you actually publish. Iterate on style, lighting and composition.",
+      "Generate high-quality images from text prompts. Create product shots, marketing visuals and social graphics, then edit, upscale or create variations.",
     h1: "Describe the picture. Get something you can publish.",
     lede: "Generate campaign visuals, product scenes, blog imagery and social assets from a written description, then iterate until the composition is right.",
     ctaLabel: "Create an image",
@@ -484,10 +484,10 @@ export const coreToolsA: Tool[] = [
     name: "AI Video Generator",
     category: "AI Video",
     summary:
-      "Produce short video from a script, a prompt or a set of stills, with voiceover and captions attached.",
+      "Create short videos from text prompts or still images. Includes text-to-video, image-to-video, smooth transitions, and options for captions and voiceover.",
     title: "AI Video Generator: Short Video From a Script | AmmarAI",
     description:
-      "Turn a script, prompt or set of images into short video with voiceover and captions. Built for social, ads and explainers.",
+      "Create short videos from text prompts or still images, with text-to-video, image-to-video, smooth transitions, and caption and voiceover options.",
     h1: "Short video, from script to finished cut",
     lede: "The AI Video Generator is the assembly layer: it takes your script, visuals and voice and produces a short video you can post, rather than an isolated clip you still have to edit.",
     ctaLabel: "Generate a video",
@@ -639,13 +639,13 @@ export const coreToolsA: Tool[] = [
   },
   {
     slug: "ai-voice-generator",
-    name: "AI Voice Generator",
+    name: "AI Voiceover & Voice Clone",
     category: "AI Voice",
     summary:
-      "Create natural-sounding narration with control over voice, pace, emphasis and language.",
-    title: "AI Voice Generator: Natural Narration on Demand | AmmarAI",
+      "Generate natural-sounding voiceovers in 150+ languages and dialects. Clone your own voice or choose from a large library of neural voices, with control over tone, speed, and emotion.",
+    title: "AI Voiceover & Voice Clone: Natural Narration | AmmarAI",
     description:
-      "Generate natural voiceovers with control over pace, emphasis and pronunciation. Built for video, ads, courses and product audio.",
+      "Generate natural-sounding voiceovers in 150+ languages and dialects. Clone your own voice or pick from a neural voice library, with control over tone, speed and emotion.",
     h1: "Voiceover that sounds directed, not synthesised",
     lede: "Choose a voice, shape the delivery, and produce narration for video, courses and product audio without booking a studio.",
     ctaLabel: "Generate a voiceover",
@@ -1081,10 +1081,10 @@ export const coreToolsA: Tool[] = [
     name: "AI Transcription",
     category: "AI Transcription",
     summary:
-      "Turn interviews, meetings and videos into searchable transcripts with speaker labels and timestamps.",
+      "Accurately transcribe audio and video files into text with speaker labels and timestamps. Supports multiple languages and common audio formats.",
     title: "AI Transcription: Meetings and Interviews to Text | AmmarAI",
     description:
-      "Transcribe meetings, interviews and video with speaker labels and timestamps. Search, summarise and export subtitles.",
+      "Accurately transcribe audio and video files into text with speaker labels and timestamps, across multiple languages and common audio formats.",
     h1: "Every recording becomes a searchable document",
     lede: "Upload audio or video and get a timestamped, speaker-labelled transcript you can search, summarise, quote and turn into subtitles.",
     ctaLabel: "Transcribe a recording",

@@ -11,7 +11,6 @@ export const marketingTools: Tool[] = [
     h1: "Write ads that fit any channel, fast",
     lede: "Turn one product idea into ready-to-test ad variations for search, social, and display — matched to each platform's format.",
     ctaLabel: "Generate Ads Free",
-    featured: true,
     popular: true,
     what: [
       "The AI Ad Generator is a starting point for paid campaigns across formats you don't have time to write from scratch — search headlines, social carousels, display banners, native placements. Instead of staring at a blank doc, you describe your product, audience, and goal, and get a spread of angles: benefit-led, urgency-led, question-led, social-proof-led.",

@@ -14,7 +14,6 @@ export const chatbotTools: Tool[] = [
     lede:
       "Pick a specialist — a career counselor, a chef, a financial analyst, a travel guide, a debate coach — and start talking. Each AmmarAI Chat Bot is trained with the knowledge of industry experts and conversion experts, so it answers instantly, stays on task and gives you the information you actually asked for.",
     ctaLabel: "Meet the assistants",
-    featured: true,
     popular: true,
     what: [
       "AI Chat Bots are persona-based virtual assistants. Instead of one general-purpose chat, you choose from a gallery of specialists — each one shaped around a real profession: a Career Counselor who knows hiring, a Chef who thinks in ingredients and timing, a Financial Analyst who speaks in cash flow, a Personal Trainer who programs in sets and recovery windows. The persona is not a costume; it is a curated system of domain knowledge, tone and priorities that keeps the assistant on task.",

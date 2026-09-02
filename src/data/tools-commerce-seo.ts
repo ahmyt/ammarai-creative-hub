@@ -421,7 +421,6 @@ export const commerceSeoTools: Tool[] = [
     h1: "Draft content built around real search intent",
     lede: "Good SEO content starts with understanding what someone typing a query actually wants. AmmarAI drafts structured content around that intent, giving you a real starting point, not a shortcut to rankings.",
     ctaLabel: "Draft SEO content",
-    featured: true,
     what: [
       "AI SEO content generation means drafting an article, page, or section structured around a target keyword and, more importantly, the intent behind it — is the searcher trying to learn, compare, buy, or troubleshoot? Content that ignores intent (e.g., a hard sell for someone doing early research) tends to underperform regardless of keyword usage, and search engines have gotten better at recognizing thin, keyword-stuffed pages that don't actually satisfy the query.",
       "This tool takes a topic, target keyword, and search intent, then drafts a structured outline and full content aimed at that intent — informational content gets a clear explanatory structure, comparison intent gets a more evaluative structure, and so on. It's meant as a strong first draft: adding original insight, examples, and expertise from your own experience is what typically separates content that performs well from content that reads like every other AI-generated page on the topic."
@@ -627,7 +626,6 @@ export const commerceSeoTools: Tool[] = [
     h1: "Draft a full blog post from a keyword brief",
     lede: "From headline to conclusion, AmmarAI drafts a complete, structured blog post around your target keyword — a real starting point for your editorial process, not a publish-and-forget shortcut.",
     ctaLabel: "Draft a blog post",
-    featured: true,
     what: [
       "An SEO blog post is a specific format: it needs a headline that reflects the query, an introduction that confirms to the reader they're in the right place, a body organized into scannable sections (usually with subheadings matching related questions or subtopics), and a conclusion that wraps up without simply repeating the intro. Getting this structure right matters as much as the words themselves, since both readers and search engines rely on clear organization to judge whether a page thoroughly covers a topic.",
       "This tool drafts the full post end-to-end from a target keyword and topic brief: title options, an outline, a full intro, body sections with subheadings, and a conclusion. It's built to save the structural and first-draft writing time, with the understanding that publishable content still benefits from a human pass to add original examples, verify facts, and inject a voice that doesn't read identically to every other AI-assisted post on the same keyword."
