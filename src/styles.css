@@ -89,6 +89,42 @@
   --ring: oklch(0.681 0.196 42);
 }
 
+/*
+ * Purple "Nocturne Prism" theme — used only by /theme-preview.
+ * Overrides the resolved --color-* tokens because Tailwind v4
+ * bakes @theme references at build time.
+ */
+.theme-nocturne {
+  --color-background: oklch(0.16 0.03 295);
+  --color-foreground: oklch(0.95 0.015 295);
+  --color-card: oklch(0.20 0.035 295);
+  --color-card-foreground: oklch(0.95 0.015 295);
+  --color-popover: oklch(0.20 0.035 295);
+  --color-popover-foreground: oklch(0.95 0.015 295);
+  --color-primary: oklch(0.70 0.19 300);
+  --color-primary-foreground: oklch(0.15 0.03 295);
+  --color-secondary: oklch(0.24 0.04 295);
+  --color-secondary-foreground: oklch(0.92 0.02 300);
+  --color-muted: oklch(0.24 0.04 295);
+  --color-muted-foreground: oklch(0.72 0.04 295);
+  --color-accent: oklch(0.72 0.21 305);
+  --color-accent-foreground: oklch(0.16 0.03 295);
+  --color-destructive: oklch(0.60 0.22 25);
+  --color-destructive-foreground: oklch(0.97 0.01 295);
+  --color-border: oklch(0.28 0.045 295);
+  --color-input: oklch(0.30 0.05 295);
+  --color-ring: oklch(0.72 0.21 305);
+  --color-ink: oklch(0.12 0.025 295);
+  --color-ink-foreground: oklch(0.96 0.015 295);
+  --color-paper: oklch(0.20 0.035 295);
+  --color-hairline: oklch(0.28 0.045 295);
+  --color-sand: oklch(0.24 0.04 295);
+
+  color-scheme: dark;
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+}
+
 
 
 
