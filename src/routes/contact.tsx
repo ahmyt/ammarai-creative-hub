@@ -1,14 +1,17 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { Container, Section, Card } from "@/components/site/primitives";
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { ActionButton, ButtonLink } from "@/components/site/Button";
+import { siteContentQuery } from "@/lib/content";
 
 const title = "Contact AmmarAI: Sales, Support and Partnerships | AmmarAI";
 const description =
   "Get in touch about plans, agency and team accounts, technical questions or partnership enquiries.";
 
 export const Route = createFileRoute("/contact")({
+  loader: ({ context }) => context.queryClient.ensureQueryData(siteContentQuery),
   head: () => ({
     meta: [
       { title },
@@ -22,26 +25,20 @@ export const Route = createFileRoute("/contact")({
   component: Contact,
 });
 
-const channels = [
-  {
-    title: "Support",
-    body: "Questions about a tool, an allowance or something behaving oddly. Include what you were generating and we can be far more useful.",
-    label: "support@ammarai.com",
-  },
-  {
-    title: "Teams and agencies",
-    body: "Seat-based workspaces, multiple client brands and high-volume bulk generation.",
-    label: "teams@ammarai.com",
-  },
-  {
-    title: "Partnerships",
-    body: "Integrations, affiliate arrangements and anything involving the two of us building something together.",
-    label: "partners@ammarai.com",
-  },
-];
-
 function Contact() {
   const [sent, setSent] = useState(false);
+  const { data: content } = useSuspenseQuery(siteContentQuery);
+  const page = content.pages.find((p) => p.slug === "contact");
+
+  const eyebrow = page?.eyebrow ?? "Contact";
+  const h1 = page?.h1 ?? "Tell us what you are trying to build";
+  const lede =
+    page?.lede ??
+    "The more specific you are about the work, the more specific the answer. We reply to everything within two working days.";
+  const formHeading = page?.formHeading ?? "Send a message";
+  const sentHeading = page?.sentHeading ?? "Message noted";
+  const sentBody = page?.sentBody ?? "";
+  const channels = page?.channels ?? [];
 
   return (
     <div>
@@ -49,13 +46,10 @@ function Contact() {
         <Container>
           <Breadcrumbs items={[{ label: "Home", to: "/" }, { label: "Contact" }]} />
           <div className="mt-8 max-w-3xl">
-            <p className="eyebrow">Contact</p>
-            <h1 className="mt-4 text-balance text-4xl leading-[1.05] sm:text-5xl">
-              Tell us what you are trying to build
-            </h1>
+            <p className="eyebrow">{eyebrow}</p>
+            <h1 className="mt-4 text-balance text-4xl leading-[1.05] sm:text-5xl">{h1}</h1>
             <p className="mt-5 text-pretty text-lg leading-relaxed text-muted-foreground">
-              The more specific you are about the work, the more specific the answer. We reply to
-              everything within two working days.
+              {lede}
             </p>
           </div>
         </Container>
@@ -67,11 +61,9 @@ function Contact() {
             <Card className="p-7">
               {sent ? (
                 <div>
-                  <h2 className="text-xl font-semibold text-foreground">Message noted</h2>
+                  <h2 className="text-xl font-semibold text-foreground">{sentHeading}</h2>
                   <p className="mt-3 text-pretty text-sm leading-relaxed text-muted-foreground">
-                    This marketing site does not yet send messages to a backend, so nothing was
-                    transmitted. In the meantime, email us directly using the addresses listed here
-                    and we will pick it up.
+                    {sentBody}
                   </p>
                   <ButtonLink to="/ai-tools" variant="outline" size="sm" className="mt-6">
                     Browse the tools
@@ -85,7 +77,7 @@ function Contact() {
                   }}
                   className="flex flex-col gap-4"
                 >
-                  <h2 className="text-xl font-semibold text-foreground">Send a message</h2>
+                  <h2 className="text-xl font-semibold text-foreground">{formHeading}</h2>
                   <div>
                     <label htmlFor="name" className="text-xs font-semibold text-foreground">
                       Name
