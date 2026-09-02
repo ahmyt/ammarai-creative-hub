@@ -23,10 +23,14 @@ import visionRevenueChart from "@/assets/vision-in-revenue-chart.jpg";
 
 export type ToolDemoMedia = {
   /** Output media kind. Omit for tools whose real output is text. */
-  kind?: "video" | "audio" | "image";
-  /** Output media URL (video, audio or image). Omit for text output. */
+  kind?: "video" | "audio" | "image" | "code";
+  /** Output media URL (video, audio or image). Omit for text/code output. */
   url?: string;
   caption?: string;
+  /** Output source code, streamed into a code block (kind: "code"). */
+  code?: string;
+  /** Language label shown on the code block. */
+  language?: string;
   /** Optional source still shown alongside the prompt (image-led tools). */
   inputImage?: string;
   inputImageAlt?: string;
@@ -36,6 +40,7 @@ export type ToolDemoMedia = {
   /** Optional attached-file chip shown alongside the prompt (document tools). */
   inputFileLabel?: string;
 };
+
 
 /**
  * Sample media per tool, one entry per example in the same order as the tool's
@@ -158,6 +163,70 @@ export const toolDemoMedia: Record<string, ToolDemoMedia[]> = {
     {
       inputImage: visionRevenueChart,
       inputImageAlt: "Uploaded screenshot: a quarterly revenue bar chart rising through Q3 then dipping in Q4",
+    },
+  ],
+  "ai-code-generator": [
+    {
+      kind: "code",
+      language: "typescript",
+      caption: "Sample output — a dependency-free generic groupBy plus the Vitest file covering the edge cases named in the prompt.",
+      code: `export function groupBy<T, K>(
+  items: readonly T[],
+  keyOf: (item: T) => K,
+): Map<K, T[]> {
+  const groups = new Map<K, T[]>();
+  for (const item of items) {
+    const key = keyOf(item);
+    const bucket = groups.get(key);
+    if (bucket) bucket.push(item);
+    else groups.set(key, [item]);
+  }
+  return groups;
+}
+
+// groupBy.test.ts
+import { describe, expect, it } from "vitest";
+
+describe("groupBy", () => {
+  it("returns an empty map for empty input", () => {
+    expect(groupBy([], (n: number) => n).size).toBe(0);
+  });
+
+  it("preserves insertion order of keys and members", () => {
+    const rows = [
+      { team: "b", id: 1 },
+      { team: "a", id: 2 },
+      { team: "b", id: 3 },
+    ];
+    const result = groupBy(rows, (r) => r.team);
+    expect([...result.keys()]).toEqual(["b", "a"]);
+    expect(result.get("b")!.map((r) => r.id)).toEqual([1, 3]);
+  });
+
+  it("does not collide numeric and string keys", () => {
+    const result = groupBy([1, "1"], (v) => v);
+    expect(result.size).toBe(2);
+  });
+});`,
+    },
+    {
+      kind: "code",
+      language: "sql",
+      caption: "Sample output — the monthly active users query, with the index note the model attached to it.",
+      code: `-- Monthly active users, last 12 complete months
+SELECT
+  date_trunc('month', e.created_at) AS month,
+  count(DISTINCT e.user_id)        AS monthly_active_users
+FROM events e
+WHERE e.created_at >= date_trunc('month', now()) - interval '12 months'
+  AND e.created_at <  date_trunc('month', now())
+GROUP BY 1
+ORDER BY 1;
+
+-- Note: this scans events by created_at and de-duplicates by user.
+-- Add a composite index so it stays cheap as the table grows:
+CREATE INDEX CONCURRENTLY IF NOT EXISTS events_user_created_idx
+  ON events (user_id, created_at);`,
     },
   ],
   "ai-document-analyzer": [

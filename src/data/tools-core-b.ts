@@ -507,16 +507,17 @@ export const coreToolsB: Tool[] = [
         input:
           "TypeScript function that groups an array of objects by a key selector, preserves insertion order, returns a Map, no dependencies. Include tests.",
         output:
-          "A typed generic implementation using a Map plus a small test file covering empty input, duplicate keys and key collisions on numeric strings.",
+          "A typed generic groupBy using a Map so insertion order is preserved, plus a Vitest file covering empty input, duplicate keys and numeric-string key collisions.",
       },
       {
         label: "SQL from a question",
         input:
           "Postgres: monthly active users for the last 12 months, counting a user active if they created at least one event. Tables: users(id, created_at), events(id, user_id, created_at).",
         output:
-          "A query using date_trunc and a distinct count, with a note about indexing events(user_id, created_at) for performance…",
+          "A date_trunc query with a distinct user count per month, plus a note to index events(user_id, created_at) so the scan stays cheap as the table grows.",
       },
     ],
+
     capabilities: [
       {
         title: "Explained output",
@@ -820,14 +821,15 @@ export const coreToolsB: Tool[] = [
         input:
           "Upload: 41-page service agreement. Question: list every obligation with a deadline attached, and cite the clause.",
         output:
-          "A table of eleven obligations with clause references, including two the reader had missed in the schedules…",
+          "Obligations with deadlines (11 found):\n1. Supplier delivers implementation plan — 10 business days from Effective Date (cl. 3.1)\n2. Customer nominates project lead — 5 business days from Effective Date (cl. 3.4)\n3. Supplier reports uptime monthly — 5th of each month (Schedule 2, §1.2)\n4. Customer raises service credits claim — within 30 days of the incident (Schedule 2, §4.1)\n5. Either party notifies renewal intent — 60 days before term end (cl. 9.2)\nTwo of these sit in the schedules rather than the body: Schedule 2 §1.2 and §4.1.",
       },
       {
         label: "Research triage",
         input:
           "Upload: six academic PDFs. Question: which of these use a sample smaller than 100, and what do they measure?",
         output:
-          "Three of the six, with sample sizes and outcome measures listed alongside the page each was found on.",
+          "Three of six papers use n < 100:\n• Okafor et al. (2023), n = 62 — measures task-completion time and error rate (p. 7)\n• Lindqvist & Barr (2021), n = 48 — measures self-reported cognitive load, NASA-TLX (p. 4)\n• Mehta (2024), n = 91 — measures 30-day retention and session frequency (p. 12)\nThe remaining three range from n = 240 to n = 1,410 and all measure conversion rather than behaviour.",
+
       },
     ],
     capabilities: [

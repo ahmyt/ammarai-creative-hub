@@ -66,6 +66,7 @@ export function AnimatedExample({
   const example = examples[index];
   const media = demoVideos?.[index];
   const demoVideo = media?.url ? media : undefined;
+  const demoCode = media?.code ? media : undefined;
   const outputWords = useMemo(() => (example?.output ?? "").split(" "), [example?.output]);
 
 
@@ -93,7 +94,7 @@ export function AnimatedExample({
     if (!example) return;
     if (reduced) {
       setTyped(example.input);
-      setWritten(example.output);
+      setWritten(demoCode?.code ?? example.output);
       setPhase("resting");
       return;
     }
@@ -110,6 +111,16 @@ export function AnimatedExample({
 
     if (phase === "thinking") {
       const t = setTimeout(() => setPhase("writing"), THINK_MS);
+      return () => clearTimeout(t);
+    }
+
+    if (phase === "writing" && demoCode) {
+      const full = demoCode.code ?? "";
+      if (written.length >= full.length) {
+        const t = setTimeout(() => setPhase("resting"), 1200);
+        return () => clearTimeout(t);
+      }
+      const t = setTimeout(() => setWritten(full.slice(0, written.length + 3)), 12);
       return () => clearTimeout(t);
     }
 
@@ -137,7 +148,7 @@ export function AnimatedExample({
       setIndex((i) => (i + 1) % examples.length);
     }, REST_MS);
     return () => clearTimeout(t);
-  }, [active, reduced, phase, typed, written, example, outputWords, examples.length, demoVideo]);
+  }, [active, reduced, phase, typed, written, example, outputWords, examples.length, demoVideo, demoCode]);
 
   if (!example) return null;
 
@@ -238,7 +249,9 @@ export function AnimatedExample({
         <div className="mt-4">
           <div className="flex items-center gap-2">
             <p className="text-xs font-semibold text-foreground/70">
-              {demoVideo?.kind === "audio"
+              {demoCode
+                ? "AmmarAI codes"
+                : demoVideo?.kind === "audio"
                 ? "AmmarAI speaks"
                 : demoVideo?.kind === "image"
                   ? "AmmarAI renders"
@@ -255,7 +268,27 @@ export function AnimatedExample({
             ) : null}
           </div>
           <div className="mt-2 rounded-xl rounded-tr-sm bg-accent/[0.06] px-4 py-3 ring-1 ring-accent/15">
-            {demoVideo ? (
+            {demoCode ? (
+              <div>
+                <div className="flex items-center justify-between gap-3">
+                  <span className="rounded-full bg-ink px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-ink-foreground">
+                    {demoCode.language ?? "code"}
+                  </span>
+                  <span className="text-xs text-muted-foreground">generated file</span>
+                </div>
+                <pre className="mt-3 max-h-80 overflow-auto rounded-lg bg-ink px-4 py-3 text-[12px] leading-relaxed text-ink-foreground ring-1 ring-border/40">
+                  <code className="font-mono whitespace-pre">
+                    {written}
+                    {phase === "writing" ? (
+                      <span className="ml-0.5 inline-block h-3.5 w-[2px] translate-y-0.5 animate-pulse bg-accent align-middle" />
+                    ) : null}
+                  </code>
+                </pre>
+                <p className="mt-3 text-pretty text-xs leading-relaxed text-muted-foreground">
+                  {demoCode.caption ?? example.output}
+                </p>
+              </div>
+            ) : demoVideo ? (
               <div>
                 {demoVideo.kind === "audio" ? (
                   <audio
