@@ -158,7 +158,7 @@ export const commerceSeoTools: Tool[] = [
       "Generate a shorter alternate version for categories with tighter limits",
       "Avoid obvious promotional language (superlatives, pricing, all-caps words)",
       "Incorporate size, color, quantity, and model details in the order shoppers typically search",
-      "Produce a few title variants so you can pick the clearest one or A/B test"
+      "Produce a few title variants to compare or A/B test"
     ],
     how: [
       { title: "Enter brand and core product type", body: "e.g., 'Brand: Kavo, Product: stainless steel French press'" },
@@ -172,7 +172,7 @@ export const commerceSeoTools: Tool[] = [
     ],
     capabilities: [
       { title: "Convention-aware ordering", body: "Places brand, product type, and key attributes in the sequence shoppers and search typically expect." },
-      { title: "Length variants", body: "Generates both a full-length and shortened title so you can fit different category limits." },
+      { title: "Length variants", body: "Generates a full-length and a shortened title to fit different category limits." },
       { title: "Promotional-language avoidance", body: "Skips common restricted patterns like superlatives, pricing, and excessive capitalization." },
       { title: "Attribute prioritization", body: "Surfaces the specs shoppers filter by (size, color, quantity) early in the title." }
     ],
@@ -226,7 +226,7 @@ export const commerceSeoTools: Tool[] = [
       "Rank or group benefits by likely purchase importance for that audience",
       "Draft benefit-led headlines or intro lines for a product page",
       "Generate multiple benefit phrasings for the same feature to test which lands best",
-      "Flag features that don't have an obvious meaningful benefit, so you can decide whether to keep them"
+      "Flag features with no obvious benefit attached, and decide whether they earn their line"
     ],
     how: [
       { title: "List the product's raw features", body: "Materials, specs, included accessories, certifications — whatever is factually true." },
@@ -516,7 +516,7 @@ export const commerceSeoTools: Tool[] = [
       { title: "Length-aware drafting", body: "Targets the practical truncation range so the key message isn't cut off in results." },
       { title: "Value-first structure", body: "Puts the strongest hook early, since that's what's most likely to stay visible even if truncated." },
       { title: "Page-type adaptation", body: "Writes differently for a blog post, a product page, or a category page based on what drives clicks for each." },
-      { title: "Variant generation", body: "Produces multiple options so you can test which phrasing improves click-through rate." }
+      { title: "Variant generation", body: "Produces multiple options to test which phrasing lifts click-through." }
     ],
     audiences: [
       { who: "SEO practitioners", why: "Batch-write or refresh meta descriptions across many pages efficiently." },

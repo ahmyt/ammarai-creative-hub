@@ -365,7 +365,7 @@ export const marketingTools: Tool[] = [
       "Size the set appropriately instead of maxing out at 30 by default",
       "Tailor tags to a specific niche (fitness, food, real estate, etc.)",
       "Avoid banned or shadowbanned hashtag terms where known",
-      "Group tags by broad vs. niche so you can choose your own mix"
+      "Group tags by broad vs. niche and choose your own mix"
     ],
     how: [
       { title: "Describe your post and niche", body: "Tell it what the content is about and your general industry or niche." },
@@ -583,7 +583,7 @@ export const marketingTools: Tool[] = [
       { label: "Personal finance tutorial", input: "Video explaining how to build a simple monthly budget from scratch", output: "Title 1: How to Build a Budget From Scratch (Beginner Guide)\nTitle 2: The Simplest Way to Budget Your Money in 2024\nTitle 3: I Built a Budget in 15 Minutes — Here's the Exact Method" }
     ],
     capabilities: [
-      { title: "Multi-strategy generation", body: "Produces different title angles so you can compare curiosity-driven and direct options side by side." },
+      { title: "Multi-strategy generation", body: "Produces different title angles — curiosity-driven and direct, side by side." },
       { title: "Truncation-aware phrasing", body: "Key words are placed early so titles remain meaningful even if cut off in some display contexts." },
       { title: "Content-accuracy checks", body: "Titles are generated to reflect what the input describes, discouraging exaggerated overpromising." }
     ],
@@ -637,7 +637,7 @@ export const marketingTools: Tool[] = [
       "Match tags to the actual described content rather than generic trends",
       "Suggest tags that include your channel or series name for consistency",
       "Include common misspellings or alternate phrasings where relevant",
-      "Group tags by specificity so you can prioritize the most relevant ones",
+      "Group tags by specificity and lead with the most relevant",
       "Adapt tag suggestions across tutorial, vlog, review, or entertainment formats"
     ],
     how: [
@@ -651,7 +651,7 @@ export const marketingTools: Tool[] = [
       { label: "Gaming walkthrough", input: "Walkthrough video for the first level of a new indie platformer game", output: "Broad: gaming, walkthrough, indie games\nSpecific: [Game Name] walkthrough, [Game Name] level 1, [Game Name] gameplay\nLong-tail: how to beat level 1 in [Game Name], [Game Name] beginner guide" }
     ],
     capabilities: [
-      { title: "Specificity tiers", body: "Tags are grouped by broad, specific, and long-tail so you can prioritize the most relevant terms first." },
+      { title: "Specificity tiers", body: "Tags are grouped by broad, specific, and long-tail, with the most relevant terms first." },
       { title: "Content-matched relevance", body: "Tags reflect what the video actually covers rather than chasing unrelated trending terms." },
       { title: "Series and channel consistency", body: "Suggestions can include your channel or series name to reinforce consistent tagging." }
     ],
