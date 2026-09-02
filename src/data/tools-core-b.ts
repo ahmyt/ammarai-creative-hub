@@ -6,10 +6,10 @@ export const coreToolsB: Tool[] = [
     name: "AI Avatar Video Generator",
     category: "AI Video",
     summary:
-      "Turn any image or video into an animated talking avatar clip with realistic lip-sync and natural expression.",
+      "Turn any image into a talking avatar video with realistic lip-sync and natural expressions. Ideal for product explainers, social content, training videos, and personal branding.",
     title: "AI Avatar Video Generator: Talking Avatar Videos | AmmarAI",
     description:
-      "Create professional animated talking videos. Turn any image or video into an engaging clip with your script or voice, realistic lip-sync and natural facial expressions.",
+      "Turn any image into a talking avatar video with realistic lip-sync and natural expressions. Ideal for product explainers, social content, training videos and personal branding.",
     h1: "Create professional animated talking videos",
     lede: "Bring your visuals to life with AI-powered avatar talking videos. Turn any image or video into an engaging animated clip by adding your script or voice, with realistic lip-sync and natural facial expressions.",
     ctaLabel: "Create a talking avatar",
@@ -461,10 +461,10 @@ export const coreToolsB: Tool[] = [
     name: "AI Code Generator",
     category: "AI Code",
     summary:
-      "Generate functions, components, queries and tests, with explanations you can actually review.",
+      "Generate code in multiple languages from natural language descriptions — functions, components, queries and tests, with explanations you can review.",
     title: "AI Code Generator: Functions, Tests and Queries | AmmarAI",
     description:
-      "Generate working code with explanations: functions, components, SQL, tests and scripts across common languages and frameworks.",
+      "Generate code in multiple languages from natural language descriptions: functions, components, SQL, tests and scripts, with explanations included.",
     h1: "Code you can read, review and defend in a pull request",
     lede: "Describe the behaviour you need and get an implementation with the reasoning attached, from a single function to a component, a query or a test suite.",
     ctaLabel: "Generate code",
@@ -620,10 +620,10 @@ export const coreToolsB: Tool[] = [
     name: "AI Vision",
     category: "AI Vision",
     summary:
-      "Ask questions about images: describe, extract text, compare, categorise and check what is in the frame.",
+      "Analyze images, chat with uploaded documents, or analyze any webpage — describe, extract text, compare, and question what you point it at.",
     title: "AI Vision: Understand and Question Any Image | AmmarAI",
     description:
-      "Upload an image and ask about it. Describe scenes, read text from photos, categorise products and generate alt text.",
+      "Analyze images, chat with uploaded documents or analyze any webpage. Describe scenes, read text from photos, compare screenshots and generate alt text.",
     h1: "Point it at an image and ask what is going on",
     lede: "AI Vision reads images the way chat reads text: describe a scene, extract the writing on a label, compare two screenshots, or generate accurate alt text at scale.",
     ctaLabel: "Analyse an image",
@@ -775,14 +775,13 @@ export const coreToolsB: Tool[] = [
     name: "AI Document Analyzer",
     category: "AI Documents",
     summary:
-      "Upload long documents and get summaries, answers with citations, and extracted structured data.",
-    title: "AI Document Analyzer: Question Long Documents | AmmarAI",
+      "Chat with uploaded documents — PDF, Word, CSV — and get summaries, answers with citations, and extracted structured data.",
+    title: "AI Document Analyzer: Chat With Your Documents | AmmarAI",
     description:
-      "Upload contracts, reports and PDFs. Get summaries, answers with citations and structured data extracted from the text.",
+      "Chat with uploaded documents (PDF, Word, CSV). Get summaries, answers with citations and structured data extracted from the text.",
     h1: "Stop reading 60 pages to find the one clause that matters",
     lede: "Upload contracts, research, reports and statements, then ask questions and get answers pointing back to the exact section they came from.",
     ctaLabel: "Analyse a document",
-    featured: true,
     what: [
       "AI Document Analyzer is built for structured, lengthy documents. You upload a PDF, a report, a contract, a policy or a spreadsheet, and it reads the whole thing so you can ask questions of it. Crucially, answers cite where they came from, so verification is a click rather than a search.",
       "The distinction from AI Vision is about shape rather than file type. Vision looks at pictures and answers what is in the frame. The document analyzer follows layout and structure across many pages: sections, defined terms, tables, appendices and cross-references. It is the tool for the thirty-page agreement, not the photo of a receipt.",
@@ -941,7 +940,6 @@ export const coreToolsB: Tool[] = [
     h1: "A complete article, structured before it is written",
     lede: "Give it a topic and an audience and get a full article with a defensible structure, headings, examples and a meta description ready to edit.",
     ctaLabel: "Generate an article",
-    featured: true,
     popular: true,
     what: [
       "The AI Article Generator produces long-form articles end to end. Unlike an open writing surface, it works structurally: it establishes what question the article answers, builds an outline with headings that match how people actually search, then writes each section against that plan. The result is a piece with a spine rather than a thousand words of pleasant drift.",

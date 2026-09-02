@@ -5,10 +5,12 @@ import { chatbotTools } from "./tools-chatbots";
 import { writingTools } from "./tools-writing";
 import { marketingTools } from "./tools-marketing";
 import { commerceSeoTools } from "./tools-commerce-seo";
+import { platformTools } from "./tools-platform";
 
 export const tools: Tool[] = [
   ...coreToolsA,
   ...coreToolsB,
+  ...platformTools,
   ...chatbotTools,
   ...writingTools,
   ...marketingTools,
@@ -151,6 +153,26 @@ const intentMap: { keywords: string[]; slugs: string[] }[] = [
       "ai-vision",
       "ai-chat",
     ],
+  },
+  {
+    keywords: ["plagiarism", "original", "copied", "duplicate", "ai detector", "detect"],
+    slugs: ["ai-plagiarism-detector", "ai-content-rewriter", "ai-grammar-checker"],
+  },
+  {
+    keywords: ["present", "slides", "slide", "deck", "powerpoint", "pptx", "keynote"],
+    slugs: ["ai-presentation-maker", "ai-writer", "ai-image-generator"],
+  },
+  {
+    keywords: ["music", "song", "track", "background music", "jingle", "sound"],
+    slugs: ["ai-music-generator", "sound-studio", "ai-voice-generator"],
+  },
+  {
+    keywords: ["widget", "website bot", "support bot", "customer support", "live chat", "deploy"],
+    slugs: ["external-chatbot", "ai-chat-bots", "ai-chat"],
+  },
+  {
+    keywords: ["url", "product link", "influencer", "clip", "repurpose", "shorts"],
+    slugs: ["ai-url-to-video", "ai-avatar-generator", "ai-video-generator"],
   },
 ];
 

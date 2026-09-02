@@ -176,8 +176,8 @@ export function Home() {
         <Container>
           <SectionHeading
             eyebrow="Flagship tools"
-            title="The tools most people come here for"
-            intro="Each one has a full guide covering what it does well, where it fails and how to brief it properly."
+            title="Six flagship tools, one workspace"
+            intro="Writing, chat, images, video, talking avatars and transcription — the core of the platform, each with a full guide on what it does well and how to brief it properly."
           />
           <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {featuredTools.map((tool) => (
