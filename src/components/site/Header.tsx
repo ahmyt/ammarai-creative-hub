@@ -6,7 +6,7 @@ import logoAsset from "@/assets/ammarai-logo.png.asset.json";
 
 export function Wordmark({ className }: { className?: string }) {
   return (
-    <span className="flex items-center gap-2">
+    <span className="flex items-center gap-1.5">
       <img
         src={logoAsset.url}
         alt=""
