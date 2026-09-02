@@ -138,6 +138,28 @@ export const fieldSpecs: Record<ContentKind, FieldSpec[]> = {
     { name: "takeaways", label: "Takeaways", type: "json", hint: "", item: S("Takeaway") },
     { name: "related", label: "Related post slugs", type: "json", hint: "", item: S("Related slug") },
   ],
+  page: [
+    { name: "name", label: "Page name", type: "text" },
+    { name: "title", label: "SEO title", type: "text" },
+    { name: "description", label: "Meta description", type: "textarea" },
+    { name: "eyebrow", label: "Eyebrow label", type: "text" },
+    { name: "h1", label: "Page heading (H1)", type: "text" },
+    { name: "lede", label: "Hero paragraph", type: "textarea" },
+    { name: "formHeading", label: "Form heading", type: "text" },
+    { name: "sentHeading", label: "Form sent heading", type: "text" },
+    { name: "sentBody", label: "Form sent message", type: "textarea" },
+    {
+      name: "channels",
+      label: "Contact channels",
+      type: "json",
+      hint: "Info cards beside the form",
+      item: O("Channel", [
+        { name: "title", label: "Title", type: "text" },
+        { name: "body", label: "Body", type: "textarea" },
+        { name: "label", label: "Link label (e.g. email)", type: "text" },
+      ]),
+    },
+  ],
 };
 
 export function emptyDraft(kind: ContentKind): Record<string, unknown> {

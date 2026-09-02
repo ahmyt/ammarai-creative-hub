@@ -114,3 +114,21 @@ export interface Post {
   takeaways: string[];
   related: string[];
 }
+
+export interface Page {
+  slug: string;
+  /** Internal label shown in the studio */
+  name: string;
+  title: string;
+  description: string;
+  eyebrow: string;
+  h1: string;
+  lede: string;
+  /** Contact form / primary panel */
+  formHeading: string;
+  sentHeading: string;
+  sentBody: string;
+  /** Contact channels / info cards */
+  channels: { title: string; body: string; label: string }[];
+}
+
