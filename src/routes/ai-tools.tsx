@@ -7,7 +7,7 @@ import { Container, Section } from "@/components/site/primitives";
 import { ToolCard } from "@/components/site/ToolCard";
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { ExternalButton } from "@/components/site/Button";
-import { SITE } from "@/lib/site";
+import { SITE, REGISTER_URL } from "@/lib/site";
 
 const title = "All AI Tools: 60+ Generators in One Workspace | AmmarAI";
 const description =

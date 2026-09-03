@@ -3,7 +3,7 @@ import { createFileRoute, notFound, Link } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import type { Tool, UseCase } from "@/data/types";
 import { siteContentQuery } from "@/lib/content";
-import { SITE, softwareApplicationJsonLd } from "@/lib/site";
+import { SITE, softwareApplicationJsonLd, REGISTER_URL } from "@/lib/site";
 import { Container, Section, SectionHeading, Card, NumberedList, BulletList } from "@/components/site/primitives";
 import { FaqAccordion, faqJsonLd } from "@/components/site/Faq";
 import { Breadcrumbs, breadcrumbJsonLd } from "@/components/site/Breadcrumbs";

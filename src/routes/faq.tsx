@@ -3,7 +3,7 @@ import { Container, Section, SectionHeading } from "@/components/site/primitives
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { FaqAccordion, faqJsonLd } from "@/components/site/Faq";
 import { ExternalButton } from "@/components/site/Button";
-import { SITE } from "@/lib/site";
+import { SITE, REGISTER_URL } from "@/lib/site";
 
 const title = "AmmarAI FAQ: Plans, Output, Ownership and Limits | AmmarAI";
 const description =
