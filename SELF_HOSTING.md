@@ -64,7 +64,7 @@ self-hosted Supabase `.env`:
 ### Build configuration (already done in this repo)
 - `vite.config.ts` pins `nitro: { preset: "node-server" }`.
   This only applies outside a Lovable build; the Lovable preview stays on Cloudflare.
-- `package.json` has `"start": "node .output/server/index.mjs"`.
+- `package.json` has `"start": "node dist/server/index.mjs"`.
 
 ### Deploy steps
 1. **Upload the project** to the Plesk domain (e.g. `httpdocs` or a sibling app dir).
@@ -74,7 +74,7 @@ self-hosted Supabase `.env`:
    - Application mode: **Production**
    - Run `npm install`, then `npm run build`
    - Application startup file/command: `npm run start`
-     (or `node .output/server/index.mjs`)
+     (or `node dist/server/index.mjs`)
 3. **Set environment variables** (Plesk → Node.js → Custom environment variables):
    - `SUPABASE_URL` = `https://supabase.yourdomain.com`
    - `SUPABASE_PUBLISHABLE_KEY` = your self-hosted anon key
