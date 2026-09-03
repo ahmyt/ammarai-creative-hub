@@ -54,6 +54,7 @@ function useToolMap() {
 }
 
 export const Route = createFileRoute("/$slug")({
+  staticData: { sitemap: true },
   loader: async ({ params, context }) => {
     const content = await context.queryClient.ensureQueryData(siteContentQuery);
     const tool = content.tools.find((t) => t.slug === params.slug);

@@ -9,6 +9,7 @@ import { SITE } from "@/lib/site";
 
 
 export const Route = createFileRoute("/blog/$slug")({
+  staticData: { sitemap: true },
   loader: async ({ params, context }) => {
     const content = await context.queryClient.ensureQueryData(siteContentQuery);
     const post = content.posts.find((p) => p.slug === params.slug);

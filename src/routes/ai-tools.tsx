@@ -14,6 +14,7 @@ const description =
   "Browse every AmmarAI tool: writing, chat, images, video, voice, transcription, vision, documents, SEO, e-commerce and code.";
 
 export const Route = createFileRoute("/ai-tools")({
+  staticData: { sitemap: true },
   loader: ({ context }) => context.queryClient.ensureQueryData(siteContentQuery),
   head: () => ({
     meta: [

@@ -11,6 +11,7 @@ const description =
   "Multi-model AI, brand voice, templates, bulk generation, uploads, assistants, team workspaces, history and clean exports.";
 
 export const Route = createFileRoute("/features/")({
+  staticData: { sitemap: true },
   head: () => ({
     meta: [
       { title },

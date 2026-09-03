@@ -6,6 +6,7 @@ import { contentKinds, contentRowsQuery, staticItems, type ContentKind } from "@
 import { titleOf } from "@/lib/cms-fields";
 
 export const Route = createFileRoute("/admin/$kind/")({
+  staticData: { sitemap: false },
   loader: ({ params }) => {
     const meta = contentKinds.find((k) => k.kind === params.kind);
     if (!meta) throw notFound();

@@ -29,6 +29,7 @@ const principles = [
 ];
 
 export const Route = createFileRoute("/about")({
+  staticData: { sitemap: true },
   head: () => ({
     meta: [
       { title },

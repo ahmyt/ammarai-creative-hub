@@ -83,6 +83,7 @@ const groups = [
 const allFaqs = groups.flatMap((g) => g.faqs);
 
 export const Route = createFileRoute("/faq")({
+  staticData: { sitemap: true },
   head: () => ({
     meta: [
       { title },

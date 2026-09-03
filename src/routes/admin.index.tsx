@@ -6,6 +6,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { contentKinds, contentRowsQuery, staticItems } from "@/lib/content";
 
 export const Route = createFileRoute("/admin/")({
+  staticData: { sitemap: false },
   component: AdminOverview,
 });
 

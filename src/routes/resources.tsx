@@ -11,6 +11,7 @@ const description =
   "Practical guides to using AI well: writing workflows, video and voice production, SEO, prompting and platform features.";
 
 export const Route = createFileRoute("/resources")({
+  staticData: { sitemap: true },
   head: () => ({
     meta: [
       { title },

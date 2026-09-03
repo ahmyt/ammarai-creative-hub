@@ -11,6 +11,7 @@ const description =
   "See how marketers, creators, small businesses, agencies, students, developers and e-commerce teams use AmmarAI day to day.";
 
 export const Route = createFileRoute("/use-cases")({
+  staticData: { sitemap: true },
   head: () => ({
     meta: [
       { title },
