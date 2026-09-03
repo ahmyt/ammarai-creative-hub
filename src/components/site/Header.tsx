@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { primaryNav, SITE, REGISTER_URL, LOGIN_URL } from "@/lib/site";
-import { ButtonLink, ExternalButton } from "./Button";
+import { ExternalButton } from "./Button";
 import logoAsset from "@/assets/ammarai-logo.png.asset.json";
 import { assetUrl } from "@/lib/asset-url";
 
