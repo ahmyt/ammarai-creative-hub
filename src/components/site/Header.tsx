@@ -3,12 +3,9 @@ import { useState } from "react";
 import { primaryNav, SITE } from "@/lib/site";
 import { ButtonLink } from "./Button";
 import logoAsset from "@/assets/ammarai-logo.png.asset.json";
-
-export function Wordmark({ className }: { className?: string }) {
-  return (
-    <span className="flex items-center gap-1.5">
-      <img
-        src={logoAsset.url}
+import { assetUrl } from "@/lib/asset-url";
+...
+        src={assetUrl(logoAsset.url)}
         alt=""
         aria-hidden="true"
         width={32}
