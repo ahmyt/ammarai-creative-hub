@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import type { Example } from "@/data/types";
 import type { ToolDemoMedia } from "@/data/tool-demos";
 import { cn } from "@/lib/utils";
+import { assetUrl } from "@/lib/asset-url";
 
 type Phase = "typing" | "thinking" | "writing" | "resting";
 
@@ -62,7 +63,17 @@ export function AnimatedExample({
   const [inView, setInView] = useState(false);
 
   const example = examples[index];
-  const media = demoVideos?.[index];
+  const rawMedia = demoVideos?.[index];
+  // Normalize CDN-hosted media URLs so they also load when the site is
+  // hosted outside Lovable (e.g. on Plesk).
+  const media = rawMedia
+    ? {
+        ...rawMedia,
+        url: rawMedia.url ? assetUrl(rawMedia.url) : rawMedia.url,
+        inputImage: rawMedia.inputImage ? assetUrl(rawMedia.inputImage) : rawMedia.inputImage,
+        inputAudio: rawMedia.inputAudio ? assetUrl(rawMedia.inputAudio) : rawMedia.inputAudio,
+      }
+    : undefined;
   const demoVideo = media?.url ? media : undefined;
   const demoCode = media?.code ? media : undefined;
   const outputWords = useMemo(() => (example?.output ?? "").split(" "), [example?.output]);
