@@ -22,11 +22,8 @@ export const Route = createFileRoute("/sitemap.xml")({
         const router = await getRouterInstance();
         const entries: SitemapEntry[] = sitemapStaticPaths(router).map((path) => ({ path }));
 
-        const addDynamic = (
-          routeId: string,
-          to: string,
-          slugs: string[],
-        ) => {
+        const addDynamic = (routeId: "/$slug" | "/blog/$slug" | "/features/$slug", slugs: string[]) => {
+          const to = routeId;
           if (!isSitemapRouteIncluded(router.routesById[routeId])) return;
           for (const slug of slugs) {
             const location = router.buildLocation({
@@ -40,12 +37,12 @@ export const Route = createFileRoute("/sitemap.xml")({
           }
         };
 
-        addDynamic("/$slug", "/$slug", [
+        addDynamic("/$slug", [
           ...tools.map((t) => t.slug),
           ...useCases.map((u) => u.slug),
         ]);
-        addDynamic("/blog/$slug", "/blog/$slug", posts.map((p) => p.slug));
-        addDynamic("/features/$slug", "/features/$slug", features.map((f) => f.slug));
+        addDynamic("/blog/$slug", posts.map((p) => p.slug));
+        addDynamic("/features/$slug", features.map((f) => f.slug));
 
         if (entries.length === 0) {
           return new Response(null, { status: 404, headers: { "Cache-Control": "no-store" } });
