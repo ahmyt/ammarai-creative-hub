@@ -12,4 +12,9 @@ export default defineConfig({
     // nitro/vite builds from this
     server: { entry: "server" },
   },
+  // Pin the Nitro build target to a Node.js server so the app can be hosted on
+  // Plesk (or any Node host). This override applies ONLY outside a Lovable
+  // build: Lovable sets LOVABLE_NITRO_PRESET=cloudflare-module internally, so
+  // the Lovable preview/published site keeps running on Cloudflare unchanged.
+  nitro: { preset: "node-server" },
 });
