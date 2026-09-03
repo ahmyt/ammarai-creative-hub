@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Container, Section, SectionHeading, Card } from "@/components/site/primitives";
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { ButtonLink, ExternalButton } from "@/components/site/Button";
-import { SITE } from "@/lib/site";
+import { SITE, REGISTER_URL } from "@/lib/site";
 import { tools } from "@/data/tools";
 
 const title = "About AmmarAI: One Workspace for AI Creation | AmmarAI";
@@ -95,7 +95,7 @@ function About() {
             </p>
           </div>
           <div className="mt-8 flex flex-wrap gap-3">
-            <ExternalButton href={"/auth"} size="lg">
+            <ExternalButton href={REGISTER_URL} size="lg">
               Start creating free
             </ExternalButton>
             <ButtonLink to="/contact" variant="outline" size="lg">

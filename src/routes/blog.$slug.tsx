@@ -5,7 +5,7 @@ import { siteContentQuery } from "@/lib/content";
 import { Container, Section, BulletList } from "@/components/site/primitives";
 import { Breadcrumbs, breadcrumbJsonLd } from "@/components/site/Breadcrumbs";
 import { ExternalButton } from "@/components/site/Button";
-import { SITE } from "@/lib/site";
+import { SITE, REGISTER_URL } from "@/lib/site";
 
 
 export const Route = createFileRoute("/blog/$slug")({
@@ -154,7 +154,7 @@ function BlogPost() {
             {SITE.tagline}
           </p>
           <div className="mt-8">
-            <ExternalButton href={"/auth"} variant="onInk" size="lg">
+            <ExternalButton href={REGISTER_URL} variant="onInk" size="lg">
               Start creating free
             </ExternalButton>
           </div>

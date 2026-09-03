@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { primaryNav, SITE } from "@/lib/site";
-import { ButtonLink } from "./Button";
+import { primaryNav, SITE, REGISTER_URL, LOGIN_URL } from "@/lib/site";
+import { ExternalButton } from "./Button";
 import logoAsset from "@/assets/ammarai-logo.png.asset.json";
 import { assetUrl } from "@/lib/asset-url";
 
@@ -48,15 +48,15 @@ export function Header() {
         </nav>
 
         <div className="hidden items-center gap-3 md:flex">
-          <Link
-            to="/auth"
+          <a
+            href={LOGIN_URL}
             className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
           >
             Login
-          </Link>
-          <ButtonLink to="/pricing" variant="ink" size="sm">
+          </a>
+          <ExternalButton href={REGISTER_URL} variant="ink" size="sm">
             Start Free
-          </ButtonLink>
+          </ExternalButton>
         </div>
 
         <button
@@ -86,16 +86,21 @@ export function Header() {
               </Link>
             ))}
             <div className="flex items-center gap-3 pt-4">
-              <ButtonLink to="/pricing" variant="primary" size="sm" onClick={() => setOpen(false)}>
+              <ExternalButton
+                href={REGISTER_URL}
+                variant="primary"
+                size="sm"
+                onClick={() => setOpen(false)}
+              >
                 Start Creating Free
-              </ButtonLink>
-              <Link
-                to="/auth"
+              </ExternalButton>
+              <a
+                href={LOGIN_URL}
                 onClick={() => setOpen(false)}
                 className="text-sm font-medium text-muted-foreground"
               >
                 Login
-              </Link>
+              </a>
             </div>
           </nav>
         </div>

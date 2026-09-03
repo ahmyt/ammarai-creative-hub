@@ -4,7 +4,7 @@ import { siteContentQuery } from "@/lib/content";
 import { Container, Section, Card } from "@/components/site/primitives";
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { ExternalButton } from "@/components/site/Button";
-import { SITE } from "@/lib/site";
+import { SITE, REGISTER_URL } from "@/lib/site";
 
 const title = "AI Use Cases by Role and Industry | AmmarAI";
 const description =
@@ -78,7 +78,7 @@ function UseCasesIndex() {
             {SITE.tagline}
           </p>
           <div className="mt-8">
-            <ExternalButton href={"/auth"} variant="onInk" size="lg">
+            <ExternalButton href={REGISTER_URL} variant="onInk" size="lg">
               Start creating free
             </ExternalButton>
           </div>

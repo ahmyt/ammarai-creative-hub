@@ -6,7 +6,7 @@ import { Breadcrumbs, breadcrumbJsonLd } from "@/components/site/Breadcrumbs";
 import { FaqAccordion, faqJsonLd } from "@/components/site/Faq";
 import { RelatedTools } from "@/components/site/ToolCard";
 import { ExternalButton, ButtonLink } from "@/components/site/Button";
-import { SITE } from "@/lib/site";
+import { SITE, REGISTER_URL } from "@/lib/site";
 
 export const Route = createFileRoute("/features/$slug")({
   staticData: { sitemap: true },
@@ -73,7 +73,7 @@ function FeatureDetail() {
               {feature.lede}
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <ExternalButton href={"/auth"} size="lg">
+              <ExternalButton href={REGISTER_URL} size="lg">
                 Start creating free
               </ExternalButton>
               <ButtonLink to="/features" variant="outline" size="lg">

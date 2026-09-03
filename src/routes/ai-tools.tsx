@@ -7,7 +7,7 @@ import { Container, Section } from "@/components/site/primitives";
 import { ToolCard } from "@/components/site/ToolCard";
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { ExternalButton } from "@/components/site/Button";
-import { SITE } from "@/lib/site";
+import { SITE, REGISTER_URL } from "@/lib/site";
 
 const title = "All AI Tools: 60+ Generators in One Workspace | AmmarAI";
 const description =
@@ -149,7 +149,7 @@ function ToolsDirectory() {
             {SITE.tagline}
           </p>
           <div className="mt-8">
-            <ExternalButton href={"/auth"} variant="onInk" size="lg">
+            <ExternalButton href={REGISTER_URL} variant="onInk" size="lg">
               Start creating free
             </ExternalButton>
           </div>
