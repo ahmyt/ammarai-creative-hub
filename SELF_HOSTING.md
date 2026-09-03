@@ -112,13 +112,11 @@ After a successful build, set the **Application startup file** to
 
 ## Notes
 
-- **Media files (logo, demo videos/audio) are not in the ZIP.** They are hosted
-  on a CDN and referenced by relative paths (`/__l5e/assets-v1/...`). The app
-  automatically rewrites these to absolute CDN URLs when it detects it is
-  running outside Lovable hosting (see `src/lib/asset-url.ts`), so media loads
-  on your Plesk domain too — as long as the Lovable-published site stays
-  online. If you ever want full independence, download those files from the
-  published site and serve them from `public/`.
+- **Media files (logo, demo videos/audio) are bundled in `public/media/`.**
+  The app automatically serves these local copies when it detects it is running
+  outside Lovable hosting (see `src/lib/asset-url.ts`). On Lovable hosting it
+  still uses the CDN paths. No external dependency — the logo, videos, and audio
+  all load from your Plesk domain directly.
 - The Lovable-hosted preview/published app is unaffected by these changes.
 - `npm install` works on Plesk without a private registry — all dependencies,
   including `@lovable.dev/*`, are public on npm.
