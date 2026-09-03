@@ -6,6 +6,10 @@ export const SITE = {
     "Write, chat, create images and video, generate voiceovers, transcribe audio, analyze documents, and code in one AI workspace.",
 };
 
+/** External app URLs for user sign-up and sign-in (the product dashboard). */
+export const REGISTER_URL = "https://ammarai.com/dashboard/register";
+export const LOGIN_URL = "https://ammarai.com/dashboard/login";
+
 export const primaryNav = [
   { label: "AI Tools", to: "/ai-tools" },
   { label: "Features", to: "/features" },
