@@ -57,15 +57,15 @@ function AuthPage() {
 
   const google = async () => {
     setMessage(null);
-    const result = await lovable.auth.signInWithOAuth("google", {
-      redirect_uri: window.location.origin,
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: { redirectTo: `${window.location.origin}/admin` },
     });
-    if (result.error) {
+    if (error) {
       setMessage("Google sign-in failed. Try again or use email.");
       return;
     }
-    if (result.redirected) return;
-    void navigate({ to: "/admin" });
+    // signInWithOAuth redirects the browser to the provider; no local navigation needed.
   };
 
   return (
