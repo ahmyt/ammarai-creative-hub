@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Container, Section, Card } from "@/components/site/primitives";
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { ActionButton, ButtonLink } from "@/components/site/Button";
+import { LOGIN_URL } from "@/lib/site";
 import { siteContentQuery } from "@/lib/content";
 
 const title = "Contact AmmarAI: Sales, Support and Partnerships | AmmarAI";
@@ -133,7 +134,7 @@ function Contact() {
               ))}
               <p className="text-xs text-muted-foreground">
                 Already have an account?{" "}
-                <Link to="/auth" className="text-accent underline underline-offset-4">
+                <a href={LOGIN_URL} className="text-accent underline underline-offset-4">
                   Sign in
                 </Link>
                 .

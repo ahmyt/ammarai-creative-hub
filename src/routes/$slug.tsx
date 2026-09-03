@@ -134,7 +134,7 @@ function ToolPage({ tool }: { tool: Tool }) {
               {renderInline(tool.lede)}
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-3">
-              <ExternalButton href={"/auth"} size="lg">
+              <ExternalButton href={REGISTER_URL} size="lg">
                 {tool.ctaLabel}
               </ExternalButton>
               <ButtonLink to="/pricing" variant="outline" size="lg">
@@ -299,7 +299,7 @@ function ToolPage({ tool }: { tool: Tool }) {
             {SITE.tagline} Start on the free plan and upgrade only when the volume demands it.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
-            <ExternalButton href={"/auth"} variant="onInk" size="lg">
+            <ExternalButton href={REGISTER_URL} variant="onInk" size="lg">
               Start creating free
             </ExternalButton>
             <ButtonLink to="/ai-tools" variant="ghost" size="lg" className="text-ink-foreground">
@@ -345,7 +345,7 @@ function UseCasePage({ useCase }: { useCase: UseCase }) {
               {useCase.lede}
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <ExternalButton href={"/auth"} size="lg">
+              <ExternalButton href={REGISTER_URL} size="lg">
                 Start creating free
               </ExternalButton>
               <ButtonLink to="/ai-tools" variant="outline" size="lg">
@@ -431,7 +431,7 @@ function UseCasePage({ useCase }: { useCase: UseCase }) {
             Every tool mentioned here is included. Start free and scale when it earns it.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
-            <ExternalButton href={"/auth"} variant="onInk" size="lg">
+            <ExternalButton href={REGISTER_URL} variant="onInk" size="lg">
               Start creating free
             </ExternalButton>
             <ButtonLink to="/pricing" variant="ghost" size="lg" className="text-ink-foreground">
