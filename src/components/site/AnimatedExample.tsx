@@ -3,7 +3,6 @@ import type { Example } from "@/data/types";
 import type { ToolDemoMedia } from "@/data/tool-demos";
 import { cn } from "@/lib/utils";
 
-
 type Phase = "typing" | "thinking" | "writing" | "resting";
 
 const TYPE_MS = 22;
@@ -53,7 +52,6 @@ export function AnimatedExample({
   demoVideos?: (ToolDemoMedia | undefined)[] | undefined;
   className?: string;
 }) {
-
   const reduced = usePrefersReducedMotion();
   const [index, setIndex] = useState(0);
   const [phase, setPhase] = useState<Phase>("typing");
@@ -68,7 +66,6 @@ export function AnimatedExample({
   const demoVideo = media?.url ? media : undefined;
   const demoCode = media?.code ? media : undefined;
   const outputWords = useMemo(() => (example?.output ?? "").split(" "), [example?.output]);
-
 
   useEffect(() => {
     const node = containerRef.current;
@@ -130,7 +127,6 @@ export function AnimatedExample({
       return () => clearTimeout(t);
     }
 
-
     if (phase === "writing") {
       const count = written ? written.split(" ").length : 0;
       if (count >= outputWords.length) {
@@ -152,59 +148,141 @@ export function AnimatedExample({
 
   if (!example) return null;
 
+  const outputKind = demoCode
+    ? "code"
+    : demoVideo?.kind === "audio"
+      ? "audio"
+      : demoVideo?.kind === "image"
+        ? "image"
+        : demoVideo
+          ? "video"
+          : "text";
+
+  const outputVerb =
+    outputKind === "code"
+      ? "AmmarAI codes"
+      : outputKind === "audio"
+        ? "AmmarAI speaks"
+        : outputKind === "image" || outputKind === "video"
+          ? "AmmarAI renders"
+          : "AmmarAI writes";
+
+  const inputVerb = media?.inputImage
+    ? "You upload + type"
+    : media?.inputAudio
+      ? "You record"
+      : media?.inputFileLabel
+        ? "You attach + ask"
+        : "You type";
+
+  const progress =
+    phase === "typing"
+      ? (typed.length / Math.max(example.input.length, 1)) * 0.35
+      : phase === "thinking"
+        ? 0.42
+        : phase === "writing"
+          ? demoCode
+            ? 0.45 + (written.length / Math.max((demoCode.code ?? "").length, 1)) * 0.5
+            : demoVideo
+              ? 0.7
+              : 0.45 +
+                ((written ? written.split(" ").length : 0) / Math.max(outputWords.length, 1)) * 0.5
+          : 1;
+
+  const statusLabel =
+    phase === "typing"
+      ? "Writing the prompt"
+      : phase === "thinking"
+        ? "Generating"
+        : phase === "writing"
+          ? "Delivering output"
+          : "Complete";
+
   return (
     <div
       ref={containerRef}
       className={cn(
-        "overflow-hidden rounded-2xl bg-card shadow-[0_2px_24px_-8px_rgba(0,0,0,0.08)] ring-1 ring-border",
+        "group/demo overflow-hidden rounded-3xl bg-card shadow-[0_28px_70px_-42px_rgba(60,40,20,0.42)] ring-1 ring-border",
         className,
       )}
     >
-      <div className="flex flex-wrap items-center gap-3 border-b border-border bg-secondary/40 px-4 py-3 sm:px-5">
-        <span className="flex gap-1.5" aria-hidden="true">
-          <span className="h-2.5 w-2.5 rounded-full bg-border" />
-          <span className="h-2.5 w-2.5 rounded-full bg-border" />
-          <span className="h-2.5 w-2.5 rounded-full bg-accent/70" />
-        </span>
-        <p className="text-xs font-semibold tracking-tight text-foreground/80">
-          {toolName}
-          <span className="ml-2 font-normal text-muted-foreground">live example</span>
-        </p>
-        <span className="ml-auto flex items-center gap-2">
-          {examples.length > 1 ? (
-            <span className="text-xs font-medium tabular-nums text-muted-foreground">
-              {index + 1} of {examples.length}
+      {/* Chrome */}
+      <div className="relative border-b border-border bg-gradient-to-b from-secondary/70 to-secondary/25 px-4 pb-3 pt-3.5 sm:px-6">
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+          <span className="relative flex h-2 w-2 shrink-0" aria-hidden="true">
+            <span
+              className={cn(
+                "absolute inset-0 rounded-full bg-accent",
+                phase !== "resting" && active ? "demo-ping" : "",
+              )}
+            />
+            <span className="relative h-2 w-2 rounded-full bg-accent" />
+          </span>
+          <p className="min-w-0 text-[13px] font-semibold tracking-tight text-foreground">
+            <span className="truncate">{toolName}</span>
+          </p>
+          <span className="rounded-full bg-accent/12 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-accent ring-1 ring-accent/25">
+            Live demo
+          </span>
+          <span className="ml-auto flex items-center gap-2.5">
+            <span
+              aria-live="polite"
+              className="hidden text-[11px] font-medium tabular-nums text-muted-foreground sm:inline"
+            >
+              {statusLabel}
             </span>
-          ) : null}
-          <button
-            type="button"
-            onClick={() => setPlaying((p) => !p)}
-            className="rounded-full px-3 py-1.5 text-xs font-semibold text-foreground/70 ring-1 ring-border transition-colors hover:bg-secondary hover:text-foreground"
-          >
-            {playing ? "Pause" : "Play"}
-          </button>
-        </span>
+            {examples.length > 1 ? (
+              <span className="text-[11px] font-semibold tabular-nums text-muted-foreground">
+                {index + 1}/{examples.length}
+              </span>
+            ) : null}
+            <button
+              type="button"
+              onClick={() => setPlaying((p) => !p)}
+              aria-label={playing ? "Pause the demo" : "Play the demo"}
+              className="flex h-7 w-7 items-center justify-center rounded-full bg-card text-foreground/70 ring-1 ring-border transition-colors hover:bg-secondary hover:text-foreground"
+            >
+              {playing ? (
+                <svg viewBox="0 0 12 12" className="h-3 w-3 fill-current" aria-hidden="true">
+                  <rect x="2" y="1.5" width="3" height="9" rx="1" />
+                  <rect x="7" y="1.5" width="3" height="9" rx="1" />
+                </svg>
+              ) : (
+                <svg viewBox="0 0 12 12" className="h-3 w-3 fill-current" aria-hidden="true">
+                  <path d="M3 1.7 10 6 3 10.3z" />
+                </svg>
+              )}
+            </button>
+          </span>
+        </div>
+        {/* Progress rail */}
+        <div className="mt-3 h-[3px] w-full overflow-hidden rounded-full bg-border/70">
+          <div
+            className="h-full rounded-full bg-accent transition-[width] duration-200 ease-linear"
+            style={{ width: `${Math.min(100, Math.max(2, progress * 100))}%` }}
+          />
+        </div>
       </div>
 
-      <div className="px-4 py-5 sm:px-6 sm:py-6">
+      <div className="demo-grid px-4 py-5 sm:px-6 sm:py-7">
+        {/* Input */}
         <div>
-          <p className="text-xs font-semibold text-foreground/70">
-            {media?.inputImage
-              ? "You upload + type"
-              : media?.inputAudio
-                ? "You record"
-                : media?.inputFileLabel
-                  ? "You attach + ask"
-                  : "You type"}
-          </p>
-          <div className="mt-2 rounded-xl rounded-tl-sm bg-secondary/60 px-4 py-3 ring-1 ring-border/60">
+          <div className="flex items-center gap-2">
+            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-ink text-[9px] font-bold text-ink-foreground">
+              You
+            </span>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+              {inputVerb}
+            </p>
+          </div>
+          <div className="mt-2.5 rounded-2xl rounded-tl-md bg-card px-4 py-3.5 shadow-[0_1px_0_rgba(0,0,0,0.02)] ring-1 ring-border">
             {media?.inputImage ? (
-              <div className="mb-3 flex items-center gap-3 rounded-lg bg-card/80 p-2 ring-1 ring-border/60">
+              <div className="mb-3 flex items-center gap-3 rounded-xl bg-secondary/60 p-2 ring-1 ring-border/70">
                 <img
                   src={media.inputImage}
                   alt={media.inputImageAlt ?? "Source image for the sample"}
                   loading="lazy"
-                  className="h-14 w-20 shrink-0 rounded-md object-cover ring-1 ring-border/60"
+                  className="h-14 w-20 shrink-0 rounded-lg object-cover ring-1 ring-border/60"
                 />
                 <span className="min-w-0">
                   <span className="block text-xs font-semibold text-foreground">
@@ -217,7 +295,7 @@ export function AnimatedExample({
               </div>
             ) : null}
             {media?.inputAudio ? (
-              <div className="mb-3 rounded-lg bg-card/80 p-2 ring-1 ring-border/60">
+              <div className="mb-3 rounded-xl bg-secondary/60 p-2 ring-1 ring-border/70">
                 <p className="mb-2 truncate text-xs font-semibold text-foreground">
                   {media.inputAudioLabel ?? "Recording attached"}
                 </p>
@@ -232,12 +310,12 @@ export function AnimatedExample({
               </div>
             ) : null}
             {media?.inputFileLabel ? (
-              <p className="mb-3 inline-flex items-center gap-2 rounded-lg bg-card/80 px-2.5 py-1.5 text-xs font-semibold text-foreground ring-1 ring-border/60">
+              <p className="mb-3 inline-flex items-center gap-2 rounded-lg bg-secondary/70 px-2.5 py-1.5 text-xs font-semibold text-foreground ring-1 ring-border/70">
                 <span aria-hidden="true">📄</span>
                 {media.inputFileLabel}
               </p>
             ) : null}
-            <p className="min-h-[3rem] text-pretty font-mono text-[13px] leading-relaxed text-foreground">
+            <p className="min-h-[2.5rem] text-pretty font-mono text-[13px] leading-relaxed text-foreground">
               {typed}
               {phase === "typing" ? (
                 <span className="ml-0.5 inline-block h-4 w-[2px] translate-y-0.5 animate-pulse bg-accent align-middle" />
@@ -246,18 +324,32 @@ export function AnimatedExample({
           </div>
         </div>
 
-        <div className="mt-4">
+        {/* Connector */}
+        <div className="flex items-center gap-3 py-3.5" aria-hidden="true">
+          <span className="h-px flex-1 bg-border" />
+          <span
+            className={cn(
+              "flex h-6 w-6 items-center justify-center rounded-full ring-1 transition-colors",
+              phase === "thinking"
+                ? "bg-accent text-accent-foreground ring-accent"
+                : "bg-card text-muted-foreground ring-border",
+            )}
+          >
+            <svg viewBox="0 0 12 12" className="h-3 w-3 fill-current">
+              <path d="M6 1.5 6 8.2 3.4 5.6 2.4 6.6 6 10.2 9.6 6.6 8.6 5.6 6 8.2z" />
+            </svg>
+          </span>
+          <span className="h-px flex-1 bg-border" />
+        </div>
+
+        {/* Output */}
+        <div>
           <div className="flex items-center gap-2">
-            <p className="text-xs font-semibold text-foreground/70">
-              {demoCode
-                ? "AmmarAI codes"
-                : demoVideo?.kind === "audio"
-                ? "AmmarAI speaks"
-                : demoVideo?.kind === "image"
-                  ? "AmmarAI renders"
-                  : demoVideo
-                    ? "AmmarAI renders"
-                    : "AmmarAI writes"}
+            <span className="flex h-5 items-center rounded-full bg-accent/15 px-2 text-[9px] font-bold uppercase tracking-wider text-accent">
+              AI
+            </span>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+              {outputVerb}
             </p>
             {phase === "thinking" ? (
               <span className="flex gap-1" aria-label="Generating">
@@ -267,17 +359,30 @@ export function AnimatedExample({
               </span>
             ) : null}
           </div>
-          <div className="mt-2 rounded-xl rounded-tr-sm bg-accent/[0.06] px-4 py-3 ring-1 ring-accent/15">
-            {demoCode ? (
-              <div>
+
+          <div className="relative mt-2.5 overflow-hidden rounded-2xl rounded-tr-md bg-card p-4 shadow-[0_18px_40px_-32px_rgba(60,40,20,0.5)] ring-1 ring-accent/25">
+            <span
+              className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-accent to-transparent"
+              aria-hidden="true"
+            />
+            {phase === "thinking" ? (
+              <div className="space-y-2.5 py-1" aria-hidden="true">
+                {["w-11/12", "w-full", "w-8/12"].map((w) => (
+                  <div key={w} className={cn("relative h-3 overflow-hidden rounded-full bg-secondary", w)}>
+                    <span className="demo-shimmer absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-transparent via-accent/25 to-transparent" />
+                  </div>
+                ))}
+              </div>
+            ) : demoCode ? (
+              <div className="demo-reveal">
                 <div className="flex items-center justify-between gap-3">
                   <span className="rounded-full bg-ink px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-ink-foreground">
                     {demoCode.language ?? "code"}
                   </span>
-                  <span className="text-xs text-muted-foreground">generated file</span>
+                  <span className="text-[11px] text-muted-foreground">generated file</span>
                 </div>
-                <pre className="mt-3 max-h-80 overflow-auto rounded-lg bg-ink px-4 py-3 text-[12px] leading-relaxed text-ink-foreground ring-1 ring-border/40">
-                  <code className="font-mono whitespace-pre">
+                <pre className="mt-3 max-h-80 overflow-auto rounded-xl bg-ink px-4 py-3.5 text-[12px] leading-relaxed text-ink-foreground ring-1 ring-border/40">
+                  <code className="whitespace-pre font-mono">
                     {written}
                     {phase === "writing" ? (
                       <span className="ml-0.5 inline-block h-3.5 w-[2px] translate-y-0.5 animate-pulse bg-accent align-middle" />
@@ -289,41 +394,47 @@ export function AnimatedExample({
                 </p>
               </div>
             ) : demoVideo ? (
-              <div>
+              <div className="demo-reveal">
                 {demoVideo.kind === "audio" ? (
-                  <audio
-                    key={demoVideo.url}
-                    src={demoVideo.url}
-                    controls
-                    preload="metadata"
-                    className="w-full"
-                    aria-label={`${toolName} sample output audio`}
-                  />
-                ) : demoVideo.kind === "image" ? (
-                  <img
-                    key={demoVideo.url}
-                    src={demoVideo.url}
-                    alt={demoVideo.caption ?? `${toolName} sample output image`}
-                    loading="lazy"
-                    className="w-full rounded-lg bg-secondary object-cover ring-1 ring-border/60"
-                  />
+                  <div className="rounded-xl bg-secondary/60 p-3 ring-1 ring-border/70">
+                    <audio
+                      key={demoVideo.url}
+                      src={demoVideo.url}
+                      controls
+                      preload="metadata"
+                      className="w-full"
+                      aria-label={`${toolName} sample output audio`}
+                    />
+                  </div>
                 ) : (
-                  <video
-                    key={demoVideo.url}
-                    src={demoVideo.url}
-                    className="w-full rounded-lg bg-secondary ring-1 ring-border/60"
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                    preload="metadata"
-                    aria-label={`${toolName} sample output video`}
-                  />
+                  <figure className="overflow-hidden rounded-xl bg-ink ring-1 ring-border/50">
+                    {demoVideo.kind === "image" ? (
+                      <img
+                        key={demoVideo.url}
+                        src={demoVideo.url}
+                        alt={demoVideo.caption ?? `${toolName} sample output image`}
+                        loading="lazy"
+                        className="w-full object-cover"
+                      />
+                    ) : (
+                      <video
+                        key={demoVideo.url}
+                        src={demoVideo.url}
+                        className="w-full"
+                        autoPlay
+                        loop
+                        muted
+                        playsInline
+                        preload="metadata"
+                        aria-label={`${toolName} sample output video`}
+                      />
+                    )}
+                  </figure>
                 )}
                 <p className="mt-3 text-pretty text-sm leading-relaxed text-foreground/85">
                   {demoVideo.caption}
                 </p>
-                <p className="mt-2 text-pretty text-xs leading-relaxed text-muted-foreground">
+                <p className="mt-1.5 text-pretty text-xs leading-relaxed text-muted-foreground">
                   {example.output}
                 </p>
               </div>
@@ -341,26 +452,30 @@ export function AnimatedExample({
           </div>
         </div>
 
-
-
+        {/* Example switcher */}
         {examples.length > 1 ? (
-          <div className="mt-5 flex gap-2 overflow-x-auto pb-1 sm:flex-wrap sm:overflow-visible">
-            {examples.map((ex, i) => (
-              <button
-                key={ex.label}
-                type="button"
-                onClick={() => setIndex(i)}
-                aria-pressed={i === index}
-                className={cn(
-                  "shrink-0 rounded-full px-3.5 py-1.5 text-xs font-semibold transition-colors",
-                  i === index
-                    ? "bg-ink text-ink-foreground"
-                    : "text-foreground/70 ring-1 ring-border hover:bg-secondary hover:text-foreground",
-                )}
-              >
-                {ex.label}
-              </button>
-            ))}
+          <div className="mt-5 flex items-center gap-3">
+            <span className="hidden shrink-0 text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground sm:inline">
+              Try
+            </span>
+            <div className="flex gap-1.5 overflow-x-auto rounded-full bg-secondary/70 p-1 ring-1 ring-border/70 sm:flex-wrap sm:overflow-visible">
+              {examples.map((ex, i) => (
+                <button
+                  key={ex.label}
+                  type="button"
+                  onClick={() => setIndex(i)}
+                  aria-pressed={i === index}
+                  className={cn(
+                    "shrink-0 rounded-full px-3.5 py-1.5 text-xs font-semibold transition-all",
+                    i === index
+                      ? "bg-ink text-ink-foreground shadow-[0_6px_14px_-8px_rgba(0,0,0,0.6)]"
+                      : "text-foreground/65 hover:bg-card hover:text-foreground",
+                  )}
+                >
+                  {ex.label}
+                </button>
+              ))}
+            </div>
           </div>
         ) : null}
       </div>
