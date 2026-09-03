@@ -16,5 +16,7 @@ export default defineConfig({
   // Plesk (or any Node host). This override applies ONLY outside a Lovable
   // build: Lovable sets LOVABLE_NITRO_PRESET=cloudflare-module internally, so
   // the Lovable preview/published site keeps running on Cloudflare unchanged.
-  nitro: { preset: "node-server" },
+  // output.dir is pinned to "dist" so the server entry is always at
+  // dist/server/index.mjs regardless of preset.
+  nitro: { preset: "node-server", output: { dir: "dist" } },
 });
