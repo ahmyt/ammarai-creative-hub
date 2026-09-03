@@ -1,72 +1,34 @@
-# Self-hosting AmmarAI on Plesk
+# Hosting AmmarAI on Plesk (with the existing cloud database)
 
-This guide covers hosting the AmmarAI marketing site on a Plesk server with a
-**self-hosted Supabase** backend. The app is a TanStack Start (React 19 + Vite)
-SSR app. By default it builds for Cloudflare Workers; this project is configured
-to build as a **Node.js server** when built outside Lovable, so Plesk can run it.
+This guide covers hosting the AmmarAI site on a Plesk server while **keeping your
+existing Lovable Cloud database**. No database migration is needed — the app
+talks to the same cloud database over HTTPS, wherever it runs.
+
+The app is a TanStack Start (React 19 + Vite) SSR app. By default it builds for
+Cloudflare Workers; this project is configured to build as a **Node.js server**
+when built outside Lovable, so Plesk can run it.
 
 ---
 
 ## 1. Where the database is
 
-There is **no database file in the code download**. The database is a hosted
-PostgreSQL instance (Supabase). The app talks to it remotely over HTTPS using
-keys in `.env`. To self-host, you run your own Supabase instance (Track A)
-and point the app at it (Track B).
+There is **no database file in the code download**. The database is your existing
+Lovable Cloud PostgreSQL instance. The Plesk app connects to it remotely using
+the same keys that are in this repo's `.env` — nothing to set up or migrate.
+All your content, admin users, and sign-ins keep working as-is.
 
 ---
 
-## 2. Track A — Set up a self-hosted Supabase on Plesk
+## 2. Build configuration (already done in this repo)
 
-Self-hosted Supabase is a Docker Compose stack (Postgres + Auth + Data API +
-Realtime + Storage + Studio). Plesk supports Docker via an extension.
-
-1. **Enable Docker** in Plesk: Extensions → Docker (install if missing).
-2. **Deploy Supabase** following the official self-hosting guide:
-   https://supabase.com/docs/guides/self-hosting/docker
-   - Clone the repo, edit `.env`:
-     - `POSTGRES_PASSWORD`, `JWT_SECRET` (generate strong values)
-     - `ANON_KEY`, `SERVICE_ROLE_KEY` (generate Supabase-format JWTs — see guide)
-     - `SITE_URL=https://yourdomain.com`
-     - `API_EXTERNAL_URL=https://supabase.yourdomain.com`
-     - `ADDITIONAL_REDIRECT_URLS=https://yourdomain.com`
-   - `docker compose up -d`
-   - Put API (`:8000`) and Studio (`:3000`) behind `https://supabase.yourdomain.com`
-     using a Plesk reverse proxy / subdomain.
-3. **Apply the schema.** Open the Supabase Studio SQL Editor and run the file
-   `supabase/self-host-schema.sql` from this repo. It creates:
-   - `public.user_roles` table + `app_role` enum
-   - `public.content` table (no `kind` CHECK, so pages work)
-   - `has_role`, `claim_first_admin`, `set_updated_at` functions + trigger
-   - RLS policies and GRANTs
-4. **Migrate existing content data.** Export the `content` rows from your current
-   Lovable Cloud database and insert them into the new `content` table. The
-   table is publicly readable, so you can pull rows via the Data API and re-insert.
-   Auth users are **not** migrated — sign up fresh (see step 6).
-5. **Configure email.** Set an SMTP server in the Supabase `.env`
-   (`SMTP_*` vars) so signup confirmation emails send. For testing you can
-   disable email confirmation in Dashboard → Authentication → Providers.
-6. **Become admin.** Sign up at `https://yourdomain.com/auth`, then go to
-   `/admin` → **Claim first admin** (this button appears when no admin exists yet).
-
-### Google sign-in on self-hosted Supabase
-The app calls Supabase Auth's Google provider directly. Configure it in your
-self-hosted Supabase `.env`:
-- `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` (from Google Cloud Console →
-  Credentials → OAuth client)
-- Authorized redirect URI in Google Console:
-  `https://supabase.yourdomain.com/auth/v1/callback`
-
----
-
-## 3. Track B — Run the app as a Node server on Plesk
-
-### Build configuration (already done in this repo)
-- `vite.config.ts` pins `nitro: { preset: "node-server" }`.
+- `vite.config.ts` pins `nitro: { preset: "node-server", output: { dir: "dist" } }`.
   This only applies outside a Lovable build; the Lovable preview stays on Cloudflare.
 - `package.json` has `"start": "node dist/server/index.mjs"`.
 
-### Deploy steps
+---
+
+## 3. Deploy steps on Plesk
+
 1. **Upload the project** to the Plesk domain (e.g. `httpdocs` or a sibling app dir).
 2. In Plesk → **Domains → yourdomain.com → Node.js**:
    - Node.js version: **20+**
@@ -75,33 +37,56 @@ self-hosted Supabase `.env`:
    - Run `npm install`, then `npm run build`
    - Application startup file/command: `npm run start`
      (or `node dist/server/index.mjs`)
-3. **Set environment variables** (Plesk → Node.js → Custom environment variables):
-   - `SUPABASE_URL` = `https://supabase.yourdomain.com`
-   - `SUPABASE_PUBLISHABLE_KEY` = your self-hosted anon key
-   - `SUPABASE_SERVICE_ROLE_KEY` = your self-hosted service-role key
-   - `VITE_SUPABASE_URL` = same as `SUPABASE_URL`
-   - `VITE_SUPABASE_PUBLISHABLE_KEY` = same anon key
-   - `VITE_SUPABASE_PROJECT_ID` = a stable id for your self-hosted project
+3. **Set environment variables** (Plesk → Node.js → Custom environment variables).
+   Copy the values from this repo's `.env`:
+   - `VITE_SUPABASE_URL`
+   - `VITE_SUPABASE_PUBLISHABLE_KEY`
+   - `VITE_SUPABASE_PROJECT_ID`
+   - `SUPABASE_URL` = same as `VITE_SUPABASE_URL`
+   - `SUPABASE_PUBLISHABLE_KEY` = same as `VITE_SUPABASE_PUBLISHABLE_KEY`
    - `PORT` = the port Plesk routes to (e.g. `3000`)
-   - Re-run `npm run build` after setting `VITE_*` vars (they bake into the client bundle).
+   - Re-run `npm run build` **after** setting `VITE_*` vars — they bake into the
+     client bundle at build time.
 4. **Routing.** TanStack Start serves all routes (SSR HTML + static assets) from
    one Node process. Configure Plesk to proxy all requests to `localhost:PORT`
    (Apache `ProxyPass` / nginx reverse proxy, or Passenger). Do not serve only
    static files — SSR pages come from the Node server.
 
-### Verify
+---
+
+## 4. Google sign-in
+
+The app calls Supabase Auth's Google provider directly. Since your domain changes
+from `*.lovable.app` to your own domain:
+
+1. In Google Cloud Console → Credentials → your OAuth client, add the authorized
+   redirect URI for your cloud auth endpoint:
+   `https://<your-cloud-project-host>/auth/v1/callback` (this URL is the
+   `SUPABASE_URL` value + `/auth/v1/callback`).
+2. The app's OAuth `redirectTo` is `window.location.origin + "/admin"`, so on
+   your domain users return to `https://yourdomain.com/admin` — make sure that
+   origin is allowed in the cloud project's Auth redirect-URL settings.
+3. Email/password sign-in works with no extra configuration.
+
+---
+
+## 5. Verify
+
 - Visit `/` — homepage renders.
 - Visit `/sitemap.xml` — valid XML returned.
-- `/auth` sign up → `/admin` → Claim first admin → edit content → see it on the site.
+- Sign in at `/auth` → `/admin` → edit content → see the change on the site.
 - Google sign-in redirects to Google and returns to `/admin`.
 
 ---
 
 ## Notes
+
 - The Lovable-hosted preview/published app is unaffected by these changes.
 - `npm install` works on Plesk without a private registry — all dependencies,
   including `@lovable.dev/*`, are public on npm.
-- Self-hosted Supabase needs ample RAM (recommend 2 GB+ free). Confirm your Plesk
-  server supports Docker.
-- If you prefer to keep the existing Lovable Cloud database instead, skip Track A
-  and only point the Plesk app at the existing cloud keys — far simpler.
+- The Lovable build environment forces the Cloudflare preset internally, so the
+  `node-server` build can only be produced outside Lovable. Run `npm run build`
+  on your own machine/Plesk first and confirm it emits `dist/server/index.mjs`
+  before going live.
+- Update `public/robots.txt` and the sitemap origin if you move fully to your
+  custom domain (currently they point at `ammarai-creative-hub.lovable.app`).
