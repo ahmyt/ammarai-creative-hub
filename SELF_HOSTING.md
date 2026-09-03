@@ -79,6 +79,37 @@ from `*.lovable.app` to your own domain:
 
 ---
 
+## Troubleshooting
+
+### `npm run build` fails with exit code 127 and `nodenv: node: command not found`
+
+This is a Plesk environment issue, not a code problem. Some Plesk servers (e.g.
+Zap Hosting) manage Node with **nodenv**, and the version selected in Plesk
+(e.g. `22.23.2`) may not actually be installed in nodenv — so the `node` binary
+is missing when the build runs.
+
+**Fix 1 — pick an installed Node version:**
+1. Plesk → **Websites & Domains → yourdomain.com → Node.js** (Dashboard tab).
+2. Set the Node.js version to a plain installed major version — **22** or **20**
+   (the ones nodenv lists), not a specific patch like `22.23.2`.
+3. Save, then re-run `npm run build` from "Run Node.js commands".
+
+**Fix 2 — run the build over SSH (most reliable):**
+```bash
+cd /var/www/vhosts/yourdomain.com/<your-app-folder>
+export PATH="$HOME/.nodenv/shims:$HOME/.nodenv/bin:$PATH"
+nodenv versions        # see what's installed
+nodenv global 22       # pick an installed version
+node -v                # should print a version now
+npm install
+npm run build          # should produce dist/server/index.mjs
+```
+
+After a successful build, set the **Application startup file** to
+`dist/server/index.mjs` in Plesk Node.js settings and click **Restart App**.
+
+---
+
 ## Notes
 
 - The Lovable-hosted preview/published app is unaffected by these changes.
