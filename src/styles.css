@@ -198,6 +198,60 @@
   animation: editorial-rise 0.6s cubic-bezier(0.32, 0.72, 0, 1) both;
 }
 
+/* --- Live example demo panel --- */
+
+@keyframes demo-shimmer {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(200%);
+  }
+}
+
+@utility demo-shimmer {
+  animation: demo-shimmer 1.4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+@keyframes demo-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.995);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@utility demo-reveal {
+  animation: demo-reveal 0.5s cubic-bezier(0.32, 0.72, 0, 1) both;
+}
+
+@keyframes demo-ping {
+  0% {
+    transform: scale(1);
+    opacity: 0.55;
+  }
+  70%,
+  100% {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+}
+
+@utility demo-ping {
+  animation: demo-ping 1.8s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+@utility demo-grid {
+  background-image:
+    linear-gradient(to right, color-mix(in oklab, var(--color-hairline) 55%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in oklab, var(--color-hairline) 55%, transparent) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
