@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { plans, SITE } from "@/lib/site";
+import { plans, SITE, REGISTER_URL } from "@/lib/site";
 import { Container, Section, SectionHeading } from "@/components/site/primitives";
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { FaqAccordion, faqJsonLd } from "@/components/site/Faq";
@@ -106,7 +106,7 @@ function Pricing() {
                   ))}
                 </ul>
                 <ExternalButton
-                  href={"/auth"}
+                  href={REGISTER_URL}
                   variant={plan.highlight ? "primary" : "outline"}
                   className="mt-7 w-full"
                 >

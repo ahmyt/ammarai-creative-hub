@@ -154,7 +154,7 @@ function BlogPost() {
             {SITE.tagline}
           </p>
           <div className="mt-8">
-            <ExternalButton href={"/auth"} variant="onInk" size="lg">
+            <ExternalButton href={REGISTER_URL} variant="onInk" size="lg">
               Start creating free
             </ExternalButton>
           </div>
