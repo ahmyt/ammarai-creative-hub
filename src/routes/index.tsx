@@ -4,7 +4,7 @@ import { tools, featuredTools, popularTools, recentTools, usedCategories, sugges
 import { useCases } from "@/data/use-cases";
 import { features } from "@/data/features";
 import { posts } from "@/data/posts";
-import { SITE, organizationJsonLd } from "@/lib/site";
+import { SITE, organizationJsonLd, REGISTER_URL } from "@/lib/site";
 import { Container, Section, SectionHeading, Card } from "@/components/site/primitives";
 import { ToolCard } from "@/components/site/ToolCard";
 import { ExternalButton, ButtonLink } from "@/components/site/Button";
@@ -88,7 +88,7 @@ export function Home() {
                 and your history in one place.
               </p>
               <div className="mt-9 flex flex-wrap items-center gap-3">
-                <ExternalButton href={"/auth"} size="lg">
+                <ExternalButton href={REGISTER_URL} size="lg">
                   Start creating free
                 </ExternalButton>
                 <ButtonLink to="/ai-tools" variant="outline" size="lg">
@@ -364,7 +364,7 @@ export function Home() {
             it.
           </p>
           <div className="mt-9 flex flex-wrap justify-center gap-3">
-            <ExternalButton href={"/auth"} variant="onInk" size="lg">
+            <ExternalButton href={REGISTER_URL} variant="onInk" size="lg">
               Start creating free
             </ExternalButton>
             <ButtonLink to="/pricing" variant="ghost" size="lg" className="text-ink-foreground">
