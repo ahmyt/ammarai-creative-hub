@@ -11,6 +11,7 @@ const description =
   "Get in touch about plans, agency and team accounts, technical questions or partnership enquiries.";
 
 export const Route = createFileRoute("/contact")({
+  staticData: { sitemap: true },
   loader: ({ context }) => context.queryClient.ensureQueryData(siteContentQuery),
   head: () => ({
     meta: [

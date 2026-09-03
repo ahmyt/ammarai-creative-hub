@@ -8,6 +8,7 @@ import { ListField } from "@/components/cms/ListField";
 import { RichTextArea } from "@/components/cms/RichTextArea";
 
 export const Route = createFileRoute("/admin/$kind/$slug")({
+  staticData: { sitemap: false },
   loader: ({ params }) => {
     const meta = contentKinds.find((k) => k.kind === params.kind);
     if (!meta) throw notFound();

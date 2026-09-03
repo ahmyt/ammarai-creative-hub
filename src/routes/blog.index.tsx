@@ -9,6 +9,7 @@ const description =
   "Long-form guides on writing, video, voice, SEO and productivity with AI, written for people shipping real work.";
 
 export const Route = createFileRoute("/blog/")({
+  staticData: { sitemap: true },
   head: () => ({
     meta: [
       { title },

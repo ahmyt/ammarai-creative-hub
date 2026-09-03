@@ -5,6 +5,7 @@ import { lovable } from "@/integrations/lovable/index";
 import { Container, Section } from "@/components/site/primitives";
 
 export const Route = createFileRoute("/auth")({
+  staticData: { sitemap: false },
   head: () => ({
     meta: [
       { title: "Sign in to the AmmarAI content studio" },

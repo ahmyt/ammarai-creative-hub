@@ -34,6 +34,7 @@ const homeFaqs = [
 ];
 
 export const Route = createFileRoute("/")({
+  staticData: { sitemap: true },
   head: () => ({
     meta: [
       { title },

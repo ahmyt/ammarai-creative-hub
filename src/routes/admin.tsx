@@ -5,6 +5,7 @@ import { Container, Section } from "@/components/site/primitives";
 import { contentKinds } from "@/lib/content";
 
 export const Route = createFileRoute("/admin")({
+  staticData: { sitemap: "exclude-subtree" },
   head: () => ({
     meta: [
       { title: "Content studio | AmmarAI" },

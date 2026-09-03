@@ -9,6 +9,7 @@ import { ExternalButton, ButtonLink } from "@/components/site/Button";
 import { SITE } from "@/lib/site";
 
 export const Route = createFileRoute("/features/$slug")({
+  staticData: { sitemap: true },
   loader: async ({ params, context }) => {
     const content = await context.queryClient.ensureQueryData(siteContentQuery);
     const feature = content.features.find((f) => f.slug === params.slug);
