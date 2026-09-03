@@ -136,7 +136,7 @@ function Contact() {
                 Already have an account?{" "}
                 <a href={LOGIN_URL} className="text-accent underline underline-offset-4">
                   Sign in
-                </Link>
+                </a>
                 .
               </p>
             </div>
