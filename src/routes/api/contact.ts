@@ -12,10 +12,10 @@ const contactSchema = z.object({
 const DEFAULT_NOTIFY_EMAIL = "support@ammarai.com";
 
 type EmailSettings = {
-  senderDomain?: string;
-  fromName?: string;
-  fromEmail?: string;
-  notifyEmail?: string;
+  senderDomain?: string | undefined;
+  fromName?: string | undefined;
+  fromEmail?: string | undefined;
+  notifyEmail?: string | undefined;
 };
 
 const str = (value: unknown): string | undefined =>
