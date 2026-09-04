@@ -22,6 +22,7 @@ import { Route as ResourcesRouteImport } from './routes/resources'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as UseCasesRouteImport } from './routes/use-cases'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
+import { Route as AdminArticlesRouteImport } from './routes/admin.articles'
 import { Route as AdminMessagesRouteImport } from './routes/admin.messages'
 import { Route as ApiContactRouteImport } from './routes/api/contact'
 import { Route as AuthForwardRouteImport } from './routes/auth.forward'
@@ -31,6 +32,7 @@ import { Route as FeaturesIndexRouteImport } from './routes/features.index'
 import { Route as FeaturesSlugRouteImport } from './routes/features.$slug'
 import { Route as AdminKindIndexRouteImport } from './routes/admin.$kind.index'
 import { Route as AdminKindSlugRouteImport } from './routes/admin.$kind.$slug'
+import { Route as ApiPublicCronBabylovegrowthRouteImport } from './routes/api/public/cron/babylovegrowth'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -97,6 +99,11 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminArticlesRoute = AdminArticlesRouteImport.update({
+  id: '/articles',
+  path: '/articles',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminMessagesRoute = AdminMessagesRouteImport.update({
   id: '/messages',
   path: '/messages',
@@ -142,6 +149,12 @@ const AdminKindSlugRoute = AdminKindSlugRouteImport.update({
   path: '/$kind/$slug',
   getParentRoute: () => AdminRoute,
 } as any)
+const ApiPublicCronBabylovegrowthRoute =
+  ApiPublicCronBabylovegrowthRouteImport.update({
+    id: '/api/public/cron/babylovegrowth',
+    path: '/api/public/cron/babylovegrowth',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -156,6 +169,7 @@ export interface FileRoutesByFullPath {
   '/resources': typeof ResourcesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/use-cases': typeof UseCasesRoute
+  '/admin/articles': typeof AdminArticlesRoute
   '/admin/messages': typeof AdminMessagesRoute
   '/api/contact': typeof ApiContactRoute
   '/auth/forward': typeof AuthForwardRoute
@@ -166,6 +180,7 @@ export interface FileRoutesByFullPath {
   '/features/': typeof FeaturesIndexRoute
   '/admin/$kind/$slug': typeof AdminKindSlugRoute
   '/admin/$kind/': typeof AdminKindIndexRoute
+  '/api/public/cron/babylovegrowth': typeof ApiPublicCronBabylovegrowthRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -179,6 +194,7 @@ export interface FileRoutesByTo {
   '/resources': typeof ResourcesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/use-cases': typeof UseCasesRoute
+  '/admin/articles': typeof AdminArticlesRoute
   '/admin/messages': typeof AdminMessagesRoute
   '/api/contact': typeof ApiContactRoute
   '/auth/forward': typeof AuthForwardRoute
@@ -189,6 +205,7 @@ export interface FileRoutesByTo {
   '/features': typeof FeaturesIndexRoute
   '/admin/$kind/$slug': typeof AdminKindSlugRoute
   '/admin/$kind': typeof AdminKindIndexRoute
+  '/api/public/cron/babylovegrowth': typeof ApiPublicCronBabylovegrowthRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -204,6 +221,7 @@ export interface FileRoutesById {
   '/resources': typeof ResourcesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/use-cases': typeof UseCasesRoute
+  '/admin/articles': typeof AdminArticlesRoute
   '/admin/messages': typeof AdminMessagesRoute
   '/api/contact': typeof ApiContactRoute
   '/auth/forward': typeof AuthForwardRoute
@@ -214,6 +232,7 @@ export interface FileRoutesById {
   '/features/': typeof FeaturesIndexRoute
   '/admin/$kind/$slug': typeof AdminKindSlugRoute
   '/admin/$kind/': typeof AdminKindIndexRoute
+  '/api/public/cron/babylovegrowth': typeof ApiPublicCronBabylovegrowthRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -230,6 +249,7 @@ export interface FileRouteTypes {
     | '/resources'
     | '/sitemap.xml'
     | '/use-cases'
+    | '/admin/articles'
     | '/admin/messages'
     | '/api/contact'
     | '/auth/forward'
@@ -240,6 +260,7 @@ export interface FileRouteTypes {
     | '/features/'
     | '/admin/$kind/$slug'
     | '/admin/$kind/'
+    | '/api/public/cron/babylovegrowth'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -253,6 +274,7 @@ export interface FileRouteTypes {
     | '/resources'
     | '/sitemap.xml'
     | '/use-cases'
+    | '/admin/articles'
     | '/admin/messages'
     | '/api/contact'
     | '/auth/forward'
@@ -263,6 +285,7 @@ export interface FileRouteTypes {
     | '/features'
     | '/admin/$kind/$slug'
     | '/admin/$kind'
+    | '/api/public/cron/babylovegrowth'
   id:
     | '__root__'
     | '/'
@@ -277,6 +300,7 @@ export interface FileRouteTypes {
     | '/resources'
     | '/sitemap.xml'
     | '/use-cases'
+    | '/admin/articles'
     | '/admin/messages'
     | '/api/contact'
     | '/auth/forward'
@@ -287,6 +311,7 @@ export interface FileRouteTypes {
     | '/features/'
     | '/admin/$kind/$slug'
     | '/admin/$kind/'
+    | '/api/public/cron/babylovegrowth'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -307,6 +332,7 @@ export interface RootRouteChildren {
   FeaturesSlugRoute: typeof FeaturesSlugRoute
   BlogIndexRoute: typeof BlogIndexRoute
   FeaturesIndexRoute: typeof FeaturesIndexRoute
+  ApiPublicCronBabylovegrowthRoute: typeof ApiPublicCronBabylovegrowthRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -402,6 +428,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/articles': {
+      id: '/admin/articles'
+      path: '/articles'
+      fullPath: '/admin/articles'
+      preLoaderRoute: typeof AdminArticlesRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/messages': {
       id: '/admin/messages'
       path: '/messages'
@@ -465,10 +498,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminKindSlugRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/api/public/cron/babylovegrowth': {
+      id: '/api/public/cron/babylovegrowth'
+      path: '/api/public/cron/babylovegrowth'
+      fullPath: '/api/public/cron/babylovegrowth'
+      preLoaderRoute: typeof ApiPublicCronBabylovegrowthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 interface AdminRouteChildren {
+  AdminArticlesRoute: typeof AdminArticlesRoute
   AdminMessagesRoute: typeof AdminMessagesRoute
   AdminIndexRoute: typeof AdminIndexRoute
   AdminKindSlugRoute: typeof AdminKindSlugRoute
@@ -476,6 +517,7 @@ interface AdminRouteChildren {
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
+  AdminArticlesRoute: AdminArticlesRoute,
   AdminMessagesRoute: AdminMessagesRoute,
   AdminIndexRoute: AdminIndexRoute,
   AdminKindSlugRoute: AdminKindSlugRoute,
@@ -512,6 +554,7 @@ const rootRouteChildren: RootRouteChildren = {
   FeaturesSlugRoute: FeaturesSlugRoute,
   BlogIndexRoute: BlogIndexRoute,
   FeaturesIndexRoute: FeaturesIndexRoute,
+  ApiPublicCronBabylovegrowthRoute: ApiPublicCronBabylovegrowthRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

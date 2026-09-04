@@ -86,6 +86,63 @@ export type Database = {
         }
         Relationships: []
       }
+      syndicated_articles: {
+        Row: {
+          content_html: string | null
+          content_markdown: string | null
+          created_at: string
+          external_id: string | null
+          faq_json_ld: Json | null
+          hero_image_url: string | null
+          id: string
+          is_hidden: boolean
+          json_ld: Json | null
+          language_code: string
+          meta_description: string | null
+          published_at: string | null
+          slug: string
+          synced_at: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          content_html?: string | null
+          content_markdown?: string | null
+          created_at?: string
+          external_id?: string | null
+          faq_json_ld?: Json | null
+          hero_image_url?: string | null
+          id?: string
+          is_hidden?: boolean
+          json_ld?: Json | null
+          language_code?: string
+          meta_description?: string | null
+          published_at?: string | null
+          slug: string
+          synced_at?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          content_html?: string | null
+          content_markdown?: string | null
+          created_at?: string
+          external_id?: string | null
+          faq_json_ld?: Json | null
+          hero_image_url?: string | null
+          id?: string
+          is_hidden?: boolean
+          json_ld?: Json | null
+          language_code?: string
+          meta_description?: string | null
+          published_at?: string | null
+          slug?: string
+          synced_at?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
