@@ -82,7 +82,7 @@ export const Route = createFileRoute("/api/contact")({
       // connection and returns a safe error code — no credentials or payloads.
       GET: async () => {
         if (!process.env["SMTP_HOST"]) {
-          return Response.json({ smtp: "not_configured" });
+          return Response.json({ build: CONTACT_BUILD, smtp: "not_configured" });
         }
         let config: Record<string, unknown> | undefined;
         try {
@@ -90,10 +90,15 @@ export const Route = createFileRoute("/api/contact")({
             await import("@/lib/contact-smtp.server");
           config = getSmtpDiagnostic();
           await verifySmtpConnection();
-          return Response.json({ smtp: "ok", config });
+          return Response.json({ build: CONTACT_BUILD, smtp: "ok", config });
         } catch (error) {
           return Response.json(
-            { smtp: "failed", ...(config ? { config } : {}), error: safeEmailError(error) },
+            {
+              build: CONTACT_BUILD,
+              smtp: "failed",
+              ...(config ? { config } : {}),
+              error: safeEmailError(error),
+            },
             { status: 502 },
           );
         }
