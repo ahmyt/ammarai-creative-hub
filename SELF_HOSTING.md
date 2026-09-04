@@ -137,33 +137,33 @@ After a successful build, set the **Application startup file** to
 
 ---
 
-## Contact form email via cPanel or Plesk SMTP
+## Contact form email via Plesk SMTP
 
 The contact form stores every message in the database first, then sends a
 notification to the CMS-configured notify address (default
 `support@ammarai.com`) plus a confirmation to the visitor. On your Plesk
-(Node) deployment it sends through your own mailbox via SMTP. Copy the exact
-outgoing-server values shown in cPanel under **Email Accounts → Connect
-Devices**, then set these environment variables in the deployed Node app:
+(Node) deployment it sends through your Plesk mailbox via SMTP. Set these
+environment variables in **Plesk → Websites & Domains → ammarai.com →
+Node.js → Custom environment variables**:
 
 | Variable | Example | Notes |
 | --- | --- | --- |
-| `SMTP_HOST` | `mail.ammarai.com` | The outgoing server shown by cPanel/Plesk |
-| `SMTP_PORT` | `465` | `465` = SSL, `587` = STARTTLS |
-| `SMTP_SECURE` | `true` | `true` for port 465, `false` for 587 |
-| `SMTP_USER` | `support@ammarai.com` | Full mailbox address |
+| `SMTP_HOST` | `mail.ammarai.com` | Outgoing server hostname; see Plesk → Mail → Mail Settings |
+| `SMTP_PORT` | `587` | `587` = STARTTLS, `465` = SSL |
+| `SMTP_SECURE` | `false` | `false` for port 587, `true` for 465 |
+| `SMTP_USER` | `support@ammarai.com` | Full Plesk mailbox address |
 | `SMTP_PASS` | `••••••••` | Mailbox password |
 | `SMTP_FROM` | `support@ammarai.com` | Optional; defaults to `SMTP_USER` |
 
-The CMS Contact page fields `fromName` and `notifyEmail` still apply. For
-cPanel compatibility, the authenticated `SMTP_USER` is always used as the
-envelope sender. `SMTP_FROM` must be that mailbox or an alias that cPanel
-explicitly permits; a different CMS `fromEmail` does not override it.
+The CMS Contact page fields `fromName` and `notifyEmail` still apply. The
+authenticated `SMTP_USER` is always used as the envelope sender. `SMTP_FROM`
+must be that mailbox or an alias that Plesk explicitly permits; a different
+CMS `fromEmail` does not override it.
 
-Port 465 requires `SMTP_SECURE=true`. Port 587 requires
-`SMTP_SECURE=false` so STARTTLS can be negotiated. If `SMTP_HOST` is not set,
-the app falls back to the Lovable email path (used on Lovable hosting only),
-and the message is still safely stored in the database either way.
+Port 587 requires `SMTP_SECURE=false` so STARTTLS can be negotiated. Port 465
+requires `SMTP_SECURE=true`. If `SMTP_HOST` is not set, the app falls back to
+the Lovable email path (used on Lovable hosting only), and the message is
+still safely stored in the database either way.
 
 After adding or changing the variables, restart the deployed Node app so the
 new environment is loaded. A successful form response now means the SMTP
@@ -171,3 +171,34 @@ server accepted both the support notification and visitor confirmation. If
 either send fails, the page states that the message was saved but email
 delivery failed; inspect the Node app log for the safe SMTP error code and
 response code.
+
+### Bounced by a blacklist (e.g. Spamhaus / Outlook 550 5.7.1)
+
+If external recipients (Hotmail/Outlook, Gmail) bounce with
+`550 5.7.1 ... blocked using Spamhaus`, the message was accepted by your
+Plesk mail server but rejected by the recipient because the **server's IP
+address is on a spam blacklist**. This is a mail-server reputation issue, not
+an app bug — the app code needs no change. Fix it on the server:
+
+1. **Check and delist the IP**: look up the server IP (e.g. `185.223.31.164`)
+   at <https://check.spamhaus.org/>. A PBL listing means the IP must not send
+   mail directly without a proper hostname (fix HELO/rDNS below, then request
+   removal). An SBL/XBL listing means spam or malware was sent from the
+   server — secure it first (check the mail queue, change mailbox passwords,
+   scan for malware), then request delisting.
+2. **Set the mail server hostname (HELO)**: in Plesk → Tools & Settings →
+   Mail Server Settings, ensure the server identifies itself with a valid
+   FQDN (e.g. `mail.ammarai.com`) that resolves to the server IP.
+3. **Set reverse DNS (PTR record)**: ask your hosting provider to point the
+   server IP's reverse DNS to `mail.ammarai.com`. A missing or mismatched PTR
+   record is a common Spamhaus/Outlook rejection trigger.
+4. **Lock down relaying**: ensure outgoing mail requires SMTP authentication
+   (Plesk default) so the server cannot be used as an open relay, and clear
+   any spam backlog in the mail queue.
+5. **Check DNS auth records** wherever the ammarai.com zone is managed:
+   SPF must include the Plesk server IP
+   (`v=spf1 mx a ip4:185.223.31.164 -all` style), and DKIM + DMARC should be
+   enabled for the domain (Plesk can generate DKIM keys under Mail Settings).
+
+After delisting, propagation to receiving providers can take up to 24–48
+hours. Re-test by submitting the contact form to an external address.
