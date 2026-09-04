@@ -41,8 +41,6 @@ const requiredEnv = (name: "SMTP_HOST" | "SMTP_USER" | "SMTP_PASS"): string => {
   return value;
 };
 
-const envIsTrue = (name: string): boolean => envValue(name)?.toLowerCase() === "true";
-
 type SmtpConfig = {
   host: string;
   port: number;
@@ -64,7 +62,10 @@ const getSmtpConfig = (): SmtpConfig => {
 
   const isLoopback =
     host === "127.0.0.1" || host === "localhost" || host === "::1" || host === "[::1]";
-  const authDisabled = isLoopback && port === 25 && envIsTrue("SMTP_AUTH_DISABLED");
+  // Local port 25 is a trusted same-server handoff. Never attempt SMTP AUTH
+  // here: Plesk commonly rejects AUTH on its loopback listener with a 454.
+  // Every remote host and every other port still requires credentials.
+  const authDisabled = isLoopback && port === 25;
   const configuredSecure = envValue("SMTP_SECURE")?.toLowerCase();
   const secure = authDisabled
     ? false
