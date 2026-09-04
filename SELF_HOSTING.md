@@ -67,6 +67,9 @@ Lovable hosting — on your own server it returns 404. So the app detects the ho
   and goes to `/admin`. If the managed broker returns to the Lovable homepage
   instead of honoring the forward URL, the root layout detects the OAuth session
   fragment and immediately relays it to `https://ammarai.com/auth` as a fallback.
+  If the broker has already consumed that fragment and opened `/admin` on the
+  Lovable-hosted site, that established session is relayed to the same canonical
+  auth route as a second fallback, so the CMS remains on `ammarai.com`.
 
 This lives in `src/lib/oauth-selfhost.ts`, `src/routes/auth.tsx` and
 `src/routes/auth.forward.tsx`. If you deploy on a domain other than
