@@ -66,7 +66,12 @@ const getSmtpConfig = (): SmtpConfig => {
   const isLoopback =
     host === "127.0.0.1" || host === "localhost" || host === "::1" || host === "[::1]";
   const authDisabled = isLoopback && port === 25 && envIsTrue("SMTP_AUTH_DISABLED");
-  const secure = authDisabled ? false : envValue("SMTP_SECURE")?.toLowerCase() !== "false";
+  const configuredSecure = envValue("SMTP_SECURE")?.toLowerCase();
+  const secure = authDisabled
+    ? false
+    : configuredSecure === undefined
+      ? port === 465
+      : configuredSecure === "true";
   const user = authDisabled ? envValue("SMTP_USER") ?? "support@ammarai.com" : requiredEnv("SMTP_USER");
 
   return { host, port, secure, authDisabled, user };
