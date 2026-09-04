@@ -29,6 +29,8 @@ export const Route = createFileRoute("/contact")({
 
 function Contact() {
   const [sent, setSent] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const { data: content } = useSuspenseQuery(siteContentQuery);
   const page = content.pages.find((p) => p.slug === "contact");
 
@@ -73,9 +75,41 @@ function Contact() {
                 </div>
               ) : (
                 <form
-                  onSubmit={(e) => {
+                  onSubmit={async (e) => {
                     e.preventDefault();
-                    setSent(true);
+                    if (sending) return;
+                    const form = e.currentTarget;
+                    const data = new FormData(form);
+                    setSending(true);
+                    setError(null);
+                    try {
+                      const res = await fetch("/api/contact", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                          name: String(data.get("name") ?? ""),
+                          email: String(data.get("email") ?? ""),
+                          message: String(data.get("message") ?? ""),
+                        }),
+                      });
+                      if (!res.ok) {
+                        const payload = (await res.json().catch(() => null)) as
+                          | { error?: string }
+                          | null;
+                        setError(
+                          payload?.error ??
+                            "Something went wrong. Please email support@ammarai.com directly.",
+                        );
+                        return;
+                      }
+                      setSent(true);
+                    } catch {
+                      setError(
+                        "The message could not be sent. Please email support@ammarai.com directly.",
+                      );
+                    } finally {
+                      setSending(false);
+                    }
                   }}
                   className="flex flex-col gap-4"
                 >
@@ -115,8 +149,13 @@ function Contact() {
                       className="mt-1.5 w-full rounded-md bg-background px-3.5 py-2.5 text-sm text-foreground ring-1 ring-border focus:outline-2 focus:outline-offset-2 focus:outline-ring"
                     />
                   </div>
-                  <ActionButton type="submit" className="mt-1 self-start">
-                    Send message
+                  {error ? (
+                    <p role="alert" className="text-sm text-destructive">
+                      {error}
+                    </p>
+                  ) : null}
+                  <ActionButton type="submit" disabled={sending} className="mt-1 self-start">
+                    {sending ? "Sending…" : "Send message"}
                   </ActionButton>
                 </form>
               )}
