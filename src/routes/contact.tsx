@@ -29,6 +29,7 @@ export const Route = createFileRoute("/contact")({
 
 function Contact() {
   const [sent, setSent] = useState(false);
+  const [confirmationSent, setConfirmationSent] = useState(true);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { data: content } = useSuspenseQuery(siteContentQuery);
@@ -69,6 +70,12 @@ function Contact() {
                   <p className="mt-3 text-pretty text-sm leading-relaxed text-muted-foreground">
                     {sentBody}
                   </p>
+                  {!confirmationSent ? (
+                    <p className="mt-3 text-pretty text-sm leading-relaxed text-muted-foreground">
+                      Note: our automatic confirmation email to you may be delayed — your message
+                      has reached our team.
+                    </p>
+                  ) : null}
                   <ButtonLink to="/ai-tools" variant="outline" size="sm" className="mt-6">
                     Browse the tools
                   </ButtonLink>
@@ -92,14 +99,15 @@ function Contact() {
                           message: String(data.get("message") ?? ""),
                         }),
                       });
+                      const payload = (await res.json().catch(() => null)) as
+                        | {
+                            error?: string;
+                            saved?: boolean;
+                            confirmationSent?: boolean;
+                            emailError?: { code?: string; command?: string; responseCode?: number };
+                          }
+                        | null;
                       if (!res.ok) {
-                        const payload = (await res.json().catch(() => null)) as
-                          | {
-                              error?: string;
-                              saved?: boolean;
-                              emailError?: { code?: string; command?: string; responseCode?: number };
-                            }
-                          | null;
                         const detail = payload?.emailError
                           ? [
                               payload.emailError.code,
@@ -110,14 +118,13 @@ function Contact() {
                               .join(" / ")
                           : "";
                         setError(
-                          (payload?.saved
-                            ? "Your message was saved, but the confirmation email could not be delivered. Our team can still view your message in the CMS."
-                            : payload?.error ??
-                              "Something went wrong. Please email support@ammarai.com directly.") +
+                          (payload?.error ??
+                            "Something went wrong. Please email support@ammarai.com directly.") +
                             (detail ? ` (SMTP: ${detail})` : ""),
                         );
                         return;
                       }
+                      setConfirmationSent(payload?.confirmationSent ?? true);
                       setSent(true);
                     } catch {
                       setError(

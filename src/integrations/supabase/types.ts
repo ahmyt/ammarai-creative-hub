@@ -16,6 +16,7 @@ export type Database = {
     Tables: {
       contact_messages: {
         Row: {
+          confirmation_status: string
           created_at: string
           email: string
           id: string
@@ -23,6 +24,7 @@ export type Database = {
           name: string
         }
         Insert: {
+          confirmation_status?: string
           created_at?: string
           email: string
           id?: string
@@ -30,6 +32,7 @@ export type Database = {
           name: string
         }
         Update: {
+          confirmation_status?: string
           created_at?: string
           email?: string
           id?: string
