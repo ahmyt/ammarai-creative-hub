@@ -36,6 +36,23 @@ function AdminArticles() {
     enabled: isAdmin,
   });
 
+  const fetchSettings = useServerFn(getSyncSettings);
+  const { data: settings } = useQuery({
+    queryKey: ["sync-settings"],
+    queryFn: () => fetchSettings(),
+    enabled: isAdmin,
+  });
+
+  const saveInterval = useServerFn(setSyncInterval);
+  const intervalMutation = useMutation({
+    mutationFn: (intervalHours: number) => saveInterval({ data: { intervalHours } }),
+    onSuccess: (result) => {
+      setStatus(`Automatic sync set to ${intervalLabel(result.intervalHours).toLowerCase()}.`);
+      void queryClient.invalidateQueries({ queryKey: ["sync-settings"] });
+    },
+    onError: (error: Error) => setStatus(error.message),
+  });
+
   const runSync = useServerFn(syncBabyLoveGrowthArticles);
   const sync = useMutation({
     mutationFn: () => runSync({ data: undefined } as never),
