@@ -29,6 +29,7 @@ export const Route = createFileRoute("/contact")({
 
 function Contact() {
   const [sent, setSent] = useState(false);
+  const [confirmationSent, setConfirmationSent] = useState(true);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { data: content } = useSuspenseQuery(siteContentQuery);
@@ -69,6 +70,12 @@ function Contact() {
                   <p className="mt-3 text-pretty text-sm leading-relaxed text-muted-foreground">
                     {sentBody}
                   </p>
+                  {!confirmationSent ? (
+                    <p className="mt-3 text-pretty text-sm leading-relaxed text-muted-foreground">
+                      Note: our automatic confirmation email to you may be delayed — your message
+                      has reached our team.
+                    </p>
+                  ) : null}
                   <ButtonLink to="/ai-tools" variant="outline" size="sm" className="mt-6">
                     Browse the tools
                   </ButtonLink>
