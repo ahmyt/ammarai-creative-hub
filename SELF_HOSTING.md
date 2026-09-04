@@ -212,6 +212,29 @@ the intended environment values or newest build. Common failure codes are
 SMTP), `EAUTH` (mailbox login failure), and `ESOCKET` with `wrong version
 number` (`SMTP_SECURE` doesn't match the port: 465 → `true`, 587 → `false`).
 
+### Team email arrives but the visitor confirmation does not
+
+If `support@ammarai.com` receives the notification while the visitor never gets
+the confirmation, local delivery works and only **outbound** mail is failing:
+the support mailbox is on the same Plesk server, so that message never leaves
+the machine. Trace the confirmation instead of the connection:
+
+1. Open **CMS → Messages**. Each submission now shows the delivery reference,
+   the mail server's reply, and the attempt time for the visitor confirmation.
+   "Accepted by mail server" means Plesk took the message — not that the
+   recipient's provider delivered it.
+2. On the server, look that reference/recipient up in the Plesk mail queue and
+   mail log (`/var/log/maillog`, `qmail-qstat` / `mailq`).
+   - **Still queued/deferred:** outbound port 25 is likely blocked by the
+     hosting provider, or the receiver is throttling the IP.
+   - **Rejected by the receiver:** see the blacklist section below.
+   - **Accepted by the receiver:** check the recipient's junk/quarantine and
+     confirm SPF, DKIM, DMARC, PTR and HELO are aligned.
+   - **No handoff at all:** use the recorded reply to correct the send path.
+3. If outbound mail from this IP stays blocked, point `SMTP_HOST`/`SMTP_PORT`/
+   `SMTP_USER`/`SMTP_PASS` at a reputable relay mailbox and restart the app.
+   No code change is needed.
+
 ### Bounced by a blacklist (e.g. Spamhaus / Outlook 550 5.7.1)
 
 If external recipients (Hotmail/Outlook, Gmail) bounce with
