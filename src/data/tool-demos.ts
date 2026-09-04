@@ -20,6 +20,10 @@ import imageOutWorkbench from "@/assets/imggen-out-workbench.jpg";
 import imageOutCyclist from "@/assets/imggen-out-cyclist.jpg";
 import visionBikeWheel from "@/assets/vision-in-bike-wheel.jpg";
 import visionRevenueChart from "@/assets/vision-in-revenue-chart.jpg";
+import seoReportUrlAudit from "@/assets/seo-report-url-audit.jpg";
+import seoReportTextAnalysis from "@/assets/seo-report-text-analysis.jpg";
+import seoReportKeywords from "@/assets/seo-report-keywords.jpg";
+
 
 export type ToolDemoMedia = {
   /** Output media kind. Omit for tools whose real output is text. */
@@ -229,11 +233,32 @@ CREATE INDEX CONCURRENTLY IF NOT EXISTS events_user_created_idx
   ON events (user_id, created_at);`,
     },
   ],
+  "ai-seo-analyzer": [
+    {
+      kind: "image",
+      url: seoReportUrlAudit,
+      caption:
+        "Sample output — the URL Analysis report for esimnow.net: score, page information as the crawler sees it, the two issues found, and the technical checks.",
+    },
+    {
+      kind: "image",
+      url: seoReportTextAnalysis,
+      caption:
+        "Sample output — the Text Analysis report: content stats, readability, keyword density and the four edits it recommends first.",
+    },
+    {
+      kind: "image",
+      url: seoReportKeywords,
+      caption:
+        "Sample output — the Keywords report: demand for the head term plus related variants ranked by volume, difficulty and CPC.",
+    },
+  ],
   "ai-document-analyzer": [
     { inputFileLabel: "service-agreement.pdf — 41 pages" },
     { inputFileLabel: "6 research PDFs — 148 pages total" },
   ],
 };
+
 
 /** @deprecated use `toolDemoMedia` */
 export const toolDemoVideos = toolDemoMedia;

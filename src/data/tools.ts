@@ -1,6 +1,7 @@
 import type { Tool, ToolCategory } from "./types";
 import { coreToolsA } from "./tools-core-a";
 import { coreToolsB } from "./tools-core-b";
+import { seoAnalyzerTools } from "./tools-seo-analyzer";
 import { chatbotTools } from "./tools-chatbots";
 import { writingTools } from "./tools-writing";
 import { marketingTools } from "./tools-marketing";
@@ -10,12 +11,14 @@ import { platformTools } from "./tools-platform";
 export const tools: Tool[] = [
   ...coreToolsA,
   ...coreToolsB,
+  ...seoAnalyzerTools,
   ...platformTools,
   ...chatbotTools,
   ...writingTools,
   ...marketingTools,
   ...commerceSeoTools,
 ];
+
 
 export const toolBySlug = new Map(tools.map((t) => [t.slug, t]));
 
@@ -50,7 +53,7 @@ export function toolsByCategory(category: ToolCategory) {
   return tools.filter((t) => t.category === category);
 }
 
-export const featuredTools = tools.filter((t) => t.featured).slice(0, 6);
+export const featuredTools = tools.filter((t) => t.featured).slice(0, 7);
 export const popularTools = tools.filter((t) => t.popular).slice(0, 8);
 export const recentTools = tools.filter((t) => t.recent).slice(0, 6);
 
@@ -123,6 +126,7 @@ const intentMap: { keywords: string[]; slugs: string[] }[] = [
   {
     keywords: ["seo", "keyword", "rank", "search", "meta"],
     slugs: [
+      "ai-seo-analyzer",
       "ai-seo-content-generator",
       "meta-description-generator",
       "faq-generator",
@@ -130,6 +134,11 @@ const intentMap: { keywords: string[]; slugs: string[] }[] = [
       "keyword-based-rewriter",
     ],
   },
+  {
+    keywords: ["audit", "seo score", "site score", "readability", "difficulty", "search volume", "analyze url", "analyse url"],
+    slugs: ["ai-seo-analyzer", "ai-seo-content-generator", "meta-description-generator"],
+  },
+
   {
     keywords: ["email", "newsletter", "outreach", "cold", "subject"],
     slugs: [
