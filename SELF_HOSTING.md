@@ -56,19 +56,11 @@ All your content, admin users, and sign-ins keep working as-is.
 
 ## 4. Google sign-in
 
-Cloud auth only redirects to whitelisted origins (the Lovable-hosted site), so
-on your own domain the app uses a built-in forwarder:
-
-1. On your domain, "Continue with Google" sends the OAuth return to
-   `https://ammarai-creative-hub.lovable.app/auth/forward?to=<your-origin>/auth`.
-2. That page forwards the login tokens to your domain, where the app picks up
-   the session and lands on `/admin`.
-
-No extra configuration is needed — just make sure your deployed copy is up to
-date (this lives in `src/routes/auth.tsx` and `src/routes/auth.forward.tsx`).
-If you deploy on a different domain than `ammarai.com`, add that hostname to
-`ALLOWED_TARGET_HOSTS` in `src/routes/auth.forward.tsx`.
-Email/password sign-in works with no extra configuration.
+Google sign-in goes through the managed OAuth broker (`src/routes/auth.tsx` uses
+`lovable.auth.signInWithOAuth("google", { redirect_uri: window.location.origin })`).
+The broker supports custom domains, so no per-domain whitelist or forwarder page
+is needed — just deploy an up-to-date build. Email/password sign-in works with no
+extra configuration.
 
 ---
 
