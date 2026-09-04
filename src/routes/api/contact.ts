@@ -110,29 +110,45 @@ export const Route = createFileRoute("/api/contact")({
 
         // Email delivery is best-effort: the stored row is the source of truth.
         try {
-          // Created by the email template scaffolding once a sender domain is set up.
-          // Resolved at runtime so the app builds before that step is done.
-          const specifier = "@/lib/email-templates/send-email";
-          const mod = (await import(/* @vite-ignore */ specifier)) as {
-            sendTemplateEmail: (
-              template: string,
-              to: string,
-              opts: Record<string, unknown>,
-            ) => Promise<{ sent: boolean; reason?: string }>;
-          };
-          const idemBase = `contact-${messageId}`;
-          await mod.sendTemplateEmail("contact-notification", notifyTo, {
-            templateData: { name, email, message },
-            idempotencyKey: `${idemBase}-notify`,
-            ...sendOptions,
-          });
-          const confirmation = await mod.sendTemplateEmail("contact-confirmation", email, {
-            templateData: { name },
-            idempotencyKey: `${idemBase}-confirm`,
-            ...sendOptions,
-          });
-          if (!confirmation.sent) {
-            console.log(`Contact confirmation not sent (${confirmation.reason})`);
+          const smtpHost = process.env["SMTP_HOST"];
+          if (smtpHost) {
+            // Self-hosted deployments (e.g. Plesk) send through their own
+            // mailbox via SMTP. Loaded dynamically so the edge/preview build,
+            // which has no SMTP support, is unaffected.
+            const { sendContactEmails } = await import("@/lib/contact-smtp.server");
+            await sendContactEmails({
+              name,
+              email,
+              message,
+              notifyTo,
+              fromName: settings.fromName,
+              fromEmail: settings.fromEmail,
+            });
+          } else {
+            // Lovable-hosted delivery path, available once a sender domain is
+            // set up. Resolved at runtime so the app builds before that step.
+            const specifier = "@/lib/email-templates/send-email";
+            const mod = (await import(/* @vite-ignore */ specifier)) as {
+              sendTemplateEmail: (
+                template: string,
+                to: string,
+                opts: Record<string, unknown>,
+              ) => Promise<{ sent: boolean; reason?: string }>;
+            };
+            const idemBase = `contact-${messageId}`;
+            await mod.sendTemplateEmail("contact-notification", notifyTo, {
+              templateData: { name, email, message },
+              idempotencyKey: `${idemBase}-notify`,
+              ...sendOptions,
+            });
+            const confirmation = await mod.sendTemplateEmail("contact-confirmation", email, {
+              templateData: { name },
+              idempotencyKey: `${idemBase}-confirm`,
+              ...sendOptions,
+            });
+            if (!confirmation.sent) {
+              console.log(`Contact confirmation not sent (${confirmation.reason})`);
+            }
           }
         } catch (emailError) {
           console.error("Contact email delivery failed", emailError);
