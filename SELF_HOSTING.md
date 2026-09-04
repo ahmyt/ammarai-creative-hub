@@ -56,17 +56,19 @@ All your content, admin users, and sign-ins keep working as-is.
 
 ## 4. Google sign-in
 
-The app calls Supabase Auth's Google provider directly. Since your domain changes
-from `*.lovable.app` to your own domain:
+Cloud auth only redirects to whitelisted origins (the Lovable-hosted site), so
+on your own domain the app uses a built-in forwarder:
 
-1. In Google Cloud Console → Credentials → your OAuth client, add the authorized
-   redirect URI for your cloud auth endpoint:
-   `https://<your-cloud-project-host>/auth/v1/callback` (this URL is the
-   `SUPABASE_URL` value + `/auth/v1/callback`).
-2. The app's OAuth `redirectTo` is `window.location.origin + "/admin"`, so on
-   your domain users return to `https://yourdomain.com/admin` — make sure that
-   origin is allowed in the cloud project's Auth redirect-URL settings.
-3. Email/password sign-in works with no extra configuration.
+1. On your domain, "Continue with Google" sends the OAuth return to
+   `https://ammarai-creative-hub.lovable.app/auth/forward?to=<your-origin>/auth`.
+2. That page forwards the login tokens to your domain, where the app picks up
+   the session and lands on `/admin`.
+
+No extra configuration is needed — just make sure your deployed copy is up to
+date (this lives in `src/routes/auth.tsx` and `src/routes/auth.forward.tsx`).
+If you deploy on a different domain than `ammarai.com`, add that hostname to
+`ALLOWED_TARGET_HOSTS` in `src/routes/auth.forward.tsx`.
+Email/password sign-in works with no extra configuration.
 
 ---
 

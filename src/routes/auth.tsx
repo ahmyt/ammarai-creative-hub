@@ -57,9 +57,21 @@ function AuthPage() {
 
   const google = async () => {
     setMessage(null);
+    // The cloud auth service only redirects back to whitelisted origins (the
+    // Lovable-hosted site). When self-hosted (e.g. Plesk on ammarai.com), we
+    // return to a forwarder page on the Lovable domain, which hands the
+    // session tokens (URL hash) back to this origin.
+    const host = window.location.hostname;
+    const onLovable =
+      host.endsWith(".lovable.app") || host === "localhost" || host === "127.0.0.1";
+    const redirectTo = onLovable
+      ? `${window.location.origin}/admin`
+      : `https://ammarai-creative-hub.lovable.app/auth/forward?to=${encodeURIComponent(
+          `${window.location.origin}/auth`,
+        )}`;
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
-      options: { redirectTo: `${window.location.origin}/admin` },
+      options: { redirectTo },
     });
     if (error) {
       setMessage("Google sign-in failed. Try again or use email.");
