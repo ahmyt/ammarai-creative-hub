@@ -47,8 +47,8 @@ function BlogIndex() {
         slug: a.slug,
         title: a.title,
         excerpt: a.meta_description ?? "",
-        category: "Guide",
-        readingTime: "",
+        category: articleCategory(a),
+        readingTime: articleReadingTime(a),
         date: articleDate(a),
       })),
     ...content.posts.map((p) => ({
