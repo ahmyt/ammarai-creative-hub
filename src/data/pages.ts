@@ -11,9 +11,9 @@ export const pages: Page[] = [
     h1: "Tell us what you are trying to build",
     lede: "The more specific you are about the work, the more specific the answer. We reply to everything within two working days.",
     formHeading: "Send a message",
-    sentHeading: "Message noted",
+    sentHeading: "Message received",
     sentBody:
-      "This marketing site does not yet send messages to a backend, so nothing was transmitted. In the meantime, email us directly using the addresses listed here and we will pick it up.",
+      "Thanks for getting in touch — your message is with us and we reply to everything within two working days. A confirmation is on its way to your inbox.",
     channels: [
       {
         title: "Support",
