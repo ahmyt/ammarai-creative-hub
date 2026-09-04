@@ -52,11 +52,20 @@ const createTransporter = () => {
   }
   const secure = (process.env["SMTP_SECURE"] ?? String(port === 465)) !== "false";
 
+  // When the mail server is on the same machine (loopback), its TLS
+  // certificate is issued for the public hostname, not 127.0.0.1. The
+  // connection never leaves the server, so skipping the hostname check is
+  // safe. SMTP_TLS_REJECT_UNAUTHORIZED=false forces the same for any host.
+  const isLoopback = host === "127.0.0.1" || host === "localhost" || host === "::1";
+  const allowAnyCert =
+    isLoopback || (process.env["SMTP_TLS_REJECT_UNAUTHORIZED"] ?? "").trim() === "false";
+
   return nodemailer.createTransport({
     host,
     port,
     secure,
     auth: { user, pass },
+    ...(allowAnyCert ? { tls: { rejectUnauthorized: false } } : {}),
     connectionTimeout: 10_000,
     greetingTimeout: 10_000,
     socketTimeout: 20_000,
