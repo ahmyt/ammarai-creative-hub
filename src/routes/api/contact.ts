@@ -140,8 +140,10 @@ export const Route = createFileRoute("/api/contact")({
             : {}),
         };
 
-        // The stored row remains the source of truth, but delivery failures are
-        // returned to the browser so it never shows a false confirmation.
+        // The stored row remains the source of truth. The notification to the
+        // team must succeed; the customer confirmation is best-effort and its
+        // outcome is recorded on the row so the CMS shows who received it.
+        let confirmationSent = false;
         try {
           const smtpHost = process.env["SMTP_HOST"];
           if (smtpHost) {
@@ -157,12 +159,19 @@ export const Route = createFileRoute("/api/contact")({
               fromName: settings.fromName,
               fromEmail: settings.fromEmail,
             });
-            console.info("Contact SMTP delivery accepted", {
+            confirmationSent = delivery.confirmation.status === "sent";
+            console.info("Contact SMTP delivery", {
               messageId,
               notificationMessageId: delivery.notification.messageId,
               notificationResponse: delivery.notification.response,
-              confirmationMessageId: delivery.confirmation.messageId,
-              confirmationResponse: delivery.confirmation.response,
+              confirmation:
+                delivery.confirmation.status === "sent"
+                  ? {
+                      status: "sent",
+                      messageId: delivery.confirmation.messageId,
+                      response: delivery.confirmation.response,
+                    }
+                  : { status: "failed", error: safeEmailError(delivery.confirmation.error) },
             });
           } else {
             // Lovable-hosted delivery path, available once a sender domain is
@@ -181,19 +190,20 @@ export const Route = createFileRoute("/api/contact")({
               idempotencyKey: `${idemBase}-notify`,
               ...sendOptions,
             });
+            if (!notification.sent) {
+              throw new Error(
+                `Managed email rejected: notification=${notification.reason ?? "unknown"}`,
+              );
+            }
             const confirmation = await mod.sendTemplateEmail("contact-confirmation", email, {
               templateData: { name },
               idempotencyKey: `${idemBase}-confirm`,
               ...sendOptions,
             });
-            if (!notification.sent || !confirmation.sent) {
-              throw new Error(
-                `Managed email rejected: notification=${notification.reason ?? "unknown"}, confirmation=${confirmation.reason ?? "unknown"}`,
-              );
-            }
+            confirmationSent = confirmation.sent;
           }
         } catch (emailError) {
-          console.error("Contact email delivery failed", {
+          console.error("Contact notification delivery failed", {
             messageId,
             error: safeEmailError(emailError),
           });
@@ -202,14 +212,21 @@ export const Route = createFileRoute("/api/contact")({
               saved: true,
               emailSent: false,
               error:
-                "Your message was saved, but email delivery failed. Our team can still view it in the CMS.",
+                "Your message was saved, but the notification email to our team could not be delivered. We can still view your message in the CMS.",
               emailError: safeEmailError(emailError),
             },
             { status: 502 },
           );
         }
 
-        return Response.json({ ok: true, saved: true, emailSent: true });
+        // Record the confirmation outcome on the stored message (the anon
+        // role may only update this single column). Failure here is fine.
+        await supabase
+          .from("contact_messages")
+          .update({ confirmation_status: confirmationSent ? "sent" : "failed" })
+          .eq("id", messageId);
+
+        return Response.json({ ok: true, saved: true, emailSent: true, confirmationSent });
       },
     },
   },
