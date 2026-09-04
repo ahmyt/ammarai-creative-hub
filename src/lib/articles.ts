@@ -61,3 +61,20 @@ export function articleDate(article: SyndicatedArticle): string {
 export function articleExcerpt(article: SyndicatedArticle): string {
   return article.meta_description ?? "";
 }
+
+/** Label shown alongside the reading time. */
+export function articleCategory(_article: SyndicatedArticle): string {
+  return "AI Guides";
+}
+
+/** Rough reading time based on the article body, e.g. "8 min read". */
+export function articleReadingTime(article: SyndicatedArticle): string {
+  const source = article.content_markdown ?? article.content_html ?? "";
+  const text = source
+    .replace(/<[^>]+>/g, " ")
+    .replace(/[#>*_`~[\]()!-]/g, " ")
+    .trim();
+  const words = text ? text.split(/\s+/).length : 0;
+  const minutes = Math.max(1, Math.round(words / 200));
+  return `${minutes} min read`;
+}

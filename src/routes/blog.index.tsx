@@ -1,7 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { siteContentQuery } from "@/lib/content";
-import { articleDate, syndicatedArticlesQuery } from "@/lib/articles";
+import {
+  articleCategory,
+  articleDate,
+  articleReadingTime,
+  syndicatedArticlesQuery,
+} from "@/lib/articles";
 import { Container, Section } from "@/components/site/primitives";
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 
@@ -42,8 +47,8 @@ function BlogIndex() {
         slug: a.slug,
         title: a.title,
         excerpt: a.meta_description ?? "",
-        category: "Guide",
-        readingTime: "",
+        category: articleCategory(a),
+        readingTime: articleReadingTime(a),
         date: articleDate(a),
       })),
     ...content.posts.map((p) => ({
