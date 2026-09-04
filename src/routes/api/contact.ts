@@ -48,13 +48,12 @@ export const Route = createFileRoute("/api/contact")({
           },
         });
 
-        const { data: row, error: insertError } = await supabase
+        const messageId = crypto.randomUUID();
+        const { error: insertError } = await supabase
           .from("contact_messages")
-          .insert({ name, email, message })
-          .select("id")
-          .single();
+          .insert({ id: messageId, name, email, message });
 
-        if (insertError || !row) {
+        if (insertError) {
           console.error("Failed to store contact message", insertError);
           return Response.json(
             { error: "Something went wrong on our side. Please email support@ammarai.com directly." },
@@ -67,7 +66,7 @@ export const Route = createFileRoute("/api/contact")({
           // Scaffolded by the email setup; resolved at runtime on the server.
           // @ts-ignore - module is created by the email template scaffolding step
           const { sendTemplateEmail } = await import("@/lib/email-templates/send-email");
-          const idemBase = `contact-${row.id}`;
+          const idemBase = `contact-${messageId}`;
           await sendTemplateEmail("contact-notification", NOTIFY_EMAIL, {
             templateData: { name, email, message },
             idempotencyKey: `${idemBase}-notify`,
