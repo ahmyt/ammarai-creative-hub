@@ -51,8 +51,8 @@ export const Route = createFileRoute("/api/contact")({
         }
         try {
           const { verifySmtpConnection } = await import("@/lib/contact-smtp.server");
-          await verifySmtpConnection();
-          return Response.json({ smtp: "ok" });
+          const config = await verifySmtpConnection();
+          return Response.json({ smtp: "ok", config });
         } catch (error) {
           return Response.json({ smtp: "failed", error: safeEmailError(error) }, { status: 502 });
         }

@@ -25,10 +25,51 @@ export type ContactEmailDelivery = {
     | { status: "failed"; error: unknown };
 };
 
+const envValue = (name: string): string | undefined => {
+  const raw = process.env[name]?.trim();
+  if (!raw) return undefined;
+  const first = raw.at(0);
+  const last = raw.at(-1);
+  if ((first === '"' && last === '"') || (first === "'" && last === "'")) {
+    return raw.slice(1, -1).trim() || undefined;
+  }
+  return raw;
+};
+
 const requiredEnv = (name: "SMTP_HOST" | "SMTP_USER" | "SMTP_PASS"): string => {
-  const value = process.env[name]?.trim();
+  const value = envValue(name);
   if (!value) throw new Error(`${name} is not configured`);
   return value;
+};
+
+const envIsTrue = (name: string): boolean => envValue(name)?.toLowerCase() === "true";
+
+type SmtpConfig = {
+  host: string;
+  port: number;
+  secure: boolean;
+  authDisabled: boolean;
+  user: string;
+};
+
+export type SmtpDiagnostic = Pick<SmtpConfig, "host" | "port" | "secure"> & {
+  authEnabled: boolean;
+};
+
+const getSmtpConfig = (): SmtpConfig => {
+  const host = requiredEnv("SMTP_HOST").toLowerCase().replace(/\.$/, "");
+  const port = Number(envValue("SMTP_PORT") ?? "465");
+  if (!Number.isInteger(port) || port < 1 || port > 65535) {
+    throw new Error("SMTP_PORT must be a valid port number");
+  }
+
+  const isLoopback =
+    host === "127.0.0.1" || host === "localhost" || host === "::1" || host === "[::1]";
+  const authDisabled = isLoopback && port === 25 && envIsTrue("SMTP_AUTH_DISABLED");
+  const secure = authDisabled ? false : envValue("SMTP_SECURE")?.toLowerCase() !== "false";
+  const user = authDisabled ? envValue("SMTP_USER") ?? "support@ammarai.com" : requiredEnv("SMTP_USER");
+
+  return { host, port, secure, authDisabled, user };
 };
 
 const deliveryResult = (info: SentMessageInfo): { messageId: string; response: string } => ({
@@ -44,61 +85,57 @@ const deliveryResult = (info: SentMessageInfo): { messageId: string; response: s
  * Runs only on Node hosts; the edge/preview runtime never imports this file.
  */
 const createTransporter = () => {
-  const host = requiredEnv("SMTP_HOST");
-
-  const port = Number(process.env["SMTP_PORT"] ?? "465");
-  if (!Number.isInteger(port) || port < 1 || port > 65535) {
-    throw new Error("SMTP_PORT must be a valid port number");
-  }
-  const secure = (process.env["SMTP_SECURE"] ?? String(port === 465)) !== "false";
-
+  const config = getSmtpConfig();
   // When the mail server is on the same machine (loopback), its TLS
   // certificate is issued for the public hostname, not 127.0.0.1. The
   // connection never leaves the server, so skipping the hostname check is
   // safe. SMTP_TLS_REJECT_UNAUTHORIZED=false forces the same for any host.
-  const isLoopback = host === "127.0.0.1" || host === "localhost" || host === "::1";
-  const authDisabled =
-    isLoopback && (process.env["SMTP_AUTH_DISABLED"] ?? "").trim().toLowerCase() === "true";
+  const isLoopback =
+    config.host === "127.0.0.1" ||
+    config.host === "localhost" ||
+    config.host === "::1" ||
+    config.host === "[::1]";
   const allowAnyCert =
-    isLoopback || (process.env["SMTP_TLS_REJECT_UNAUTHORIZED"] ?? "").trim() === "false";
+    isLoopback || envValue("SMTP_TLS_REJECT_UNAUTHORIZED")?.toLowerCase() === "false";
 
-  const auth = authDisabled
+  const auth = config.authDisabled
     ? undefined
-    : { user: requiredEnv("SMTP_USER"), pass: requiredEnv("SMTP_PASS") };
+    : { user: config.user, pass: requiredEnv("SMTP_PASS") };
 
-  return nodemailer.createTransport({
-    host,
-    port,
-    secure,
+  const transporter = nodemailer.createTransport({
+    host: config.host,
+    port: config.port,
+    secure: config.secure,
     ...(auth ? { auth } : {}),
     ...(allowAnyCert ? { tls: { rejectUnauthorized: false } } : {}),
     connectionTimeout: 10_000,
     greetingTimeout: 10_000,
     socketTimeout: 20_000,
   });
+  return { transporter, config };
 };
 
 /** Opens the SMTP connection and authenticates. Used by the diagnostics endpoint. */
-export async function verifySmtpConnection(): Promise<void> {
-  await createTransporter().verify();
+export async function verifySmtpConnection(): Promise<SmtpDiagnostic> {
+  const { transporter, config } = createTransporter();
+  await transporter.verify();
+  return {
+    host: config.host,
+    port: config.port,
+    secure: config.secure,
+    authEnabled: !config.authDisabled,
+  };
 }
 
 export async function sendContactEmails(input: ContactEmailInput): Promise<ContactEmailDelivery> {
-  const host = requiredEnv("SMTP_HOST");
-  const isLoopback = host === "127.0.0.1" || host === "localhost" || host === "::1";
-  const authDisabled =
-    isLoopback && (process.env["SMTP_AUTH_DISABLED"] ?? "").trim().toLowerCase() === "true";
-  const user = authDisabled
-    ? process.env["SMTP_USER"]?.trim() || "support@ammarai.com"
-    : requiredEnv("SMTP_USER");
-  const transporter = createTransporter();
+  const { transporter, config } = createTransporter();
 
   await transporter.verify();
 
   // Keep the envelope sender tied to the authenticated mailbox. Many cPanel
   // servers reject or silently discard messages that spoof another sender.
-  const envelopeFrom = user;
-  const fromAddress = process.env["SMTP_FROM"]?.trim() || user;
+  const envelopeFrom = config.user;
+  const fromAddress = envValue("SMTP_FROM") ?? config.user;
   const from = input.fromName ? `"${input.fromName.replace(/"/g, "")}" <${fromAddress}>` : fromAddress;
 
   const safeName = escapeHtml(input.name);
