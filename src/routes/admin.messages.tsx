@@ -47,8 +47,11 @@ function AdminMessages() {
         <h2 className="text-lg font-semibold">Contact messages</h2>
         <p className="mt-1 text-sm text-muted-foreground">
           Every contact-form submission is stored here, even when email delivery fails. The badge
-          shows whether the visitor's confirmation email was delivered.
+          shows what happened when the visitor's confirmation email was handed to the mail server.
+          "Accepted by mail server" means the mail server took the message — use the reference below
+          to trace the rest of the journey in the mail log.
         </p>
+
       </div>
 
       {isLoading ? (
