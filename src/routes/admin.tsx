@@ -114,6 +114,14 @@ function AdminLayout() {
               {k.label}
             </Link>
           ))}
+          {isAdmin ? (
+            <Link
+              to="/admin/messages"
+              className="rounded-full px-3.5 py-1.5 text-xs font-semibold text-muted-foreground ring-1 ring-border hover:text-foreground [&.active]:bg-ink [&.active]:text-ink-foreground"
+            >
+              Messages
+            </Link>
+          ) : null}
         </nav>
 
         {!isEditor ? (
