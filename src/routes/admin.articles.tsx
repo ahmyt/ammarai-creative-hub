@@ -5,7 +5,17 @@ import { useServerFn } from "@tanstack/react-start";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { allSyndicatedArticlesQuery, articleDate } from "@/lib/articles";
-import { syncBabyLoveGrowthArticles } from "@/lib/babylovegrowth.functions";
+import {
+  getSyncSettings,
+  setSyncInterval,
+  syncBabyLoveGrowthArticles,
+} from "@/lib/babylovegrowth.functions";
+
+const INTERVAL_OPTIONS = [1, 6, 12, 24, 48, 72] as const;
+
+function intervalLabel(hours: number): string {
+  return hours === 1 ? "Every hour" : `Every ${hours} hours`;
+}
 
 export const Route = createFileRoute("/admin/articles")({
   staticData: { sitemap: false },
