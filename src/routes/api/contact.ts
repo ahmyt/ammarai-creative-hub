@@ -9,7 +9,17 @@ const contactSchema = z.object({
   message: z.string().trim().min(1).max(5000),
 });
 
-const NOTIFY_EMAIL = "support@ammarai.com";
+const DEFAULT_NOTIFY_EMAIL = "support@ammarai.com";
+
+type EmailSettings = {
+  senderDomain?: string;
+  fromName?: string;
+  fromEmail?: string;
+  notifyEmail?: string;
+};
+
+const str = (value: unknown): string | undefined =>
+  typeof value === "string" && value.trim() ? value.trim() : undefined;
 
 export const Route = createFileRoute("/api/contact")({
   staticData: { sitemap: false },
