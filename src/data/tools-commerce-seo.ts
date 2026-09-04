@@ -477,7 +477,7 @@ export const commerceSeoTools: Tool[] = [
       { q: "How is this different from the SEO Blog Generator?", a: "This tool is intent- and keyword-focused for any page type or section. The SEO Blog Generator is specifically structured for full long-form blog posts, including intros and conclusions." },
       { q: "Can I use it for product or service pages too?", a: "Yes — set the intent to transactional and it will structure content around decision-stage questions rather than a blog narrative." }
     ],
-    related: ["seo-blog-generator", "meta-description-generator", "faq-generator", "seo-content-rewriter", "keyword-based-rewriter"]
+    related: ["ai-seo-analyzer", "seo-blog-generator", "meta-description-generator", "faq-generator", "seo-content-rewriter"]
   },
   {
     slug: "meta-description-generator",
@@ -546,7 +546,7 @@ export const commerceSeoTools: Tool[] = [
       { q: "What's the exact character limit?", a: "There isn't one fixed hard limit — truncation typically happens somewhere around 155-160 characters on desktop, but it varies by device, font rendering, and search engine behavior, so treat it as a practical guideline." },
       { q: "Should every page have a unique meta description?", a: "Yes — duplicate descriptions across pages make it harder for both users and search engines to distinguish pages, and waste the click-through opportunity a unique one provides." }
     ],
-    related: ["ai-seo-content-generator", "faq-generator", "seo-blog-generator", "seo-content-rewriter", "amazon-product-title-generator"]
+    related: ["ai-seo-analyzer", "ai-seo-content-generator", "faq-generator", "seo-blog-generator", "seo-content-rewriter"]
   },
   {
     slug: "faq-generator",
