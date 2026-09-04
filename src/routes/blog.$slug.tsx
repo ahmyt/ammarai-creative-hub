@@ -2,7 +2,13 @@ import { createFileRoute, notFound, Link } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import type { Post } from "@/data/types";
 import { siteContentQuery } from "@/lib/content";
-import { articleDate, syndicatedArticlesQuery, type SyndicatedArticle } from "@/lib/articles";
+import {
+  articleCategory,
+  articleDate,
+  articleReadingTime,
+  syndicatedArticlesQuery,
+  type SyndicatedArticle,
+} from "@/lib/articles";
 import { Container, Section, BulletList } from "@/components/site/primitives";
 import { Breadcrumbs, breadcrumbJsonLd } from "@/components/site/Breadcrumbs";
 import { ExternalButton } from "@/components/site/Button";
