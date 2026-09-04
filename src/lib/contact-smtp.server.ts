@@ -20,7 +20,9 @@ type ContactEmailInput = {
 
 export type ContactEmailDelivery = {
   notification: { messageId: string; response: string };
-  confirmation: { messageId: string; response: string };
+  confirmation:
+    | { status: "sent"; messageId: string; response: string }
+    | { status: "failed"; error: unknown };
 };
 
 const requiredEnv = (name: "SMTP_HOST" | "SMTP_USER" | "SMTP_PASS"): string => {
@@ -117,20 +119,29 @@ export async function sendContactEmails(input: ContactEmailInput): Promise<Conta
       <p style="font-family:sans-serif;white-space:pre-wrap">${safeMessage}</p>`,
   });
 
-  const confirmation = await transporter.sendMail({
-    from,
-    to: input.email,
-    envelope: { from: envelopeFrom, to: input.email },
-    subject: "We received your message — AmmarAI",
-    text: `Hi ${input.name},\n\nThanks for reaching out. We've received your message and will get back to you shortly.\n\n— The AmmarAI Team`,
-    html: `
-      <p style="font-family:sans-serif">Hi ${safeName},</p>
-      <p style="font-family:sans-serif">Thanks for reaching out. We've received your message and will get back to you shortly.</p>
-      <p style="font-family:sans-serif">— The AmmarAI Team</p>`,
-  });
+  // The customer confirmation is best-effort: a rejection (e.g. the sending
+  // IP is temporarily blocklisted) must not fail the whole submission. The
+  // notification to the team above still throws on failure.
+  let confirmation: ContactEmailDelivery["confirmation"];
+  try {
+    const info = await transporter.sendMail({
+      from,
+      to: input.email,
+      envelope: { from: envelopeFrom, to: input.email },
+      subject: "We received your message — AmmarAI",
+      text: `Hi ${input.name},\n\nThanks for reaching out. We've received your message and will get back to you shortly.\n\n— The AmmarAI Team`,
+      html: `
+        <p style="font-family:sans-serif">Hi ${safeName},</p>
+        <p style="font-family:sans-serif">Thanks for reaching out. We've received your message and will get back to you shortly.</p>
+        <p style="font-family:sans-serif">— The AmmarAI Team</p>`,
+    });
+    confirmation = { status: "sent", ...deliveryResult(info) };
+  } catch (error) {
+    confirmation = { status: "failed", error };
+  }
 
   return {
     notification: deliveryResult(notification),
-    confirmation: deliveryResult(confirmation),
+    confirmation,
   };
 }
