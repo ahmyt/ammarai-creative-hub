@@ -120,6 +120,17 @@ export type Database = {
         }
         Returns: boolean
       }
+      record_contact_confirmation: {
+        Args: {
+          _attempted_at: string
+          _error: string
+          _id: string
+          _message_id: string
+          _response: string
+          _status: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
       app_role: "admin" | "editor" | "user"
