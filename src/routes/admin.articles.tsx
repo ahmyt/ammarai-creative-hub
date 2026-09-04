@@ -104,15 +104,40 @@ function AdminArticles() {
             Articles pulled in automatically and published on the blog.
           </p>
         </div>
-        <button
-          type="button"
-          onClick={() => sync.mutate()}
-          disabled={sync.isPending}
-          className="rounded-md bg-ink px-4 py-2 text-xs font-semibold text-ink-foreground disabled:opacity-60"
-        >
-          {sync.isPending ? "Syncing…" : "Sync now"}
-        </button>
+        <div className="flex flex-wrap items-center gap-3">
+          <label className="flex items-center gap-2 text-xs font-semibold">
+            <span className="text-muted-foreground">Auto-sync</span>
+            <select
+              value={settings?.intervalHours ?? 24}
+              disabled={intervalMutation.isPending}
+              onChange={(event) => intervalMutation.mutate(Number(event.target.value))}
+              className="rounded-md border border-border bg-background px-2 py-1.5 text-xs font-semibold"
+            >
+              {INTERVAL_OPTIONS.map((hours) => (
+                <option key={hours} value={hours}>
+                  {intervalLabel(hours)}
+                </option>
+              ))}
+            </select>
+          </label>
+          <button
+            type="button"
+            onClick={() => sync.mutate()}
+            disabled={sync.isPending}
+            className="rounded-md bg-ink px-4 py-2 text-xs font-semibold text-ink-foreground disabled:opacity-60"
+          >
+            {sync.isPending ? "Syncing…" : "Sync now"}
+          </button>
+        </div>
       </div>
+
+      {settings ? (
+        <p className="mt-2 text-xs text-muted-foreground">
+          {settings.lastRunAt
+            ? `Last automatic sync: ${new Date(settings.lastRunAt).toLocaleString()}`
+            : "No automatic sync has run yet."}
+        </p>
+      ) : null}
 
       {status ? <p className="mt-3 text-sm text-muted-foreground">{status}</p> : null}
 
