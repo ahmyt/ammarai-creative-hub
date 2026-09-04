@@ -21,6 +21,24 @@ type EmailSettings = {
 const str = (value: unknown): string | undefined =>
   typeof value === "string" && value.trim() ? value.trim() : undefined;
 
+const safeEmailError = (error: unknown): Record<string, unknown> => {
+  if (!(error instanceof Error)) return { message: "Unknown email delivery error" };
+  const smtpError = error as Error & {
+    code?: unknown;
+    command?: unknown;
+    responseCode?: unknown;
+  };
+  return {
+    name: error.name,
+    message: error.message,
+    ...(typeof smtpError.code === "string" ? { code: smtpError.code } : {}),
+    ...(typeof smtpError.command === "string" ? { command: smtpError.command } : {}),
+    ...(typeof smtpError.responseCode === "number"
+      ? { responseCode: smtpError.responseCode }
+      : {}),
+  };
+};
+
 export const Route = createFileRoute("/api/contact")({
   staticData: { sitemap: false },
   server: {
@@ -108,7 +126,8 @@ export const Route = createFileRoute("/api/contact")({
             : {}),
         };
 
-        // Email delivery is best-effort: the stored row is the source of truth.
+        // The stored row remains the source of truth, but delivery failures are
+        // returned to the browser so it never shows a false confirmation.
         try {
           const smtpHost = process.env["SMTP_HOST"];
           if (smtpHost) {
@@ -116,13 +135,20 @@ export const Route = createFileRoute("/api/contact")({
             // mailbox via SMTP. Loaded dynamically so the edge/preview build,
             // which has no SMTP support, is unaffected.
             const { sendContactEmails } = await import("@/lib/contact-smtp.server");
-            await sendContactEmails({
+            const delivery = await sendContactEmails({
               name,
               email,
               message,
               notifyTo,
               fromName: settings.fromName,
               fromEmail: settings.fromEmail,
+            });
+            console.info("Contact SMTP delivery accepted", {
+              messageId,
+              notificationMessageId: delivery.notification.messageId,
+              notificationResponse: delivery.notification.response,
+              confirmationMessageId: delivery.confirmation.messageId,
+              confirmationResponse: delivery.confirmation.response,
             });
           } else {
             // Lovable-hosted delivery path, available once a sender domain is
@@ -136,7 +162,7 @@ export const Route = createFileRoute("/api/contact")({
               ) => Promise<{ sent: boolean; reason?: string }>;
             };
             const idemBase = `contact-${messageId}`;
-            await mod.sendTemplateEmail("contact-notification", notifyTo, {
+            const notification = await mod.sendTemplateEmail("contact-notification", notifyTo, {
               templateData: { name, email, message },
               idempotencyKey: `${idemBase}-notify`,
               ...sendOptions,
@@ -146,15 +172,29 @@ export const Route = createFileRoute("/api/contact")({
               idempotencyKey: `${idemBase}-confirm`,
               ...sendOptions,
             });
-            if (!confirmation.sent) {
-              console.log(`Contact confirmation not sent (${confirmation.reason})`);
+            if (!notification.sent || !confirmation.sent) {
+              throw new Error(
+                `Managed email rejected: notification=${notification.reason ?? "unknown"}, confirmation=${confirmation.reason ?? "unknown"}`,
+              );
             }
           }
         } catch (emailError) {
-          console.error("Contact email delivery failed", emailError);
+          console.error("Contact email delivery failed", {
+            messageId,
+            error: safeEmailError(emailError),
+          });
+          return Response.json(
+            {
+              saved: true,
+              emailSent: false,
+              error:
+                "Your message was saved, but email delivery failed. Our team can still view it in the CMS.",
+            },
+            { status: 502 },
+          );
         }
 
-        return Response.json({ ok: true });
+        return Response.json({ ok: true, saved: true, emailSent: true });
       },
     },
   },

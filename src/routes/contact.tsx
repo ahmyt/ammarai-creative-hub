@@ -94,10 +94,12 @@ function Contact() {
                       });
                       if (!res.ok) {
                         const payload = (await res.json().catch(() => null)) as
-                          | { error?: string }
+                          | { error?: string; saved?: boolean }
                           | null;
                         setError(
-                          payload?.error ??
+                          payload?.saved
+                            ? "Your message was saved, but the confirmation email could not be delivered. Our team can still view your message in the CMS."
+                            : payload?.error ??
                             "Something went wrong. Please email support@ammarai.com directly.",
                         );
                         return;
