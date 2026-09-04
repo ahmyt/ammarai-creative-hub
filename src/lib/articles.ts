@@ -62,9 +62,47 @@ export function articleExcerpt(article: SyndicatedArticle): string {
   return article.meta_description ?? "";
 }
 
-/** Label shown alongside the reading time. */
-export function articleCategory(_article: SyndicatedArticle): string {
-  return "AI Guides";
+/**
+ * Content-aware category derived from the article's title, description and
+ * body. Falls back to "AI Guides" when nothing matches.
+ */
+const CATEGORY_KEYWORDS: [string, string[]][] = [
+  ["AI SEO", ["seo", "search engine", "ranking", "rank on google", "serp", "backlink", "keyword research", "organic traffic", "meta description", "schema markup"]],
+  ["AI Marketing", ["marketing", "campaign", "conversion", "advertising", "ads", "funnel", "branding", "copy that converts", "lead generation", "email campaign"]],
+  ["AI Writing", ["writing", "copywriting", "blog post", "content writing", "storytelling", "essay", "article writing", "headline"]],
+  ["AI Video", ["video", "animation", "lip-sync", "footage", "thumbnail"]],
+  ["AI Voice", ["voice", "voiceover", "text to speech", "tts", "narration", "dubbing"]],
+  ["AI Audio", ["audio", "podcast", "music", "sound", "transcription", "speech to text"]],
+  ["AI Social Media", ["instagram", "tiktok", "social media", "linkedin", "twitter", "x post", "caption", "hashtag", "followers"]],
+  ["AI Business", ["business", "startup", "entrepreneur", "sales", "revenue", "growth strategy", "productivity", "workflow"]],
+  ["AI E-commerce", ["e-commerce", "ecommerce", "shopify", "product description", "online store", "checkout"]],
+  ["AI Image", ["image generation", "image generator", "photo", "illustration", "art", "design"]],
+];
+
+export function articleCategory(article: SyndicatedArticle): string {
+  const title = (article.title ?? "").toLowerCase();
+  const description = (article.meta_description ?? "").toLowerCase();
+  const bodySource = article.content_markdown ?? article.content_html ?? "";
+  const body = bodySource
+    .replace(/<[^>]+>/g, " ")
+    .toLowerCase()
+    .slice(0, 3000);
+
+  let best: string | null = null;
+  let bestScore = 0;
+  for (const [category, keywords] of CATEGORY_KEYWORDS) {
+    let score = 0;
+    for (const keyword of keywords) {
+      if (title.includes(keyword)) score += 5;
+      if (description.includes(keyword)) score += 3;
+      if (body.includes(keyword)) score += 1;
+    }
+    if (score > bestScore) {
+      bestScore = score;
+      best = category;
+    }
+  }
+  return best ?? "AI Guides";
 }
 
 /** Rough reading time based on the article body, e.g. "8 min read". */
