@@ -11,6 +11,7 @@ import { tools } from "@/data/tools";
 import { useCases } from "@/data/use-cases";
 import { posts } from "@/data/posts";
 import { features } from "@/data/features";
+import { fetchSyndicatedArticles } from "@/lib/articles";
 
 const BASE_URL = "https://ammarai-creative-hub.lovable.app";
 
@@ -41,7 +42,9 @@ export const Route = createFileRoute("/sitemap.xml")({
           ...tools.map((t) => t.slug),
           ...useCases.map((u) => u.slug),
         ]);
-        addDynamic("/blog/$slug", posts.map((p) => p.slug));
+        const syndicated = await fetchSyndicatedArticles().catch(() => []);
+        const syndicatedSlugs = syndicated.filter((a) => !a.is_hidden).map((a) => a.slug);
+        addDynamic("/blog/$slug", [...posts.map((p) => p.slug), ...syndicatedSlugs]);
         addDynamic("/features/$slug", features.map((f) => f.slug));
 
         if (entries.length === 0) {
