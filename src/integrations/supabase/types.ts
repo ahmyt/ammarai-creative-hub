@@ -86,6 +86,42 @@ export type Database = {
         }
         Relationships: []
       }
+      sync_cron_tokens: {
+        Row: {
+          id: string
+          token: string
+        }
+        Insert: {
+          id: string
+          token?: string
+        }
+        Update: {
+          id?: string
+          token?: string
+        }
+        Relationships: []
+      }
+      sync_settings: {
+        Row: {
+          id: string
+          interval_hours: number
+          last_run_at: string | null
+          updated_at: string
+        }
+        Insert: {
+          id: string
+          interval_hours?: number
+          last_run_at?: string | null
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          interval_hours?: number
+          last_run_at?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       syndicated_articles: {
         Row: {
           content_html: string | null

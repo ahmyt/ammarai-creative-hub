@@ -5,7 +5,17 @@ import { useServerFn } from "@tanstack/react-start";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { allSyndicatedArticlesQuery, articleDate } from "@/lib/articles";
-import { syncBabyLoveGrowthArticles } from "@/lib/babylovegrowth.functions";
+import {
+  getSyncSettings,
+  setSyncInterval,
+  syncBabyLoveGrowthArticles,
+} from "@/lib/babylovegrowth.functions";
+
+const INTERVAL_OPTIONS = [1, 6, 12, 24, 48, 72] as const;
+
+function intervalLabel(hours: number): string {
+  return hours === 1 ? "Every hour" : `Every ${hours} hours`;
+}
 
 export const Route = createFileRoute("/admin/articles")({
   staticData: { sitemap: false },
@@ -24,6 +34,23 @@ function AdminArticles() {
   const { data: articles = [], isLoading } = useQuery({
     ...allSyndicatedArticlesQuery,
     enabled: isAdmin,
+  });
+
+  const fetchSettings = useServerFn(getSyncSettings);
+  const { data: settings } = useQuery({
+    queryKey: ["sync-settings"],
+    queryFn: () => fetchSettings(),
+    enabled: isAdmin,
+  });
+
+  const saveInterval = useServerFn(setSyncInterval);
+  const intervalMutation = useMutation({
+    mutationFn: (intervalHours: number) => saveInterval({ data: { intervalHours } }),
+    onSuccess: (result) => {
+      setStatus(`Automatic sync set to ${intervalLabel(result.intervalHours).toLowerCase()}.`);
+      void queryClient.invalidateQueries({ queryKey: ["sync-settings"] });
+    },
+    onError: (error: Error) => setStatus(error.message),
   });
 
   const runSync = useServerFn(syncBabyLoveGrowthArticles);
@@ -77,15 +104,40 @@ function AdminArticles() {
             Articles pulled in automatically and published on the blog.
           </p>
         </div>
-        <button
-          type="button"
-          onClick={() => sync.mutate()}
-          disabled={sync.isPending}
-          className="rounded-md bg-ink px-4 py-2 text-xs font-semibold text-ink-foreground disabled:opacity-60"
-        >
-          {sync.isPending ? "Syncing…" : "Sync now"}
-        </button>
+        <div className="flex flex-wrap items-center gap-3">
+          <label className="flex items-center gap-2 text-xs font-semibold">
+            <span className="text-muted-foreground">Auto-sync</span>
+            <select
+              value={settings?.intervalHours ?? 24}
+              disabled={intervalMutation.isPending}
+              onChange={(event) => intervalMutation.mutate(Number(event.target.value))}
+              className="rounded-md border border-border bg-background px-2 py-1.5 text-xs font-semibold"
+            >
+              {INTERVAL_OPTIONS.map((hours) => (
+                <option key={hours} value={hours}>
+                  {intervalLabel(hours)}
+                </option>
+              ))}
+            </select>
+          </label>
+          <button
+            type="button"
+            onClick={() => sync.mutate()}
+            disabled={sync.isPending}
+            className="rounded-md bg-ink px-4 py-2 text-xs font-semibold text-ink-foreground disabled:opacity-60"
+          >
+            {sync.isPending ? "Syncing…" : "Sync now"}
+          </button>
+        </div>
       </div>
+
+      {settings ? (
+        <p className="mt-2 text-xs text-muted-foreground">
+          {settings.lastRunAt
+            ? `Last automatic sync: ${new Date(settings.lastRunAt).toLocaleString()}`
+            : "No automatic sync has run yet."}
+        </p>
+      ) : null}
 
       {status ? <p className="mt-3 text-sm text-muted-foreground">{status}</p> : null}
 
