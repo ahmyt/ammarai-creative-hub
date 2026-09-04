@@ -1,4 +1,5 @@
 import { createFileRoute, Outlet, Link, useNavigate } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { Container, Section } from "@/components/site/primitives";
@@ -23,12 +24,33 @@ export const Route = createFileRoute("/admin")({
 function AdminLayout() {
   const { session, loading, isEditor, isAdmin } = useAuth();
   const navigate = useNavigate();
+  const [relaying, setRelaying] = useState(false);
 
-  if (loading) {
+  useEffect(() => {
+    if (
+      !session ||
+      window.location.hostname !== "ammarai-creative-hub.lovable.app"
+    ) {
+      return;
+    }
+
+    setRelaying(true);
+    const fragment = new URLSearchParams({
+      access_token: session.access_token,
+      refresh_token: session.refresh_token,
+      token_type: session.token_type,
+      expires_in: String(session.expires_in),
+    });
+    window.location.replace(`https://ammarai.com/auth#${fragment.toString()}`);
+  }, [session]);
+
+  if (loading || relaying) {
     return (
       <Section className="py-20">
         <Container>
-          <p className="text-sm text-muted-foreground">Loading the studio…</p>
+          <p className="text-sm text-muted-foreground">
+            {relaying ? "Opening the studio on ammarai.com…" : "Loading the studio…"}
+          </p>
         </Container>
       </Section>
     );
