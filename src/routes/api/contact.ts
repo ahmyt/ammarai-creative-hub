@@ -37,6 +37,32 @@ const safeEmailError = (error: unknown): Record<string, unknown> => {
   };
 };
 
+type ConfirmationOutcome = {
+  confirmation_status: "sent" | "failed";
+  confirmation_message_id: string | null;
+  confirmation_response: string | null;
+  confirmation_error: string | null;
+  confirmation_attempted_at: string;
+};
+
+// Writes the delivery outcome back to the stored message. Returns an error
+// string when the write fails (logged + surfaced in the API response) so a
+// failed write-back is never silent. Never throws — the message itself is
+// already stored, which is what matters most.
+const recordConfirmationOutcome = async (
+  supabase: ReturnType<typeof createClient<Database>>,
+  messageId: string,
+  outcome: ConfirmationOutcome,
+): Promise<string | null> => {
+  const { error } = await supabase
+    .from("contact_messages")
+    .update(outcome)
+    .eq("id", messageId);
+  if (!error) return null;
+  console.error("Failed to record contact delivery outcome", { messageId, error });
+  return error.message;
+};
+
 export const Route = createFileRoute("/api/contact")({
   staticData: { sitemap: false },
   server: {
@@ -234,13 +260,26 @@ export const Route = createFileRoute("/api/contact")({
             messageId,
             error: safeEmailError(emailError),
           });
+          // Record that delivery was attempted and failed, so the CMS never
+          // shows a misleading "no delivery recorded" for a fresh submission.
+          const safe = safeEmailError(emailError);
+          await recordConfirmationOutcome(supabase, messageId, {
+            confirmation_status: "failed",
+            confirmation_message_id: null,
+            confirmation_response: null,
+            confirmation_error: [safe["code"], safe["command"], safe["responseCode"], safe["message"]]
+              .filter((part) => part !== undefined && part !== null)
+              .join(" / ")
+              .slice(0, 500),
+            confirmation_attempted_at: new Date().toISOString(),
+          });
           return Response.json(
             {
               saved: true,
               emailSent: false,
               error:
                 "Your message was saved, but the notification email to our team could not be delivered. We can still view your message in the CMS.",
-              emailError: safeEmailError(emailError),
+              emailError: safe,
             },
             { status: 502 },
           );
@@ -249,20 +288,22 @@ export const Route = createFileRoute("/api/contact")({
         // Record the confirmation outcome and the mail server's own reply on
         // the stored message, so a submission can be traced in the mail log.
         // "sent" means the mail server accepted the handoff — not that the
-        // recipient's provider delivered it. Failure here is fine.
-        await supabase
-          .from("contact_messages")
-          .update({
-            confirmation_status: confirmationSent ? "sent" : "failed",
-            confirmation_message_id: confirmationMessageId,
-            confirmation_response: confirmationResponse,
-            confirmation_error: confirmationErrorText,
-            confirmation_attempted_at: new Date().toISOString(),
-          })
-          .eq("id", messageId);
+        // recipient's provider delivered it.
+        const trackingError = await recordConfirmationOutcome(supabase, messageId, {
+          confirmation_status: confirmationSent ? "sent" : "failed",
+          confirmation_message_id: confirmationMessageId,
+          confirmation_response: confirmationResponse,
+          confirmation_error: confirmationErrorText,
+          confirmation_attempted_at: new Date().toISOString(),
+        });
 
-
-        return Response.json({ ok: true, saved: true, emailSent: true, confirmationSent });
+        return Response.json({
+          ok: true,
+          saved: true,
+          emailSent: true,
+          confirmationSent,
+          ...(trackingError ? { trackingRecorded: false } : {}),
+        });
       },
     },
   },

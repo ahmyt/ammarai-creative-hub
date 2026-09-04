@@ -17,7 +17,7 @@ const STATUS_STYLES: Record<string, string> = {
 const STATUS_LABELS: Record<string, string> = {
   sent: "Accepted by mail server",
   failed: "Confirmation failed",
-  not_sent: "No confirmation attempted",
+  not_sent: "No delivery recorded (old build)",
 };
 
 function AdminMessages() {
