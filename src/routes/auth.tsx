@@ -2,6 +2,11 @@ import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
+import {
+  consumeForwardedTokens,
+  isLovableHosted,
+  signInWithGoogleSelfHosted,
+} from "@/lib/oauth-selfhost";
 import { Container, Section } from "@/components/site/primitives";
 
 export const Route = createFileRoute("/auth")({
