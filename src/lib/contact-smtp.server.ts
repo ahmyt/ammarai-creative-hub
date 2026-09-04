@@ -77,6 +77,16 @@ const getSmtpConfig = (): SmtpConfig => {
   return { host, port, secure, authDisabled, user };
 };
 
+export const getSmtpDiagnostic = (): SmtpDiagnostic => {
+  const config = getSmtpConfig();
+  return {
+    host: config.host,
+    port: config.port,
+    secure: config.secure,
+    authEnabled: !config.authDisabled,
+  };
+};
+
 const deliveryResult = (info: SentMessageInfo): { messageId: string; response: string } => ({
   messageId: String(info.messageId ?? ""),
   response: String(info.response ?? "accepted"),
@@ -124,12 +134,7 @@ const createTransporter = () => {
 export async function verifySmtpConnection(): Promise<SmtpDiagnostic> {
   const { transporter, config } = createTransporter();
   await transporter.verify();
-  return {
-    host: config.host,
-    port: config.port,
-    secure: config.secure,
-    authEnabled: !config.authDisabled,
-  };
+  return { ...getSmtpDiagnostic(), authEnabled: !config.authDisabled };
 }
 
 export async function sendContactEmails(input: ContactEmailInput): Promise<ContactEmailDelivery> {
@@ -137,8 +142,8 @@ export async function sendContactEmails(input: ContactEmailInput): Promise<Conta
 
   await transporter.verify();
 
-  // Keep the envelope sender tied to the authenticated mailbox. Many cPanel
-  // servers reject or silently discard messages that spoof another sender.
+  // Keep the envelope sender tied to the configured local mailbox. Mail
+  // servers often reject or silently discard messages that spoof a sender.
   const envelopeFrom = config.user;
   const fromAddress = envValue("SMTP_FROM") ?? config.user;
   const from = input.fromName ? `"${input.fromName.replace(/"/g, "")}" <${fromAddress}>` : fromAddress;

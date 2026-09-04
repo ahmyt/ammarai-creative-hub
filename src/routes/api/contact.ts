@@ -49,12 +49,19 @@ export const Route = createFileRoute("/api/contact")({
         if (!process.env["SMTP_HOST"]) {
           return Response.json({ smtp: "not_configured" });
         }
+        let config: Record<string, unknown> | undefined;
         try {
-          const { verifySmtpConnection } = await import("@/lib/contact-smtp.server");
-          const config = await verifySmtpConnection();
+          const { getSmtpDiagnostic, verifySmtpConnection } = await import(
+            "@/lib/contact-smtp.server"
+          );
+          config = getSmtpDiagnostic();
+          await verifySmtpConnection();
           return Response.json({ smtp: "ok", config });
         } catch (error) {
-          return Response.json({ smtp: "failed", error: safeEmailError(error) }, { status: 502 });
+          return Response.json(
+            { smtp: "failed", ...(config ? { config } : {}), error: safeEmailError(error) },
+            { status: 502 },
+          );
         }
       },
       POST: async ({ request }) => {
