@@ -157,6 +157,9 @@ export const Route = createFileRoute("/api/contact")({
         // team must succeed; the customer confirmation is best-effort and its
         // outcome is recorded on the row so the CMS shows who received it.
         let confirmationSent = false;
+        let confirmationMessageId: string | null = null;
+        let confirmationResponse: string | null = null;
+        let confirmationErrorText: string | null = null;
         try {
           const smtpHost = process.env["SMTP_HOST"];
           if (smtpHost) {
@@ -173,6 +176,17 @@ export const Route = createFileRoute("/api/contact")({
               fromEmail: settings.fromEmail,
             });
             confirmationSent = delivery.confirmation.status === "sent";
+            if (delivery.confirmation.status === "sent") {
+              confirmationMessageId = delivery.confirmation.messageId || null;
+              confirmationResponse = delivery.confirmation.response || null;
+            } else {
+              const safe = safeEmailError(delivery.confirmation.error);
+              confirmationErrorText = [safe["code"], safe["command"], safe["responseCode"], safe["message"]]
+                .filter((part) => part !== undefined && part !== null)
+                .join(" / ")
+                .slice(0, 500);
+            }
+
             console.info("Contact SMTP delivery", {
               messageId,
               notificationMessageId: delivery.notification.messageId,
