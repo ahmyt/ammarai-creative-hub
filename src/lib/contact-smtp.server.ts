@@ -41,7 +41,7 @@ const deliveryResult = (info: SentMessageInfo): { messageId: string; response: s
  *   SMTP_USER, SMTP_PASS, SMTP_FROM (defaults to SMTP_USER).
  * Runs only on Node hosts; the edge/preview runtime never imports this file.
  */
-export async function sendContactEmails(input: ContactEmailInput): Promise<ContactEmailDelivery> {
+const createTransporter = () => {
   const host = requiredEnv("SMTP_HOST");
   const user = requiredEnv("SMTP_USER");
   const pass = requiredEnv("SMTP_PASS");
@@ -52,7 +52,7 @@ export async function sendContactEmails(input: ContactEmailInput): Promise<Conta
   }
   const secure = (process.env["SMTP_SECURE"] ?? String(port === 465)) !== "false";
 
-  const transporter = nodemailer.createTransport({
+  return nodemailer.createTransport({
     host,
     port,
     secure,
@@ -61,6 +61,16 @@ export async function sendContactEmails(input: ContactEmailInput): Promise<Conta
     greetingTimeout: 10_000,
     socketTimeout: 20_000,
   });
+};
+
+/** Opens the SMTP connection and authenticates. Used by the diagnostics endpoint. */
+export async function verifySmtpConnection(): Promise<void> {
+  await createTransporter().verify();
+}
+
+export async function sendContactEmails(input: ContactEmailInput): Promise<ContactEmailDelivery> {
+  const user = requiredEnv("SMTP_USER");
+  const transporter = createTransporter();
 
   await transporter.verify();
 

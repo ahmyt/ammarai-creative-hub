@@ -169,8 +169,16 @@ After adding or changing the variables, restart the deployed Node app so the
 new environment is loaded. A successful form response now means the SMTP
 server accepted both the support notification and visitor confirmation. If
 either send fails, the page states that the message was saved but email
-delivery failed; inspect the Node app log for the safe SMTP error code and
-response code.
+delivery failed, followed by a safe SMTP diagnostic code
+(`SMTP: <code> / <command> / <responseCode>`).
+
+Quick self-test: open `https://ammarai.com/api/contact` in a browser.
+`{"smtp":"ok"}` means the connection and login work; `{"smtp":"not_configured"}`
+means `SMTP_HOST` is missing; a 502 with an error object means the server
+rejected the connection — common codes: `ECONNECTION`/`ETIMEDOUT` (wrong host
+or port, or firewall blocking outbound SMTP), `EAUTH` (wrong mailbox password
+or SMTP auth disabled), `ESOCKET` with `wrong version number` (`SMTP_SECURE`
+doesn't match the port: 465 → `true`, 587 → `false`).
 
 ### Bounced by a blacklist (e.g. Spamhaus / Outlook 550 5.7.1)
 
