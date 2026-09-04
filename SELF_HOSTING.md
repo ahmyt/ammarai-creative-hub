@@ -134,3 +134,30 @@ After a successful build, set the **Application startup file** to
   before going live.
 - Update `public/robots.txt` and the sitemap origin if you move fully to your
   custom domain (currently they point at `ammarai-creative-hub.lovable.app`).
+
+---
+
+## Contact form email via Plesk SMTP
+
+The contact form stores every message in the database first, then sends a
+notification to the CMS-configured notify address (default
+`support@ammarai.com`) plus a confirmation to the visitor. On your Plesk
+(Node) deployment it sends through your own Plesk mailbox via SMTP — set
+these environment variables in the Plesk Node.js app settings:
+
+| Variable | Example | Notes |
+| --- | --- | --- |
+| `SMTP_HOST` | `mail.ammarai.com` | Your Plesk mail server (often the domain itself) |
+| `SMTP_PORT` | `465` | `465` = SSL, `587` = STARTTLS |
+| `SMTP_SECURE` | `true` | `true` for port 465, `false` for 587 |
+| `SMTP_USER` | `support@ammarai.com` | Full mailbox address |
+| `SMTP_PASS` | `••••••••` | Mailbox password |
+| `SMTP_FROM` | `support@ammarai.com` | Optional; defaults to `SMTP_USER` |
+
+The CMS Contact page fields (`fromName`, `fromEmail`, `notifyEmail`) still
+apply: `fromEmail` overrides `SMTP_FROM`, and `notifyEmail` sets who receives
+the notification. If `SMTP_HOST` is not set, the app falls back to the
+Lovable email path (used on Lovable hosting only), and the message is still
+safely stored in the database either way.
+
+After adding the variables, restart the Node app in Plesk and test the form.
