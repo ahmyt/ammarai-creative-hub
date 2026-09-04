@@ -69,9 +69,11 @@ function AuthPage() {
 
   const google = async () => {
     setMessage(null);
-    const result = await lovable.auth.signInWithOAuth("google", {
-      redirect_uri: window.location.origin,
-    });
+    const result = isLovableHosted(window.location.hostname)
+      ? await lovable.auth.signInWithOAuth("google", {
+          redirect_uri: window.location.origin,
+        })
+      : await signInWithGoogleSelfHosted();
     if (result.error) {
       setMessage("Google sign-in failed. Try again or use email.");
       return;
