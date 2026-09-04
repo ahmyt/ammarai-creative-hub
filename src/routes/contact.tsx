@@ -94,13 +94,27 @@ function Contact() {
                       });
                       if (!res.ok) {
                         const payload = (await res.json().catch(() => null)) as
-                          | { error?: string; saved?: boolean }
+                          | {
+                              error?: string;
+                              saved?: boolean;
+                              emailError?: { code?: string; command?: string; responseCode?: number };
+                            }
                           | null;
+                        const detail = payload?.emailError
+                          ? [
+                              payload.emailError.code,
+                              payload.emailError.command,
+                              payload.emailError.responseCode,
+                            ]
+                              .filter((part) => part !== undefined)
+                              .join(" / ")
+                          : "";
                         setError(
-                          payload?.saved
+                          (payload?.saved
                             ? "Your message was saved, but the confirmation email could not be delivered. Our team can still view your message in the CMS."
                             : payload?.error ??
-                            "Something went wrong. Please email support@ammarai.com directly.",
+                              "Something went wrong. Please email support@ammarai.com directly.") +
+                            (detail ? ` (SMTP: ${detail})` : ""),
                         );
                         return;
                       }
