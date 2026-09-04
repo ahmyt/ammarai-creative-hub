@@ -22,6 +22,7 @@ import { Route as ResourcesRouteImport } from './routes/resources'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as UseCasesRouteImport } from './routes/use-cases'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
+import { Route as AdminArticlesRouteImport } from './routes/admin.articles'
 import { Route as AdminMessagesRouteImport } from './routes/admin.messages'
 import { Route as ApiContactRouteImport } from './routes/api/contact'
 import { Route as AuthForwardRouteImport } from './routes/auth.forward'
@@ -98,6 +99,11 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminArticlesRoute = AdminArticlesRouteImport.update({
+  id: '/articles',
+  path: '/articles',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminMessagesRoute = AdminMessagesRouteImport.update({
   id: '/messages',
   path: '/messages',
@@ -163,6 +169,7 @@ export interface FileRoutesByFullPath {
   '/resources': typeof ResourcesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/use-cases': typeof UseCasesRoute
+  '/admin/articles': typeof AdminArticlesRoute
   '/admin/messages': typeof AdminMessagesRoute
   '/api/contact': typeof ApiContactRoute
   '/auth/forward': typeof AuthForwardRoute
@@ -187,6 +194,7 @@ export interface FileRoutesByTo {
   '/resources': typeof ResourcesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/use-cases': typeof UseCasesRoute
+  '/admin/articles': typeof AdminArticlesRoute
   '/admin/messages': typeof AdminMessagesRoute
   '/api/contact': typeof ApiContactRoute
   '/auth/forward': typeof AuthForwardRoute
@@ -213,6 +221,7 @@ export interface FileRoutesById {
   '/resources': typeof ResourcesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/use-cases': typeof UseCasesRoute
+  '/admin/articles': typeof AdminArticlesRoute
   '/admin/messages': typeof AdminMessagesRoute
   '/api/contact': typeof ApiContactRoute
   '/auth/forward': typeof AuthForwardRoute
@@ -240,6 +249,7 @@ export interface FileRouteTypes {
     | '/resources'
     | '/sitemap.xml'
     | '/use-cases'
+    | '/admin/articles'
     | '/admin/messages'
     | '/api/contact'
     | '/auth/forward'
@@ -264,6 +274,7 @@ export interface FileRouteTypes {
     | '/resources'
     | '/sitemap.xml'
     | '/use-cases'
+    | '/admin/articles'
     | '/admin/messages'
     | '/api/contact'
     | '/auth/forward'
@@ -289,6 +300,7 @@ export interface FileRouteTypes {
     | '/resources'
     | '/sitemap.xml'
     | '/use-cases'
+    | '/admin/articles'
     | '/admin/messages'
     | '/api/contact'
     | '/auth/forward'
@@ -416,6 +428,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/articles': {
+      id: '/admin/articles'
+      path: '/articles'
+      fullPath: '/admin/articles'
+      preLoaderRoute: typeof AdminArticlesRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/messages': {
       id: '/admin/messages'
       path: '/messages'
@@ -490,6 +509,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AdminRouteChildren {
+  AdminArticlesRoute: typeof AdminArticlesRoute
   AdminMessagesRoute: typeof AdminMessagesRoute
   AdminIndexRoute: typeof AdminIndexRoute
   AdminKindSlugRoute: typeof AdminKindSlugRoute
@@ -497,6 +517,7 @@ interface AdminRouteChildren {
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
+  AdminArticlesRoute: AdminArticlesRoute,
   AdminMessagesRoute: AdminMessagesRoute,
   AdminIndexRoute: AdminIndexRoute,
   AdminKindSlugRoute: AdminKindSlugRoute,
