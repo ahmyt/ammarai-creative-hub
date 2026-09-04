@@ -54,14 +54,25 @@ const recordConfirmationOutcome = async (
   messageId: string,
   outcome: ConfirmationOutcome,
 ): Promise<string | null> => {
-  const { error } = await supabase
+  const { data, error } = await supabase
     .from("contact_messages")
     .update(outcome)
-    .eq("id", messageId);
-  if (!error) return null;
-  console.error("Failed to record contact delivery outcome", { messageId, error });
-  return error.message;
+    .eq("id", messageId)
+    .select("id");
+  if (error) {
+    console.error("Failed to record contact delivery outcome", { messageId, error });
+    return error.message;
+  }
+  if (!data || data.length === 0) {
+    console.error("Delivery outcome update matched no rows", { messageId });
+    return "update matched no rows (row-level security blocked the write)";
+  }
+  return null;
 };
+
+// Bumped whenever the contact endpoint changes, so a deployed server can be
+// identified from GET /api/contact without guessing.
+const CONTACT_BUILD = "contact-tracking-v2";
 
 export const Route = createFileRoute("/api/contact")({
   staticData: { sitemap: false },
