@@ -15,9 +15,9 @@ const STATUS_STYLES: Record<string, string> = {
 };
 
 const STATUS_LABELS: Record<string, string> = {
-  sent: "Confirmation sent",
+  sent: "Accepted by mail server",
   failed: "Confirmation failed",
-  not_sent: "No confirmation",
+  not_sent: "No confirmation attempted",
 };
 
 function AdminMessages() {
@@ -28,13 +28,16 @@ function AdminMessages() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("contact_messages")
-        .select("id, name, email, message, created_at, confirmation_status")
+        .select(
+          "id, name, email, message, created_at, confirmation_status, confirmation_message_id, confirmation_response, confirmation_attempted_at, confirmation_error",
+        )
         .order("created_at", { ascending: false })
         .limit(200);
       if (error) throw error;
       return data;
     },
   });
+
 
   if (!isAdmin) return null;
 
