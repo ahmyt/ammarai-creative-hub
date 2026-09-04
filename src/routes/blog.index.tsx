@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { siteContentQuery } from "@/lib/content";
+import { articleDate, syndicatedArticlesQuery } from "@/lib/articles";
 import { Container, Section } from "@/components/site/primitives";
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 
@@ -20,13 +21,41 @@ export const Route = createFileRoute("/blog/")({
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
-  loader: ({ context }) => context.queryClient.ensureQueryData(siteContentQuery),
+  loader: async ({ context }) => {
+    await Promise.all([
+      context.queryClient.ensureQueryData(siteContentQuery),
+      context.queryClient.ensureQueryData(syndicatedArticlesQuery),
+    ]);
+  },
   component: BlogIndex,
 });
 
 function BlogIndex() {
   const { data: content } = useSuspenseQuery(siteContentQuery);
-  const posts = content.posts;
+  const { data: articles } = useSuspenseQuery(syndicatedArticlesQuery);
+  const staticSlugs = new Set(content.posts.map((p) => p.slug));
+
+  const entries = [
+    ...articles
+      .filter((a) => !a.is_hidden && !staticSlugs.has(a.slug))
+      .map((a) => ({
+        slug: a.slug,
+        title: a.title,
+        excerpt: a.meta_description ?? "",
+        category: "Guide",
+        readingTime: "",
+        date: articleDate(a),
+      })),
+    ...content.posts.map((p) => ({
+      slug: p.slug,
+      title: p.title,
+      excerpt: p.excerpt,
+      category: p.category,
+      readingTime: p.readingTime,
+      date: p.date,
+    })),
+  ].sort((a, b) => (a.date < b.date ? 1 : -1));
+
   return (
     <div>
       <Section className="pb-8 pt-10 sm:pt-14">
@@ -48,12 +77,16 @@ function BlogIndex() {
       <Section className="pt-4">
         <Container size="narrow">
           <ul className="border-t border-border">
-            {posts.map((post) => (
+            {entries.map((post) => (
               <li key={post.slug} className="border-b border-border py-7">
                 <p className="flex flex-wrap items-center gap-2 text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
                   <span className="text-accent">{post.category}</span>
-                  <span aria-hidden="true">·</span>
-                  <span>{post.readingTime}</span>
+                  {post.readingTime ? (
+                    <>
+                      <span aria-hidden="true">·</span>
+                      <span>{post.readingTime}</span>
+                    </>
+                  ) : null}
                 </p>
                 <h2 className="mt-3 text-balance text-2xl leading-snug">
                   <Link
