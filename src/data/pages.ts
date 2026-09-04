@@ -31,5 +31,9 @@ export const pages: Page[] = [
         label: "partners@ammarai.com",
       },
     ],
+    senderDomain: "",
+    fromName: "AmmarAI",
+    fromEmail: "",
+    notifyEmail: "support@ammarai.com",
   },
 ];
