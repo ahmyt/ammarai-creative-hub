@@ -43,6 +43,20 @@ export const Route = createFileRoute("/api/contact")({
   staticData: { sitemap: false },
   server: {
     handlers: {
+      // SMTP self-test: GET /api/contact verifies the configured SMTP
+      // connection and returns a safe error code — no credentials or payloads.
+      GET: async () => {
+        if (!process.env["SMTP_HOST"]) {
+          return Response.json({ smtp: "not_configured" });
+        }
+        try {
+          const { verifySmtpConnection } = await import("@/lib/contact-smtp.server");
+          await verifySmtpConnection();
+          return Response.json({ smtp: "ok" });
+        } catch (error) {
+          return Response.json({ smtp: "failed", error: safeEmailError(error) }, { status: 502 });
+        }
+      },
       POST: async ({ request }) => {
         let body: unknown;
         try {
