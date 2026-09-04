@@ -29,3 +29,11 @@ The connection test now confirms the application can hand mail to the local Ples
 ## Verification
 
 Submit a fresh form, confirm the CMS shows the Plesk acceptance details, trace the same message ID in Plesk, and verify the final recipient outcome without treating SMTP connection success as proof of inbox delivery.
+
+## Latest evidence: internal mail works, external mail does not
+
+The team notification to `support@ammarai.com` arrives because that mailbox is on the same Plesk server — it never leaves the machine. The customer confirmation must travel to an outside provider, and only that direction is failing. With no bounce returned, the message is most likely sitting in the Plesk outbound queue (deferred) or being silently dropped/filtered at the recipient side, rather than being refused outright.
+
+This narrows the first investigation step: inspect the Plesk outbound mail queue and mail log for the confirmation recipient specifically. Queued or deferred entries point to outbound port 25 being blocked by the hosting provider or the receiving side throttling the listed IP; an accepted-then-missing message points to spam filtering and sender authentication (SPF, DKIM, DMARC, PTR, HELO).
+
+If outbound delivery from this IP remains blocked, the reliable fix is routing outgoing mail through a reputable relay mailbox, which needs only the SMTP settings changed on the server — no application rewrite.
