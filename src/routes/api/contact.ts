@@ -54,18 +54,29 @@ const recordConfirmationOutcome = async (
   messageId: string,
   outcome: ConfirmationOutcome,
 ): Promise<string | null> => {
-  const { data, error } = await supabase
-    .from("contact_messages")
-    .update(outcome)
-    .eq("id", messageId)
-    .select("id");
+  // A direct table update can never work here: the public role cannot read
+  // contact messages, so the row filter matches nothing. A narrow database
+  // routine writes only the delivery fields instead.
+  const { data, error } = await (
+    supabase.rpc as unknown as (
+      fn: string,
+      args: Record<string, unknown>,
+    ) => Promise<{ data: boolean | null; error: { message: string } | null }>
+  )("record_contact_confirmation", {
+    _id: messageId,
+    _status: outcome.confirmation_status,
+    _message_id: outcome.confirmation_message_id,
+    _response: outcome.confirmation_response,
+    _error: outcome.confirmation_error,
+    _attempted_at: outcome.confirmation_attempted_at,
+  });
   if (error) {
     console.error("Failed to record contact delivery outcome", { messageId, error });
     return error.message;
   }
-  if (!data || data.length === 0) {
-    console.error("Delivery outcome update matched no rows", { messageId });
-    return "update matched no rows (row-level security blocked the write)";
+  if (data !== true) {
+    console.error("Delivery outcome write matched no rows", { messageId });
+    return "delivery outcome write matched no rows";
   }
   return null;
 };
