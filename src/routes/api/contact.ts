@@ -33,9 +33,7 @@ const safeEmailError = (error: unknown): Record<string, unknown> => {
     message: error.message,
     ...(typeof smtpError.code === "string" ? { code: smtpError.code } : {}),
     ...(typeof smtpError.command === "string" ? { command: smtpError.command } : {}),
-    ...(typeof smtpError.responseCode === "number"
-      ? { responseCode: smtpError.responseCode }
-      : {}),
+    ...(typeof smtpError.responseCode === "number" ? { responseCode: smtpError.responseCode } : {}),
   };
 };
 
@@ -49,12 +47,18 @@ export const Route = createFileRoute("/api/contact")({
         if (!process.env["SMTP_HOST"]) {
           return Response.json({ smtp: "not_configured" });
         }
+        let config: Record<string, unknown> | undefined;
         try {
-          const { verifySmtpConnection } = await import("@/lib/contact-smtp.server");
+          const { getSmtpDiagnostic, verifySmtpConnection } =
+            await import("@/lib/contact-smtp.server");
+          config = getSmtpDiagnostic();
           await verifySmtpConnection();
-          return Response.json({ smtp: "ok" });
+          return Response.json({ smtp: "ok", config });
         } catch (error) {
-          return Response.json({ smtp: "failed", error: safeEmailError(error) }, { status: 502 });
+          return Response.json(
+            { smtp: "failed", ...(config ? { config } : {}), error: safeEmailError(error) },
+            { status: 502 },
+          );
         }
       },
       POST: async ({ request }) => {
@@ -80,11 +84,14 @@ export const Route = createFileRoute("/api/contact")({
         // publishable key and URL only — safe to ship in the bundle.
         const url = process.env["SUPABASE_URL"] ?? import.meta.env["VITE_SUPABASE_URL"];
         const key =
-          process.env["SUPABASE_PUBLISHABLE_KEY"] ?? import.meta.env["VITE_SUPABASE_PUBLISHABLE_KEY"];
+          process.env["SUPABASE_PUBLISHABLE_KEY"] ??
+          import.meta.env["VITE_SUPABASE_PUBLISHABLE_KEY"];
         if (!url || !key) {
           console.error("Contact endpoint is missing Supabase configuration");
           return Response.json(
-            { error: "Something went wrong on our side. Please email support@ammarai.com directly." },
+            {
+              error: "Something went wrong on our side. Please email support@ammarai.com directly.",
+            },
             { status: 500 },
           );
         }
@@ -110,7 +117,9 @@ export const Route = createFileRoute("/api/contact")({
         if (insertError) {
           console.error("Failed to store contact message", insertError);
           return Response.json(
-            { error: "Something went wrong on our side. Please email support@ammarai.com directly." },
+            {
+              error: "Something went wrong on our side. Please email support@ammarai.com directly.",
+            },
             { status: 500 },
           );
         }
@@ -136,7 +145,11 @@ export const Route = createFileRoute("/api/contact")({
         const sendOptions = {
           ...(settings.senderDomain ? { senderDomain: settings.senderDomain } : {}),
           ...(settings.fromEmail
-            ? { from: settings.fromName ? `${settings.fromName} <${settings.fromEmail}>` : settings.fromEmail }
+            ? {
+                from: settings.fromName
+                  ? `${settings.fromName} <${settings.fromEmail}>`
+                  : settings.fromEmail,
+              }
             : {}),
         };
 

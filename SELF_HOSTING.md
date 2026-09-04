@@ -166,10 +166,22 @@ requires `SMTP_SECURE=true`. If `SMTP_HOST` is not set, the app falls back to
 the Lovable email path (used on Lovable hosting only), and the message is
 still safely stored in the database either way.
 
-Because the mail server runs on the same machine as the app, the most
-reliable configuration is usually `SMTP_HOST=127.0.0.1`, `SMTP_PORT=25`,
-`SMTP_SECURE=false`. The certificate-name check is skipped automatically for
-loopback hosts (the connection never leaves the server). If you connect to a
+Because the mail server runs on the same machine as the app, use this exact
+local-delivery configuration:
+
+```text
+SMTP_HOST=127.0.0.1
+SMTP_PORT=25
+SMTP_SECURE=false
+SMTP_AUTH_DISABLED=true
+SMTP_USER=support@ammarai.com
+SMTP_FROM=support@ammarai.com
+```
+
+Do not include quotation marks in Plesk; the app strips accidental matching
+quotes and whitespace as a safeguard. Authentication can only be disabled on
+a loopback host using port 25. The certificate-name check is skipped
+automatically for loopback hosts (the connection never leaves the server). If you connect to a
 remote mail server whose certificate doesn't match its hostname, set
 `SMTP_TLS_REJECT_UNAUTHORIZED=false` — prefer fixing the hostname instead.
 
@@ -187,13 +199,21 @@ either send fails, the page states that the message was saved but email
 delivery failed, followed by a safe SMTP diagnostic code
 (`SMTP: <code> / <command> / <responseCode>`).
 
-Quick self-test: open `https://ammarai.com/api/contact` in a browser.
-`{"smtp":"ok"}` means the connection and login work; `{"smtp":"not_configured"}`
-means `SMTP_HOST` is missing; a 502 with an error object means the server
-rejected the connection — common codes: `ECONNECTION`/`ETIMEDOUT` (wrong host
-or port, or firewall blocking outbound SMTP), `EAUTH` (wrong mailbox password
-or SMTP auth disabled), `ESOCKET` with `wrong version number` (`SMTP_SECURE`
-doesn't match the port: 465 → `true`, 587 → `false`).
+Quick self-test: open `https://ammarai.com/api/contact` in a browser. The local
+configuration above should return:
+
+```json
+{"smtp":"ok","config":{"host":"127.0.0.1","port":25,"secure":false,"authEnabled":false}}
+```
+
+The response never includes a password. `{"smtp":"not_configured"}` means
+`SMTP_HOST` is missing; a 502 with an error object means the server rejected
+the connection. If the contact form still reports `AUTH PLAIN`, or the
+diagnostic reports `authEnabled:true`, the running Plesk process has not loaded
+the intended environment values or newest build. Common failure codes are
+`ECONNECTION`/`ETIMEDOUT` (wrong host or port, or firewall blocking outbound
+SMTP), `EAUTH` (mailbox login failure), and `ESOCKET` with `wrong version
+number` (`SMTP_SECURE` doesn't match the port: 465 → `true`, 587 → `false`).
 
 ### Bounced by a blacklist (e.g. Spamhaus / Outlook 550 5.7.1)
 
