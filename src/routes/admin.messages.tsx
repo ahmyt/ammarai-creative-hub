@@ -82,8 +82,40 @@ function AdminMessages() {
               <p className="mt-3 whitespace-pre-wrap text-sm leading-relaxed text-muted-foreground">
                 {m.message}
               </p>
+              {m.confirmation_attempted_at ||
+              m.confirmation_message_id ||
+              m.confirmation_response ||
+              m.confirmation_error ? (
+                <dl className="mt-4 space-y-1 border-t border-border pt-3 text-xs text-muted-foreground">
+                  {m.confirmation_attempted_at ? (
+                    <div className="flex flex-wrap gap-2">
+                      <dt className="font-semibold text-foreground">Attempted</dt>
+                      <dd>{new Date(m.confirmation_attempted_at).toLocaleString()}</dd>
+                    </div>
+                  ) : null}
+                  {m.confirmation_message_id ? (
+                    <div className="flex flex-wrap gap-2">
+                      <dt className="font-semibold text-foreground">Reference</dt>
+                      <dd className="break-all">{m.confirmation_message_id}</dd>
+                    </div>
+                  ) : null}
+                  {m.confirmation_response ? (
+                    <div className="flex flex-wrap gap-2">
+                      <dt className="font-semibold text-foreground">Mail server reply</dt>
+                      <dd className="break-all">{m.confirmation_response}</dd>
+                    </div>
+                  ) : null}
+                  {m.confirmation_error ? (
+                    <div className="flex flex-wrap gap-2">
+                      <dt className="font-semibold text-destructive">Problem</dt>
+                      <dd className="break-all">{m.confirmation_error}</dd>
+                    </div>
+                  ) : null}
+                </dl>
+              ) : null}
             </li>
           ))}
+
         </ul>
       )}
     </div>
