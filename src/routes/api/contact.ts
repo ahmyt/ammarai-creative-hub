@@ -37,6 +37,32 @@ const safeEmailError = (error: unknown): Record<string, unknown> => {
   };
 };
 
+type ConfirmationOutcome = {
+  confirmation_status: "sent" | "failed";
+  confirmation_message_id: string | null;
+  confirmation_response: string | null;
+  confirmation_error: string | null;
+  confirmation_attempted_at: string;
+};
+
+// Writes the delivery outcome back to the stored message. Returns an error
+// string when the write fails (logged + surfaced in the API response) so a
+// failed write-back is never silent. Never throws — the message itself is
+// already stored, which is what matters most.
+const recordConfirmationOutcome = async (
+  supabase: ReturnType<typeof createClient<Database>>,
+  messageId: string,
+  outcome: ConfirmationOutcome,
+): Promise<string | null> => {
+  const { error } = await supabase
+    .from("contact_messages")
+    .update(outcome)
+    .eq("id", messageId);
+  if (!error) return null;
+  console.error("Failed to record contact delivery outcome", { messageId, error });
+  return error.message;
+};
+
 export const Route = createFileRoute("/api/contact")({
   staticData: { sitemap: false },
   server: {
