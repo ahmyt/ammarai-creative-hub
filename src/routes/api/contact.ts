@@ -315,10 +315,11 @@ export const Route = createFileRoute("/api/contact")({
 
         return Response.json({
           ok: true,
+          build: CONTACT_BUILD,
           saved: true,
           emailSent: true,
           confirmationSent,
-          ...(trackingError ? { trackingRecorded: false } : {}),
+          ...(trackingError ? { trackingRecorded: false, trackingError } : {}),
         });
       },
     },
