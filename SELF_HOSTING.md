@@ -165,6 +165,13 @@ requires `SMTP_SECURE=true`. If `SMTP_HOST` is not set, the app falls back to
 the Lovable email path (used on Lovable hosting only), and the message is
 still safely stored in the database either way.
 
+Because the mail server runs on the same machine as the app, the most
+reliable configuration is usually `SMTP_HOST=127.0.0.1`, `SMTP_PORT=25`,
+`SMTP_SECURE=false`. The certificate-name check is skipped automatically for
+loopback hosts (the connection never leaves the server). If you connect to a
+remote mail server whose certificate doesn't match its hostname, set
+`SMTP_TLS_REJECT_UNAUTHORIZED=false` — prefer fixing the hostname instead.
+
 After adding or changing the variables, restart the deployed Node app so the
 new environment is loaded. A successful form response now means the SMTP
 server accepted both the support notification and visitor confirmation. If
