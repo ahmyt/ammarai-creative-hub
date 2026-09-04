@@ -14,6 +14,9 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 
+const PUBLISHED_LOVABLE_HOST = "ammarai-creative-hub.lovable.app";
+const SELF_HOSTED_AUTH_URL = "https://ammarai.com/auth";
+
 function NotFoundComponent() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
@@ -124,6 +127,19 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+
+  useEffect(() => {
+    // The managed Google broker can return self-hosted sign-ins to the
+    // published Lovable root despite the requested forward URL. Relay that
+    // session fragment to the canonical site's auth route, which consumes it.
+    if (
+      window.location.hostname === PUBLISHED_LOVABLE_HOST &&
+      window.location.pathname === "/" &&
+      new URLSearchParams(window.location.hash.replace(/^#/, "")).has("access_token")
+    ) {
+      window.location.replace(`${SELF_HOSTED_AUTH_URL}${window.location.hash}`);
+    }
+  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>

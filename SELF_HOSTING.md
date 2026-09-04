@@ -64,7 +64,9 @@ Lovable hosting — on your own server it returns 404. So the app detects the ho
   `https://ammarai-creative-hub.lovable.app/~oauth/initiate` and returns through
   `https://ammarai-creative-hub.lovable.app/auth/forward?to=<your-origin>/auth`,
   which hands the session tokens back to your domain; `/auth` then signs you in
-  and goes to `/admin`.
+  and goes to `/admin`. If the managed broker returns to the Lovable homepage
+  instead of honoring the forward URL, the root layout detects the OAuth session
+  fragment and immediately relays it to `https://ammarai.com/auth` as a fallback.
 
 This lives in `src/lib/oauth-selfhost.ts`, `src/routes/auth.tsx` and
 `src/routes/auth.forward.tsx`. If you deploy on a domain other than
