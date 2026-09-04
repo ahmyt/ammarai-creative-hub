@@ -61,19 +61,53 @@ export const Route = createFileRoute("/api/contact")({
           );
         }
 
+        // Sender settings are editable in the CMS (Pages → Contact).
+        let settings: EmailSettings = {};
+        const { data: pageRow } = await supabase
+          .from("content")
+          .select("data")
+          .eq("kind", "page")
+          .eq("slug", "contact")
+          .maybeSingle();
+        if (pageRow?.data && typeof pageRow.data === "object") {
+          const d = pageRow.data as Record<string, unknown>;
+          settings = {
+            senderDomain: str(d["senderDomain"]),
+            fromName: str(d["fromName"]),
+            fromEmail: str(d["fromEmail"]),
+            notifyEmail: str(d["notifyEmail"]),
+          };
+        }
+        const notifyTo = settings.notifyEmail || DEFAULT_NOTIFY_EMAIL;
+        const sendOptions = {
+          ...(settings.senderDomain ? { senderDomain: settings.senderDomain } : {}),
+          ...(settings.fromEmail
+            ? { from: settings.fromName ? `${settings.fromName} <${settings.fromEmail}>` : settings.fromEmail }
+            : {}),
+        };
+
         // Email delivery is best-effort: the stored row is the source of truth.
         try {
-          // Scaffolded by the email setup; resolved at runtime on the server.
-          // @ts-ignore - module is created by the email template scaffolding step
-          const { sendTemplateEmail } = await import("@/lib/email-templates/send-email");
+          // Created by the email template scaffolding once a sender domain is set up.
+          // Resolved at runtime so the app builds before that step is done.
+          const specifier = "@/lib/email-templates/send-email";
+          const mod = (await import(/* @vite-ignore */ specifier)) as {
+            sendTemplateEmail: (
+              template: string,
+              to: string,
+              opts: Record<string, unknown>,
+            ) => Promise<{ sent: boolean; reason?: string }>;
+          };
           const idemBase = `contact-${messageId}`;
-          await sendTemplateEmail("contact-notification", NOTIFY_EMAIL, {
+          await mod.sendTemplateEmail("contact-notification", notifyTo, {
             templateData: { name, email, message },
             idempotencyKey: `${idemBase}-notify`,
+            ...sendOptions,
           });
-          const confirmation = await sendTemplateEmail("contact-confirmation", email, {
+          const confirmation = await mod.sendTemplateEmail("contact-confirmation", email, {
             templateData: { name },
             idempotencyKey: `${idemBase}-confirm`,
+            ...sendOptions,
           });
           if (!confirmation.sent) {
             console.log(`Contact confirmation not sent (${confirmation.reason})`);
