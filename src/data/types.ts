@@ -130,5 +130,10 @@ export interface Page {
   sentBody: string;
   /** Contact channels / info cards */
   channels: { title: string; body: string; label: string }[];
+  /** Email delivery settings (contact page) */
+  senderDomain?: string;
+  fromName?: string;
+  fromEmail?: string;
+  notifyEmail?: string;
 }
 
