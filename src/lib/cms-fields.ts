@@ -159,6 +159,10 @@ export const fieldSpecs: Record<ContentKind, FieldSpec[]> = {
         { name: "label", label: "Link label (e.g. email)", type: "text" },
       ]),
     },
+    { name: "senderDomain", label: "Sender domain (e.g. notify.ammarai.com)", type: "text" },
+    { name: "fromName", label: "From name (e.g. AmmarAI)", type: "text" },
+    { name: "fromEmail", label: "From address (e.g. hello@notify.ammarai.com)", type: "text" },
+    { name: "notifyEmail", label: "Send form submissions to", type: "text" },
   ],
 };
 
