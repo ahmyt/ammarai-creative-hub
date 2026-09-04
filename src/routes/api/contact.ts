@@ -203,6 +203,7 @@ export const Route = createFileRoute("/api/contact")({
               emailSent: false,
               error:
                 "Your message was saved, but email delivery failed. Our team can still view it in the CMS.",
+              emailError: safeEmailError(emailError),
             },
             { status: 502 },
           );
