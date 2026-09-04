@@ -133,7 +133,12 @@ function AdminMessages() {
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div className="min-w-0">
                     <p className="truncate text-sm font-semibold text-foreground">
-                      {m.name} <span className="font-normal text-muted-foreground"><{m.email}></span>
+                      {m.name}{" "}
+                      <span className="font-normal text-muted-foreground">
+                        {"<"}
+                        {m.email}
+                        {">"}
+                      </span>
                     </p>
                     <p className="mt-0.5 text-xs text-muted-foreground">
                       {new Date(m.created_at).toLocaleString()}
