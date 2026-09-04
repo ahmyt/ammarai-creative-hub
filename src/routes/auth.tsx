@@ -2,6 +2,11 @@ import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
+import {
+  consumeForwardedTokens,
+  isLovableHosted,
+  signInWithGoogleSelfHosted,
+} from "@/lib/oauth-selfhost";
 import { Container, Section } from "@/components/site/primitives";
 
 export const Route = createFileRoute("/auth")({
@@ -32,9 +37,15 @@ function AuthPage() {
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
-    void supabase.auth.getSession().then(({ data }) => {
+    void (async () => {
+      // Self-hosted Google flow returns here with tokens via /auth/forward.
+      if (await consumeForwardedTokens()) {
+        void navigate({ to: "/admin" });
+        return;
+      }
+      const { data } = await supabase.auth.getSession();
       if (data.session) void navigate({ to: "/admin" });
-    });
+    })();
   }, [navigate]);
 
   const submit = async (e: React.FormEvent) => {
@@ -58,9 +69,11 @@ function AuthPage() {
 
   const google = async () => {
     setMessage(null);
-    const result = await lovable.auth.signInWithOAuth("google", {
-      redirect_uri: window.location.origin,
-    });
+    const result = isLovableHosted(window.location.hostname)
+      ? await lovable.auth.signInWithOAuth("google", {
+          redirect_uri: window.location.origin,
+        })
+      : await signInWithGoogleSelfHosted();
     if (result.error) {
       setMessage("Google sign-in failed. Try again or use email.");
       return;

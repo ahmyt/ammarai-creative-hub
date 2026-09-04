@@ -56,11 +56,20 @@ All your content, admin users, and sign-ins keep working as-is.
 
 ## 4. Google sign-in
 
-Google sign-in goes through the managed OAuth broker (`src/routes/auth.tsx` uses
-`lovable.auth.signInWithOAuth("google", { redirect_uri: window.location.origin })`).
-The broker supports custom domains, so no per-domain whitelist or forwarder page
-is needed — just deploy an up-to-date build. Email/password sign-in works with no
-extra configuration.
+The managed OAuth broker lives at `/~oauth/initiate`, a path that only exists on
+Lovable hosting — on your own server it returns 404. So the app detects the host:
+
+- On `*.lovable.app` / localhost it uses the broker directly.
+- On your domain it starts the flow against
+  `https://ammarai-creative-hub.lovable.app/~oauth/initiate` and returns through
+  `https://ammarai-creative-hub.lovable.app/auth/forward?to=<your-origin>/auth`,
+  which hands the session tokens back to your domain; `/auth` then signs you in
+  and goes to `/admin`.
+
+This lives in `src/lib/oauth-selfhost.ts`, `src/routes/auth.tsx` and
+`src/routes/auth.forward.tsx`. If you deploy on a domain other than
+`ammarai.com`, add that hostname to `ALLOWED_TARGET_HOSTS` in
+`src/routes/auth.forward.tsx`. Email/password sign-in needs no configuration.
 
 ---
 
