@@ -137,27 +137,37 @@ After a successful build, set the **Application startup file** to
 
 ---
 
-## Contact form email via Plesk SMTP
+## Contact form email via cPanel or Plesk SMTP
 
 The contact form stores every message in the database first, then sends a
 notification to the CMS-configured notify address (default
 `support@ammarai.com`) plus a confirmation to the visitor. On your Plesk
-(Node) deployment it sends through your own Plesk mailbox via SMTP — set
-these environment variables in the Plesk Node.js app settings:
+(Node) deployment it sends through your own mailbox via SMTP. Copy the exact
+outgoing-server values shown in cPanel under **Email Accounts → Connect
+Devices**, then set these environment variables in the deployed Node app:
 
 | Variable | Example | Notes |
 | --- | --- | --- |
-| `SMTP_HOST` | `mail.ammarai.com` | Your Plesk mail server (often the domain itself) |
+| `SMTP_HOST` | `mail.ammarai.com` | The outgoing server shown by cPanel/Plesk |
 | `SMTP_PORT` | `465` | `465` = SSL, `587` = STARTTLS |
 | `SMTP_SECURE` | `true` | `true` for port 465, `false` for 587 |
 | `SMTP_USER` | `support@ammarai.com` | Full mailbox address |
 | `SMTP_PASS` | `••••••••` | Mailbox password |
 | `SMTP_FROM` | `support@ammarai.com` | Optional; defaults to `SMTP_USER` |
 
-The CMS Contact page fields (`fromName`, `fromEmail`, `notifyEmail`) still
-apply: `fromEmail` overrides `SMTP_FROM`, and `notifyEmail` sets who receives
-the notification. If `SMTP_HOST` is not set, the app falls back to the
-Lovable email path (used on Lovable hosting only), and the message is still
-safely stored in the database either way.
+The CMS Contact page fields `fromName` and `notifyEmail` still apply. For
+cPanel compatibility, the authenticated `SMTP_USER` is always used as the
+envelope sender. `SMTP_FROM` must be that mailbox or an alias that cPanel
+explicitly permits; a different CMS `fromEmail` does not override it.
 
-After adding the variables, restart the Node app in Plesk and test the form.
+Port 465 requires `SMTP_SECURE=true`. Port 587 requires
+`SMTP_SECURE=false` so STARTTLS can be negotiated. If `SMTP_HOST` is not set,
+the app falls back to the Lovable email path (used on Lovable hosting only),
+and the message is still safely stored in the database either way.
+
+After adding or changing the variables, restart the deployed Node app so the
+new environment is loaded. A successful form response now means the SMTP
+server accepted both the support notification and visitor confirmation. If
+either send fails, the page states that the message was saved but email
+delivery failed; inspect the Node app log for the safe SMTP error code and
+response code.

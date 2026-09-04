@@ -1,4 +1,5 @@
 import nodemailer from "nodemailer";
+import type { SentMessageInfo } from "nodemailer";
 
 const escapeHtml = (value: string): string =>
   value
@@ -17,6 +18,22 @@ type ContactEmailInput = {
   fromEmail?: string | undefined;
 };
 
+export type ContactEmailDelivery = {
+  notification: { messageId: string; response: string };
+  confirmation: { messageId: string; response: string };
+};
+
+const requiredEnv = (name: "SMTP_HOST" | "SMTP_USER" | "SMTP_PASS"): string => {
+  const value = process.env[name]?.trim();
+  if (!value) throw new Error(`${name} is not configured`);
+  return value;
+};
+
+const deliveryResult = (info: SentMessageInfo): { messageId: string; response: string } => ({
+  messageId: String(info.messageId ?? ""),
+  response: String(info.response ?? "accepted"),
+});
+
 /**
  * Sends the contact-form notification and confirmation emails through the
  * deployment's own SMTP mailbox (e.g. Plesk mail). Configured via env vars:
@@ -24,33 +41,43 @@ type ContactEmailInput = {
  *   SMTP_USER, SMTP_PASS, SMTP_FROM (defaults to SMTP_USER).
  * Runs only on Node hosts; the edge/preview runtime never imports this file.
  */
-export async function sendContactEmails(input: ContactEmailInput): Promise<void> {
-  const host = process.env["SMTP_HOST"];
-  if (!host) return;
+export async function sendContactEmails(input: ContactEmailInput): Promise<ContactEmailDelivery> {
+  const host = requiredEnv("SMTP_HOST");
+  const user = requiredEnv("SMTP_USER");
+  const pass = requiredEnv("SMTP_PASS");
 
   const port = Number(process.env["SMTP_PORT"] ?? "465");
+  if (!Number.isInteger(port) || port < 1 || port > 65535) {
+    throw new Error("SMTP_PORT must be a valid port number");
+  }
   const secure = (process.env["SMTP_SECURE"] ?? String(port === 465)) !== "false";
-  const user = process.env["SMTP_USER"];
-  const pass = process.env["SMTP_PASS"];
 
   const transporter = nodemailer.createTransport({
     host,
     port,
     secure,
-    ...(user ? { auth: { user, pass: pass ?? "" } } : {}),
+    auth: { user, pass },
+    connectionTimeout: 10_000,
+    greetingTimeout: 10_000,
+    socketTimeout: 20_000,
   });
 
-  const fromAddress = input.fromEmail || process.env["SMTP_FROM"] || user;
-  if (!fromAddress) throw new Error("SMTP_FROM (or SMTP_USER) is not configured");
+  await transporter.verify();
+
+  // Keep the envelope sender tied to the authenticated mailbox. Many cPanel
+  // servers reject or silently discard messages that spoof another sender.
+  const envelopeFrom = user;
+  const fromAddress = process.env["SMTP_FROM"]?.trim() || user;
   const from = input.fromName ? `"${input.fromName.replace(/"/g, "")}" <${fromAddress}>` : fromAddress;
 
   const safeName = escapeHtml(input.name);
   const safeEmail = escapeHtml(input.email);
   const safeMessage = escapeHtml(input.message);
 
-  await transporter.sendMail({
+  const notification = await transporter.sendMail({
     from,
     to: input.notifyTo,
+    envelope: { from: envelopeFrom, to: input.notifyTo },
     replyTo: input.email,
     subject: `New contact message from ${input.name}`.slice(0, 200),
     text: `Name: ${input.name}\nEmail: ${input.email}\n\n${input.message}`,
@@ -61,9 +88,10 @@ export async function sendContactEmails(input: ContactEmailInput): Promise<void>
       <p style="font-family:sans-serif;white-space:pre-wrap">${safeMessage}</p>`,
   });
 
-  await transporter.sendMail({
+  const confirmation = await transporter.sendMail({
     from,
     to: input.email,
+    envelope: { from: envelopeFrom, to: input.email },
     subject: "We received your message — AmmarAI",
     text: `Hi ${input.name},\n\nThanks for reaching out. We've received your message and will get back to you shortly.\n\n— The AmmarAI Team`,
     html: `
@@ -71,4 +99,9 @@ export async function sendContactEmails(input: ContactEmailInput): Promise<void>
       <p style="font-family:sans-serif">Thanks for reaching out. We've received your message and will get back to you shortly.</p>
       <p style="font-family:sans-serif">— The AmmarAI Team</p>`,
   });
+
+  return {
+    notification: deliveryResult(notification),
+    confirmation: deliveryResult(confirmation),
+  };
 }
