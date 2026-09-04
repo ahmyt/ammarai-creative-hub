@@ -32,9 +32,15 @@ function AuthPage() {
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
-    void supabase.auth.getSession().then(({ data }) => {
+    void (async () => {
+      // Self-hosted Google flow returns here with tokens via /auth/forward.
+      if (await consumeForwardedTokens()) {
+        void navigate({ to: "/admin" });
+        return;
+      }
+      const { data } = await supabase.auth.getSession();
       if (data.session) void navigate({ to: "/admin" });
-    });
+    })();
   }, [navigate]);
 
   const submit = async (e: React.FormEvent) => {
