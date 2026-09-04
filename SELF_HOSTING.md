@@ -154,6 +154,7 @@ Node.js → Custom environment variables**:
 | `SMTP_USER` | `support@ammarai.com` | Full Plesk mailbox address |
 | `SMTP_PASS` | `••••••••` | Mailbox password |
 | `SMTP_FROM` | `support@ammarai.com` | Optional; defaults to `SMTP_USER` |
+| `SMTP_AUTH_DISABLED` | `true` | Optional; only honored for `127.0.0.1`, `localhost`, or `::1`. Use when local port 25 accepts mail but Plesk SMTP authentication returns `454` |
 
 The CMS Contact page fields `fromName` and `notifyEmail` still apply. The
 authenticated `SMTP_USER` is always used as the envelope sender. `SMTP_FROM`
@@ -171,6 +172,13 @@ reliable configuration is usually `SMTP_HOST=127.0.0.1`, `SMTP_PORT=25`,
 loopback hosts (the connection never leaves the server). If you connect to a
 remote mail server whose certificate doesn't match its hostname, set
 `SMTP_TLS_REJECT_UNAUTHORIZED=false` — prefer fixing the hostname instead.
+
+If that local connection returns `454 4.7.0 Temporary authentication failure`,
+set `SMTP_AUTH_DISABLED=true`. This omits SMTP login for the loopback connection
+and lets Plesk accept the message as local server mail. For safety, this setting
+is ignored for every non-loopback hostname, so it cannot disable authentication
+when mail crosses the network. Keep `SMTP_USER` and `SMTP_FROM` set to
+`support@ammarai.com` so the envelope and visible sender remain local.
 
 After adding or changing the variables, restart the deployed Node app so the
 new environment is loaded. A successful form response now means the SMTP

@@ -43,8 +43,6 @@ const deliveryResult = (info: SentMessageInfo): { messageId: string; response: s
  */
 const createTransporter = () => {
   const host = requiredEnv("SMTP_HOST");
-  const user = requiredEnv("SMTP_USER");
-  const pass = requiredEnv("SMTP_PASS");
 
   const port = Number(process.env["SMTP_PORT"] ?? "465");
   if (!Number.isInteger(port) || port < 1 || port > 65535) {
@@ -57,14 +55,20 @@ const createTransporter = () => {
   // connection never leaves the server, so skipping the hostname check is
   // safe. SMTP_TLS_REJECT_UNAUTHORIZED=false forces the same for any host.
   const isLoopback = host === "127.0.0.1" || host === "localhost" || host === "::1";
+  const authDisabled =
+    isLoopback && (process.env["SMTP_AUTH_DISABLED"] ?? "").trim().toLowerCase() === "true";
   const allowAnyCert =
     isLoopback || (process.env["SMTP_TLS_REJECT_UNAUTHORIZED"] ?? "").trim() === "false";
+
+  const auth = authDisabled
+    ? undefined
+    : { user: requiredEnv("SMTP_USER"), pass: requiredEnv("SMTP_PASS") };
 
   return nodemailer.createTransport({
     host,
     port,
     secure,
-    auth: { user, pass },
+    ...(auth ? { auth } : {}),
     ...(allowAnyCert ? { tls: { rejectUnauthorized: false } } : {}),
     connectionTimeout: 10_000,
     greetingTimeout: 10_000,
@@ -78,7 +82,13 @@ export async function verifySmtpConnection(): Promise<void> {
 }
 
 export async function sendContactEmails(input: ContactEmailInput): Promise<ContactEmailDelivery> {
-  const user = requiredEnv("SMTP_USER");
+  const host = requiredEnv("SMTP_HOST");
+  const isLoopback = host === "127.0.0.1" || host === "localhost" || host === "::1";
+  const authDisabled =
+    isLoopback && (process.env["SMTP_AUTH_DISABLED"] ?? "").trim().toLowerCase() === "true";
+  const user = authDisabled
+    ? process.env["SMTP_USER"]?.trim() || "support@ammarai.com"
+    : requiredEnv("SMTP_USER");
   const transporter = createTransporter();
 
   await transporter.verify();
