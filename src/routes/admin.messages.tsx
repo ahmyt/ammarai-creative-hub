@@ -9,8 +9,8 @@ export const Route = createFileRoute("/admin/messages")({
 });
 
 const STATUS_STYLES: Record<string, string> = {
-  sent: "bg-emerald-500/10 text-emerald-700 ring-emerald-600/20",
-  failed: "bg-red-500/10 text-red-700 ring-red-600/20",
+  sent: "bg-accent/10 text-accent ring-accent/30",
+  failed: "bg-destructive/10 text-destructive ring-destructive/30",
   not_sent: "bg-muted text-muted-foreground ring-border",
 };
 
