@@ -43,8 +43,20 @@ export const Route = createFileRoute("/api/contact")({
         const { name, email, message } = parsed.data;
 
         // Store the message first — it must never be lost, even if email fails.
-        const key = process.env["SUPABASE_PUBLISHABLE_KEY"]!;
-        const supabase = createClient<Database>(process.env["SUPABASE_URL"]!, key, {
+        // Fall back to the build-time VITE_* config so self-hosted deployments
+        // (e.g. Plesk) work without server-only env vars. These are the public
+        // publishable key and URL only — safe to ship in the bundle.
+        const url = process.env["SUPABASE_URL"] ?? import.meta.env["VITE_SUPABASE_URL"];
+        const key =
+          process.env["SUPABASE_PUBLISHABLE_KEY"] ?? import.meta.env["VITE_SUPABASE_PUBLISHABLE_KEY"];
+        if (!url || !key) {
+          console.error("Contact endpoint is missing Supabase configuration");
+          return Response.json(
+            { error: "Something went wrong on our side. Please email support@ammarai.com directly." },
+            { status: 500 },
+          );
+        }
+        const supabase = createClient<Database>(url, key, {
           auth: { persistSession: false, autoRefreshToken: false },
           global: {
             fetch: (input, init) => {
