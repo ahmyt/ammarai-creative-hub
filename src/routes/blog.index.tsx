@@ -1,7 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { siteContentQuery } from "@/lib/content";
-import { articleDate, syndicatedArticlesQuery } from "@/lib/articles";
+import {
+  articleCategory,
+  articleDate,
+  articleReadingTime,
+  syndicatedArticlesQuery,
+} from "@/lib/articles";
 import { Container, Section } from "@/components/site/primitives";
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 
