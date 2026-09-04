@@ -7,8 +7,8 @@ export const SITE = {
 };
 
 /** External app URLs for user sign-up and sign-in (the product dashboard). */
-export const REGISTER_URL = "https://ammarai.com/dashboard/register";
-export const LOGIN_URL = "https://ammarai.com/dashboard/login";
+export const REGISTER_URL = "https://app.ammarai.com/register";
+export const LOGIN_URL = "https://app.ammarai.com/login";
 
 export const primaryNav = [
   { label: "AI Tools", to: "/ai-tools" },
