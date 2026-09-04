@@ -4,5 +4,5 @@
   - [x] Tool data record + page content
   - [x] Three report visuals for the interactive example (esimnow.net input)
   - [x] Homepage flagship row, directory, search intent, cross-links
-- [x] Allow same-server Plesk mail delivery without SMTP authentication on localhost port 25
+- [x] Make same-server Plesk mail delivery automatically authentication-free on localhost port 25
 - [x] Normalize Plesk SMTP settings and expose safe effective-config diagnostics
