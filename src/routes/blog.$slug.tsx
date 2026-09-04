@@ -105,7 +105,11 @@ function SyndicatedArticleView({ article }: { article: SyndicatedArticle }) {
           <Breadcrumbs
             items={[{ label: "Home", to: "/" }, { label: "Blog", to: "/blog" }, { label: "Guide" }]}
           />
-          <p className="mt-8 text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
+          <p className="mt-8 flex flex-wrap items-center gap-2 text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
+            <span className="text-accent">{articleCategory(article)}</span>
+            <span aria-hidden="true">·</span>
+            <span>{articleReadingTime(article)}</span>
+            <span aria-hidden="true">·</span>
             <time dateTime={articleDate(article)}>{articleDate(article)}</time>
           </p>
           <h1 className="mt-4 text-balance text-4xl leading-[1.08] sm:text-5xl">{article.title}</h1>
