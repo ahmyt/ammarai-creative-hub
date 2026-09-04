@@ -12,6 +12,7 @@ const contactSchema = z.object({
 const NOTIFY_EMAIL = "support@ammarai.com";
 
 export const Route = createFileRoute("/api/contact")({
+  staticData: { sitemap: false },
   server: {
     handlers: {
       POST: async ({ request }) => {
@@ -63,6 +64,8 @@ export const Route = createFileRoute("/api/contact")({
 
         // Email delivery is best-effort: the stored row is the source of truth.
         try {
+          // Scaffolded by the email setup; resolved at runtime on the server.
+          // @ts-ignore - module is created by the email template scaffolding step
           const { sendTemplateEmail } = await import("@/lib/email-templates/send-email");
           const idemBase = `contact-${row.id}`;
           await sendTemplateEmail("contact-notification", NOTIFY_EMAIL, {
