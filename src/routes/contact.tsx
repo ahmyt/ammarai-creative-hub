@@ -72,10 +72,11 @@ function Contact() {
                   </p>
                   {!confirmationSent ? (
                     <p className="mt-3 text-pretty text-sm leading-relaxed text-muted-foreground">
-                      Note: our automatic confirmation email to you may be delayed — your message
-                      has reached our team.
+                      Note: our automatic confirmation email to you may be delayed or filtered by
+                      your email provider — your message has reached our team either way.
                     </p>
                   ) : null}
+
                   <ButtonLink to="/ai-tools" variant="outline" size="sm" className="mt-6">
                     Browse the tools
                   </ButtonLink>

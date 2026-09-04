@@ -16,6 +16,10 @@ export type Database = {
     Tables: {
       contact_messages: {
         Row: {
+          confirmation_attempted_at: string | null
+          confirmation_error: string | null
+          confirmation_message_id: string | null
+          confirmation_response: string | null
           confirmation_status: string
           created_at: string
           email: string
@@ -24,6 +28,10 @@ export type Database = {
           name: string
         }
         Insert: {
+          confirmation_attempted_at?: string | null
+          confirmation_error?: string | null
+          confirmation_message_id?: string | null
+          confirmation_response?: string | null
           confirmation_status?: string
           created_at?: string
           email: string
@@ -32,6 +40,10 @@ export type Database = {
           name: string
         }
         Update: {
+          confirmation_attempted_at?: string | null
+          confirmation_error?: string | null
+          confirmation_message_id?: string | null
+          confirmation_response?: string | null
           confirmation_status?: string
           created_at?: string
           email?: string

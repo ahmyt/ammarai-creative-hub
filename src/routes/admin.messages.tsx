@@ -15,9 +15,9 @@ const STATUS_STYLES: Record<string, string> = {
 };
 
 const STATUS_LABELS: Record<string, string> = {
-  sent: "Confirmation sent",
+  sent: "Accepted by mail server",
   failed: "Confirmation failed",
-  not_sent: "No confirmation",
+  not_sent: "No confirmation attempted",
 };
 
 function AdminMessages() {
@@ -28,13 +28,16 @@ function AdminMessages() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("contact_messages")
-        .select("id, name, email, message, created_at, confirmation_status")
+        .select(
+          "id, name, email, message, created_at, confirmation_status, confirmation_message_id, confirmation_response, confirmation_attempted_at, confirmation_error",
+        )
         .order("created_at", { ascending: false })
         .limit(200);
       if (error) throw error;
       return data;
     },
   });
+
 
   if (!isAdmin) return null;
 
@@ -44,8 +47,11 @@ function AdminMessages() {
         <h2 className="text-lg font-semibold">Contact messages</h2>
         <p className="mt-1 text-sm text-muted-foreground">
           Every contact-form submission is stored here, even when email delivery fails. The badge
-          shows whether the visitor's confirmation email was delivered.
+          shows what happened when the visitor's confirmation email was handed to the mail server.
+          "Accepted by mail server" means the mail server took the message — use the reference below
+          to trace the rest of the journey in the mail log.
         </p>
+
       </div>
 
       {isLoading ? (
@@ -76,8 +82,40 @@ function AdminMessages() {
               <p className="mt-3 whitespace-pre-wrap text-sm leading-relaxed text-muted-foreground">
                 {m.message}
               </p>
+              {m.confirmation_attempted_at ||
+              m.confirmation_message_id ||
+              m.confirmation_response ||
+              m.confirmation_error ? (
+                <dl className="mt-4 space-y-1 border-t border-border pt-3 text-xs text-muted-foreground">
+                  {m.confirmation_attempted_at ? (
+                    <div className="flex flex-wrap gap-2">
+                      <dt className="font-semibold text-foreground">Attempted</dt>
+                      <dd>{new Date(m.confirmation_attempted_at).toLocaleString()}</dd>
+                    </div>
+                  ) : null}
+                  {m.confirmation_message_id ? (
+                    <div className="flex flex-wrap gap-2">
+                      <dt className="font-semibold text-foreground">Reference</dt>
+                      <dd className="break-all">{m.confirmation_message_id}</dd>
+                    </div>
+                  ) : null}
+                  {m.confirmation_response ? (
+                    <div className="flex flex-wrap gap-2">
+                      <dt className="font-semibold text-foreground">Mail server reply</dt>
+                      <dd className="break-all">{m.confirmation_response}</dd>
+                    </div>
+                  ) : null}
+                  {m.confirmation_error ? (
+                    <div className="flex flex-wrap gap-2">
+                      <dt className="font-semibold text-destructive">Problem</dt>
+                      <dd className="break-all">{m.confirmation_error}</dd>
+                    </div>
+                  ) : null}
+                </dl>
+              ) : null}
             </li>
           ))}
+
         </ul>
       )}
     </div>

@@ -157,6 +157,9 @@ export const Route = createFileRoute("/api/contact")({
         // team must succeed; the customer confirmation is best-effort and its
         // outcome is recorded on the row so the CMS shows who received it.
         let confirmationSent = false;
+        let confirmationMessageId: string | null = null;
+        let confirmationResponse: string | null = null;
+        let confirmationErrorText: string | null = null;
         try {
           const smtpHost = process.env["SMTP_HOST"];
           if (smtpHost) {
@@ -173,6 +176,17 @@ export const Route = createFileRoute("/api/contact")({
               fromEmail: settings.fromEmail,
             });
             confirmationSent = delivery.confirmation.status === "sent";
+            if (delivery.confirmation.status === "sent") {
+              confirmationMessageId = delivery.confirmation.messageId || null;
+              confirmationResponse = delivery.confirmation.response || null;
+            } else {
+              const safe = safeEmailError(delivery.confirmation.error);
+              confirmationErrorText = [safe["code"], safe["command"], safe["responseCode"], safe["message"]]
+                .filter((part) => part !== undefined && part !== null)
+                .join(" / ")
+                .slice(0, 500);
+            }
+
             console.info("Contact SMTP delivery", {
               messageId,
               notificationMessageId: delivery.notification.messageId,
@@ -232,12 +246,21 @@ export const Route = createFileRoute("/api/contact")({
           );
         }
 
-        // Record the confirmation outcome on the stored message (the anon
-        // role may only update this single column). Failure here is fine.
+        // Record the confirmation outcome and the mail server's own reply on
+        // the stored message, so a submission can be traced in the mail log.
+        // "sent" means the mail server accepted the handoff — not that the
+        // recipient's provider delivered it. Failure here is fine.
         await supabase
           .from("contact_messages")
-          .update({ confirmation_status: confirmationSent ? "sent" : "failed" })
+          .update({
+            confirmation_status: confirmationSent ? "sent" : "failed",
+            confirmation_message_id: confirmationMessageId,
+            confirmation_response: confirmationResponse,
+            confirmation_error: confirmationErrorText,
+            confirmation_attempted_at: new Date().toISOString(),
+          })
           .eq("id", messageId);
+
 
         return Response.json({ ok: true, saved: true, emailSent: true, confirmationSent });
       },
