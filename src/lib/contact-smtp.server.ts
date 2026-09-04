@@ -21,8 +21,7 @@ type ContactEmailInput = {
 export type ContactEmailDelivery = {
   notification: { messageId: string; response: string };
   confirmation:
-    | { status: "sent"; messageId: string; response: string }
-    | { status: "failed"; error: unknown };
+    { status: "sent"; messageId: string; response: string } | { status: "failed"; error: unknown };
 };
 
 const envValue = (name: string): string | undefined => {
@@ -72,7 +71,9 @@ const getSmtpConfig = (): SmtpConfig => {
     : configuredSecure === undefined
       ? port === 465
       : configuredSecure === "true";
-  const user = authDisabled ? envValue("SMTP_USER") ?? "support@ammarai.com" : requiredEnv("SMTP_USER");
+  const user = authDisabled
+    ? (envValue("SMTP_USER") ?? "support@ammarai.com")
+    : requiredEnv("SMTP_USER");
 
   return { host, port, secure, authDisabled, user };
 };
@@ -146,7 +147,9 @@ export async function sendContactEmails(input: ContactEmailInput): Promise<Conta
   // servers often reject or silently discard messages that spoof a sender.
   const envelopeFrom = config.user;
   const fromAddress = envValue("SMTP_FROM") ?? config.user;
-  const from = input.fromName ? `"${input.fromName.replace(/"/g, "")}" <${fromAddress}>` : fromAddress;
+  const from = input.fromName
+    ? `"${input.fromName.replace(/"/g, "")}" <${fromAddress}>`
+    : fromAddress;
 
   const safeName = escapeHtml(input.name);
   const safeEmail = escapeHtml(input.email);
