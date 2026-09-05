@@ -10,8 +10,7 @@ export function Wordmark({ className }: { className?: string }) {
     <span className="flex items-center gap-1.5">
       <img
         src={assetUrl(logoAsset.url)}
-        alt=""
-        aria-hidden="true"
+        alt="AmmarAI logo"
         width={32}
         height={32}
         className="rounded-md size-7 sm:size-8 shrink-0"
