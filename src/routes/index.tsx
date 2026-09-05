@@ -33,6 +33,23 @@ const homeFaqs = [
   },
 ];
 
+const oldWay = [
+  "ChatGPT / Claude / Gemini subscription",
+  "Separate image tool",
+  "Separate video tool",
+  "Separate voice tool",
+  "Constant tab switching",
+];
+
+const ammarAi = [
+  "Writing + Chat",
+  "Image generation",
+  "Video generation",
+  "Voiceover & transcription",
+  "Shared brand voice and history",
+  "One subscription. One workspace.",
+];
+
 export const Route = createFileRoute("/")({
   staticData: { sitemap: true },
   head: () => ({
@@ -292,8 +309,73 @@ export function Home() {
         </Container>
       </Section>
 
-      {/* Use cases */}
+      {/* Value comparison */}
       <Section tone="sand">
+        <Container>
+          <SectionHeading
+            eyebrow="The math"
+            title="Stop paying for five AI tools"
+            intro="Stack a chat subscription, an image tool, a video tool and a voice tool and you are out $80–120 a month — and still switching tabs. AmmarAI replaces all of them with one workspace."
+          />
+          <div className="mt-10 grid gap-5 md:grid-cols-2">
+            {/* The old way */}
+            <div className="flex flex-col rounded-xl bg-card p-6 ring-1 ring-border">
+              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-muted-foreground">
+                The old way
+              </p>
+              <ul className="mt-5 flex flex-1 flex-col gap-3">
+                {oldWay.map((item) => (
+                  <li
+                    key={item}
+                    className="flex items-center gap-3 text-sm leading-relaxed text-muted-foreground"
+                  >
+                    <span aria-hidden="true" className="text-muted-foreground/50">
+                      —
+                    </span>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+              <div className="mt-6 border-t border-border pt-4">
+                <p className="text-xs text-muted-foreground">Total</p>
+                <p className="font-display text-2xl font-semibold text-foreground">
+                  $80–120+/month
+                </p>
+              </div>
+            </div>
+
+            {/* AmmarAI */}
+            <div className="flex flex-col rounded-xl bg-ink p-6 text-ink-foreground shadow-[0_24px_60px_-40px_rgba(0,0,0,0.55)]">
+              <p className="eyebrow">AmmarAI</p>
+              <ul className="mt-5 flex flex-1 flex-col gap-3">
+                {ammarAi.map((item) => (
+                  <li key={item} className="flex items-center gap-3 text-sm leading-relaxed">
+                    <span aria-hidden="true" className="text-accent">
+                      ✓
+                    </span>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+              <div className="mt-6 border-t border-ink-foreground/20 pt-4">
+                <p className="text-xs opacity-70">Total</p>
+                <p className="font-display text-2xl font-semibold">One subscription</p>
+              </div>
+            </div>
+          </div>
+          <div className="mt-9 flex flex-wrap gap-3">
+            <ExternalButton href={REGISTER_URL} size="lg">
+              Start free — no card required
+            </ExternalButton>
+            <ButtonLink to="/pricing" variant="outline" size="lg">
+              Compare plans
+            </ButtonLink>
+          </div>
+        </Container>
+      </Section>
+
+      {/* Use cases */}
+      <Section>
         <Container>
           <SectionHeading eyebrow="Use cases" title="Built around how people actually work" />
           <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -324,7 +406,7 @@ export function Home() {
       </Section>
 
       {/* Blog */}
-      <Section>
+      <Section tone="sand">
         <Container>
           <SectionHeading eyebrow="From the blog" title="Guides worth your time" />
           <div className="mt-10 grid gap-5 md:grid-cols-3">
@@ -350,7 +432,7 @@ export function Home() {
       </Section>
 
       {/* FAQ */}
-      <Section tone="sand">
+      <Section>
         <Container size="narrow">
           <FaqAccordion heading="Common questions" items={homeFaqs} />
         </Container>
