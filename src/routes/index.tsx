@@ -1,5 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { siteContentQuery } from "@/lib/content";
 import { tools, featuredTools, popularTools, recentTools, usedCategories, suggestTools, toolsByCategory } from "@/data/tools";
 import { useCases } from "@/data/use-cases";
 import { features } from "@/data/features";
@@ -52,6 +54,7 @@ const ammarAi = [
 
 export const Route = createFileRoute("/")({
   staticData: { sitemap: true },
+  loader: ({ context }) => context.queryClient.ensureQueryData(siteContentQuery),
   head: () => ({
     meta: [
       { title },
@@ -68,6 +71,25 @@ export const Route = createFileRoute("/")({
 });
 
 export function Home() {
+  const { data: content } = useSuspenseQuery(siteContentQuery);
+  const page = content.pages.find((p) => p.slug === "home");
+  const cmp = {
+    eyebrow: page?.comparisonEyebrow || "The math",
+    title: page?.comparisonTitle || "Stop paying for five AI tools",
+    intro:
+      page?.comparisonIntro ||
+      "Stack a chat subscription, an image tool, a video tool and a voice tool and you are out $80\u2013120 a month \u2014 and still switching tabs. AmmarAI replaces all of them with one workspace.",
+    oldLabel: page?.comparisonOldLabel || "The old way",
+    oldItems: page?.comparisonOldItems?.length ? page.comparisonOldItems : oldWay,
+    oldTotalLabel: page?.comparisonOldTotalLabel || "Total",
+    oldTotal: page?.comparisonOldTotal || "$80\u2013120+/month",
+    newLabel: page?.comparisonNewLabel || "AmmarAI",
+    newItems: page?.comparisonNewItems?.length ? page.comparisonNewItems : ammarAi,
+    newTotalLabel: page?.comparisonNewTotalLabel || "Total",
+    newTotal: page?.comparisonNewTotal || "One subscription",
+    ctaLabel: page?.comparisonCtaLabel || "Start free \u2014 no card required",
+    secondaryLabel: page?.comparisonSecondaryLabel || "Compare plans",
+  };
   const [query, setQuery] = useState("");
   const suggestions = useMemo(() => suggestTools(query).slice(0, 5), [query]);
 
@@ -312,19 +334,15 @@ export function Home() {
       {/* Value comparison */}
       <Section tone="sand">
         <Container>
-          <SectionHeading
-            eyebrow="The math"
-            title="Stop paying for five AI tools"
-            intro="Stack a chat subscription, an image tool, a video tool and a voice tool and you are out $80–120 a month — and still switching tabs. AmmarAI replaces all of them with one workspace."
-          />
+          <SectionHeading eyebrow={cmp.eyebrow} title={cmp.title} intro={cmp.intro} />
           <div className="mt-10 grid gap-5 md:grid-cols-2">
             {/* The old way */}
             <div className="flex flex-col rounded-xl bg-card p-6 ring-1 ring-border">
               <p className="text-xs font-semibold uppercase tracking-[0.22em] text-muted-foreground">
-                The old way
+                {cmp.oldLabel}
               </p>
               <ul className="mt-5 flex flex-1 flex-col gap-3">
-                {oldWay.map((item) => (
+                {cmp.oldItems.map((item) => (
                   <li
                     key={item}
                     className="flex items-center gap-3 text-sm leading-relaxed text-muted-foreground"
@@ -337,18 +355,18 @@ export function Home() {
                 ))}
               </ul>
               <div className="mt-6 border-t border-border pt-4">
-                <p className="text-xs text-muted-foreground">Total</p>
+                <p className="text-xs text-muted-foreground">{cmp.oldTotalLabel}</p>
                 <p className="font-display text-2xl font-semibold text-foreground">
-                  $80–120+/month
+                  {cmp.oldTotal}
                 </p>
               </div>
             </div>
 
             {/* AmmarAI */}
             <div className="flex flex-col rounded-xl bg-ink p-6 text-ink-foreground shadow-[0_24px_60px_-40px_rgba(0,0,0,0.55)]">
-              <p className="eyebrow">AmmarAI</p>
+              <p className="eyebrow">{cmp.newLabel}</p>
               <ul className="mt-5 flex flex-1 flex-col gap-3">
-                {ammarAi.map((item) => (
+                {cmp.newItems.map((item) => (
                   <li key={item} className="flex items-center gap-3 text-sm leading-relaxed">
                     <span aria-hidden="true" className="text-accent">
                       ✓
@@ -358,17 +376,17 @@ export function Home() {
                 ))}
               </ul>
               <div className="mt-6 border-t border-ink-foreground/20 pt-4">
-                <p className="text-xs opacity-70">Total</p>
-                <p className="font-display text-2xl font-semibold">One subscription</p>
+                <p className="text-xs opacity-70">{cmp.newTotalLabel}</p>
+                <p className="font-display text-2xl font-semibold">{cmp.newTotal}</p>
               </div>
             </div>
           </div>
           <div className="mt-9 flex flex-wrap gap-3">
             <ExternalButton href={REGISTER_URL} size="lg">
-              Start free — no card required
+              {cmp.ctaLabel}
             </ExternalButton>
             <ButtonLink to="/pricing" variant="outline" size="lg">
-              Compare plans
+              {cmp.secondaryLabel}
             </ButtonLink>
           </div>
         </Container>
