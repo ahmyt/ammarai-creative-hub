@@ -1,6 +1,7 @@
 export const SITE = {
   name: "AmmarAI",
   tagline: "One AI for everything you create.",
+  url: "https://ammarai.com",
   appUrl: "https://app.ammarai.com",
   description:
     "Write, chat, create images and video, generate voiceovers, transcribe audio, analyze documents, and code in one AI workspace.",
