@@ -3,7 +3,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { contentKinds, contentRowsQuery, staticItems, type ContentKind } from "@/lib/content";
-import { emptyDraft, fieldSpecs } from "@/lib/cms-fields";
+import { emptyDraft, fieldSpecs, pageFieldSpecs } from "@/lib/cms-fields";
 import { ListField } from "@/components/cms/ListField";
 import { RichTextArea } from "@/components/cms/RichTextArea";
 
@@ -33,7 +33,7 @@ function ContentEditor() {
   const queryClient = useQueryClient();
   const { data: rows = [], isLoading } = useQuery(contentRowsQuery);
 
-  const specs = fieldSpecs[typedKind];
+  const specs = typedKind === "page" ? pageFieldSpecs(slug) : fieldSpecs[typedKind];
   const base = useMemo(
     () => staticItems(typedKind).find((i) => i["slug"] === slug),
     [typedKind, slug],
@@ -71,7 +71,9 @@ function ContentEditor() {
       return;
     }
 
-    const payload: Record<string, unknown> = { slug: finalSlug };
+    // Start from previously saved data so fields hidden on this page's form
+    // (e.g. Home fields while editing Contact) are never wiped.
+    const payload: Record<string, unknown> = { ...(row?.data ?? {}), slug: finalSlug };
     for (const spec of specs) {
       if (spec.type === "boolean") {
         payload[spec.name] = flags[spec.name] ?? false;
