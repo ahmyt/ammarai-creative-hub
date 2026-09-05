@@ -1,24 +1,27 @@
-# Comparison section: feedback review
+# Fix mixed-up page editor in the CMS
 
-## Decision
+## Problem
 
-**Leave the comparison section as-is.** No changes recommended.
+In the CMS, Pages → Edit shows one shared form for every page. The Contact page editor shows Home's comparison-section fields, and the Home editor shows Contact's form/email/channel fields. This is because the editor uses a single field list for the whole "page" kind instead of per-page fields.
 
-## Reasoning
+## What we'll build
 
-Three suggestions were reviewed against the current build (`src/routes/index.tsx`, lines 334–393):
+Make the page editor show only the fields that belong to the page being edited:
 
-1. **"Give the two columns clearer visual distinction"** — Already implemented. The left column is a light `bg-card` with a ring on the sand section; the right (AmmarAI) is a dark `bg-ink` block with a deeper shadow. The light-vs-dark contrast is already the strongest distinction the Editorial palette supports; further tweaks would be cosmetic with diminishing returns.
+- **Contact page** shows: page name, SEO title, meta description, eyebrow, heading, hero paragraph, form heading, "message sent" heading/body, contact channels, and the email delivery settings (sender domain, from name/address, notify address).
+- **Home page** shows: page name, SEO title, meta description, eyebrow, heading, and all the value-comparison fields (both columns, totals, button labels).
+- Shared fields (name, SEO title, description, eyebrow, heading) stay on both.
 
-2. **"Add a simple 'Start free' button right after the comparison"** — Already present. Directly below the two columns there is a "Start free — no card required" button (→ register URL) plus a "Compare plans" link. No addition needed.
+## Technical details
 
-3. **"Move it higher (after Flagship Tools or after the hero)"** — Not recommended. The current placement (after Features, before Use Cases) is deliberate: the comparison's right column references "shared brand voice and history" and specific capabilities, which land as arguments only after the Features section explains why sixty tools feel like one product. Placing it after the hero pitches cost savings before the visitor knows what the product does; after Flagship Tools is more defensible but still skips the "one workspace" framing. The current spot converts breadth-understanding into a savings argument right before the CTA — the right sequence.
+1. `src/lib/cms-fields.ts` — split the single `page` field list into per-page lists:
+   - Add a `pageFieldSpecs(slug)` helper returning the shared fields plus either the Contact fields (`contact` slug) or the Home comparison fields (`home` slug).
+   - Keep `fieldSpecs.page` as the union for `emptyDraft` so new pages still initialize cleanly.
+2. `src/routes/admin.$kind.$slug.tsx` — when the kind is `page`, use `pageFieldSpecs(slug)` for rendering and saving instead of the full list.
+3. Saving safety: build the save payload starting from any previously saved override data, then apply the visible fields — so fields hidden on one page's form are never wiped when saving the other.
 
-## Out of scope
+## Verification
 
-- No code changes.
-- No CMS, routing, or styling changes.
-
-## If you later want to experiment
-
-A legitimate A/B option is moving the section to right after Flagship Tools (keeping all content/styling identical). That can be done as a single edit if you want to test it.
+- Typecheck passes.
+- Edit Pages → Contact: only contact-related fields appear; Pages → Home: only home/comparison fields appear.
+- Save Home, then reload Contact: contact fields retain their values (no accidental clearing).
