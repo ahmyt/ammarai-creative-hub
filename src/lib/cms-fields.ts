@@ -28,6 +28,52 @@ const faqItem: ItemSpec = O("FAQ", [
   { name: "a", label: "Answer", type: "textarea" },
 ]);
 
+const pageSharedFields: FieldSpec[] = [
+  { name: "name", label: "Page name", type: "text" },
+  { name: "title", label: "SEO title", type: "text" },
+  { name: "description", label: "Meta description", type: "textarea" },
+  { name: "eyebrow", label: "Eyebrow label", type: "text" },
+  { name: "h1", label: "Page heading (H1)", type: "text" },
+  { name: "lede", label: "Hero paragraph", type: "textarea" },
+];
+
+const pageContactFields: FieldSpec[] = [
+  { name: "formHeading", label: "Form heading", type: "text" },
+  { name: "sentHeading", label: "Form sent heading", type: "text" },
+  { name: "sentBody", label: "Form sent message", type: "textarea" },
+  {
+    name: "channels",
+    label: "Contact channels",
+    type: "json",
+    hint: "Info cards beside the form",
+    item: O("Channel", [
+      { name: "title", label: "Title", type: "text" },
+      { name: "body", label: "Body", type: "textarea" },
+      { name: "label", label: "Link label (e.g. email)", type: "text" },
+    ]),
+  },
+  { name: "senderDomain", label: "Sender domain (e.g. notify.ammarai.com)", type: "text" },
+  { name: "fromName", label: "From name (e.g. AmmarAI)", type: "text" },
+  { name: "fromEmail", label: "From address (e.g. hello@notify.ammarai.com)", type: "text" },
+  { name: "notifyEmail", label: "Send form submissions to", type: "text" },
+];
+
+const pageHomeFields: FieldSpec[] = [
+  { name: "comparisonEyebrow", label: "Comparison: eyebrow", type: "text" },
+  { name: "comparisonTitle", label: "Comparison: heading", type: "text" },
+  { name: "comparisonIntro", label: "Comparison: intro", type: "textarea" },
+  { name: "comparisonOldLabel", label: "Comparison: left column label", type: "text" },
+  { name: "comparisonOldItems", label: "Comparison: left column items", type: "json", hint: "", item: S("Item") },
+  { name: "comparisonOldTotalLabel", label: "Comparison: left total label", type: "text" },
+  { name: "comparisonOldTotal", label: "Comparison: left total", type: "text" },
+  { name: "comparisonNewLabel", label: "Comparison: right column label", type: "text" },
+  { name: "comparisonNewItems", label: "Comparison: right column items", type: "json", hint: "", item: S("Item") },
+  { name: "comparisonNewTotalLabel", label: "Comparison: right total label", type: "text" },
+  { name: "comparisonNewTotal", label: "Comparison: right total", type: "text" },
+  { name: "comparisonCtaLabel", label: "Comparison: primary button", type: "text" },
+  { name: "comparisonSecondaryLabel", label: "Comparison: secondary button", type: "text" },
+];
+
 export const fieldSpecs: Record<ContentKind, FieldSpec[]> = {
   tool: [
     { name: "name", label: "Tool name", type: "text" },
