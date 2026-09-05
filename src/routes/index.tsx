@@ -33,6 +33,23 @@ const homeFaqs = [
   },
 ];
 
+const oldWay = [
+  "ChatGPT / Claude / Gemini subscription",
+  "Separate image tool",
+  "Separate video tool",
+  "Separate voice tool",
+  "Constant tab switching",
+];
+
+const ammarAi = [
+  "Writing + Chat",
+  "Image generation",
+  "Video generation",
+  "Voiceover & transcription",
+  "Shared brand voice and history",
+  "One subscription. One workspace.",
+];
+
 export const Route = createFileRoute("/")({
   staticData: { sitemap: true },
   head: () => ({
