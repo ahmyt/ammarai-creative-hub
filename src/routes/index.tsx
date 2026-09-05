@@ -375,7 +375,7 @@ export function Home() {
       </Section>
 
       {/* Use cases */}
-      <Section tone="sand">
+      <Section>
         <Container>
           <SectionHeading eyebrow="Use cases" title="Built around how people actually work" />
           <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -406,7 +406,7 @@ export function Home() {
       </Section>
 
       {/* Blog */}
-      <Section>
+      <Section tone="sand">
         <Container>
           <SectionHeading eyebrow="From the blog" title="Guides worth your time" />
           <div className="mt-10 grid gap-5 md:grid-cols-3">
@@ -432,7 +432,7 @@ export function Home() {
       </Section>
 
       {/* FAQ */}
-      <Section tone="sand">
+      <Section>
         <Container size="narrow">
           <FaqAccordion heading="Common questions" items={homeFaqs} />
         </Container>
