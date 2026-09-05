@@ -135,5 +135,19 @@ export interface Page {
   fromName?: string;
   fromEmail?: string;
   notifyEmail?: string;
+  /** Home page value comparison section */
+  comparisonEyebrow?: string;
+  comparisonTitle?: string;
+  comparisonIntro?: string;
+  comparisonOldLabel?: string;
+  comparisonOldItems?: string[];
+  comparisonOldTotalLabel?: string;
+  comparisonOldTotal?: string;
+  comparisonNewLabel?: string;
+  comparisonNewItems?: string[];
+  comparisonNewTotalLabel?: string;
+  comparisonNewTotal?: string;
+  comparisonCtaLabel?: string;
+  comparisonSecondaryLabel?: string;
 }
 
