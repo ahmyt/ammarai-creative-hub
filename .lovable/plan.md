@@ -34,4 +34,6 @@ These measures stop casual copying only. Anyone technical can still read the pag
   - Adds/removes a `body.no-select` class on mount/unmount.
 - `src/styles.css`: `.no-select` rule with `user-select: none` (plus `-webkit-`/`-moz-` prefixes) and `-webkit-touch-callout: none`, with an override restoring `user-select: text` for `input, textarea, [contenteditable]`.
 - Mount `<ContentProtection />` once in `src/routes/__root.tsx` inside the layout, disabled when the current path starts with `/admin` or `/auth` (via `useRouterState` location).
+- Toggle storage: add a `protectContent?: boolean` field to the `Page` type (`src/data/types.ts`), default `true` on the `home` entry in `src/data/pages.ts`, and a boolean field spec in the home-page group of `src/lib/cms-fields.ts` (add boolean support to the CMS field editor in `src/routes/admin.$kind.$slug.tsx` if not present).
+- `ContentProtection` reads the value via `siteContentQuery` (`useSuspenseQuery`, home page entry) and returns `null` when the toggle is off.
 - No SSR impact: all listeners registered inside `useEffect`.
