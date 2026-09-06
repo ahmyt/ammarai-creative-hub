@@ -13,7 +13,7 @@ import { posts } from "@/data/posts";
 import { features } from "@/data/features";
 import { fetchSyndicatedArticles } from "@/lib/articles";
 
-const BASE_URL = "https://ammarai-creative-hub.lovable.app";
+const BASE_URL = "https://ammarai.com";
 
 export const Route = createFileRoute("/sitemap.xml")({
   staticData: { sitemap: false },
