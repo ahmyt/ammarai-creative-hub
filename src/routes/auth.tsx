@@ -2,11 +2,6 @@ import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
-import {
-  consumeForwardedTokens,
-  isLovableHosted,
-  signInWithGoogleSelfHosted,
-} from "@/lib/oauth-selfhost";
 import { Container, Section } from "@/components/site/primitives";
 
 export const Route = createFileRoute("/auth")({
@@ -28,6 +23,16 @@ export const Route = createFileRoute("/auth")({
   component: AuthPage,
 });
 
+/** True on Lovable hosting/preview where the managed OAuth broker is available. */
+function isLovableHosted(hostname: string) {
+  return (
+    hostname.endsWith(".lovable.app") ||
+    hostname.endsWith(".lovableproject.com") ||
+    hostname === "localhost" ||
+    hostname === "127.0.0.1"
+  );
+}
+
 function AuthPage() {
   const navigate = useNavigate();
   const [mode, setMode] = useState<"signin" | "signup">("signin");
@@ -37,15 +42,15 @@ function AuthPage() {
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
-    void (async () => {
-      // Self-hosted Google flow returns here with tokens via /auth/forward.
-      if (await consumeForwardedTokens()) {
-        void navigate({ to: "/admin" });
-        return;
-      }
-      const { data } = await supabase.auth.getSession();
+    // Handles an existing session and the native Google OAuth return (Supabase
+    // exchanges the PKCE code from the URL and fires SIGNED_IN).
+    const { data: sub } = supabase.auth.onAuthStateChange((event) => {
+      if (event === "SIGNED_IN") void navigate({ to: "/admin" });
+    });
+    void supabase.auth.getSession().then(({ data }) => {
       if (data.session) void navigate({ to: "/admin" });
-    })();
+    });
+    return () => sub.subscription.unsubscribe();
   }, [navigate]);
 
   const submit = async (e: React.FormEvent) => {
@@ -69,17 +74,28 @@ function AuthPage() {
 
   const google = async () => {
     setMessage(null);
-    const result = isLovableHosted(window.location.hostname)
-      ? await lovable.auth.signInWithOAuth("google", {
-          redirect_uri: window.location.origin,
-        })
-      : await signInWithGoogleSelfHosted();
-    if (result.error) {
-      setMessage("Google sign-in failed. Try again or use email.");
+    if (isLovableHosted(window.location.hostname)) {
+      // Managed broker (Lovable hosting / preview).
+      const result = await lovable.auth.signInWithOAuth("google", {
+        redirect_uri: window.location.origin,
+      });
+      if (result.error) {
+        setMessage("Google sign-in failed. Try again or use email.");
+        return;
+      }
+      if (result.redirected) return;
+      void navigate({ to: "/admin" });
       return;
     }
-    if (result.redirected) return;
-    void navigate({ to: "/admin" });
+    // Self-hosted (e.g. ammarai.com): native Supabase Google OAuth, decoupled
+    // from the Lovable host. Requires the project's own Google credentials and
+    // an allowed redirect URL for this origin (see SELF_HOSTING.md).
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: { redirectTo: `${window.location.origin}/auth` },
+    });
+    if (error) setMessage("Google sign-in failed. Try again or use email.");
+    // On success the browser navigates to Google, then back to /auth.
   };
 
   return (

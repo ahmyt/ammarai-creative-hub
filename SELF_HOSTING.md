@@ -56,25 +56,32 @@ All your content, admin users, and sign-ins keep working as-is.
 
 ## 4. Google sign-in
 
-The managed OAuth broker lives at `/~oauth/initiate`, a path that only exists on
-Lovable hosting — on your own server it returns 404. So the app detects the host:
+The app no longer depends on the Lovable-hosted OAuth broker. On your own
+domain it uses native Google OAuth directly, so sign-in keeps working even when
+the Lovable-hosted copy is unpublished.
 
-- On `*.lovable.app` / localhost it uses the broker directly.
-- On your domain it starts the flow against
-  `https://ammarai-creative-hub.lovable.app/~oauth/initiate` and returns through
-  `https://ammarai-creative-hub.lovable.app/auth/forward?to=<your-origin>/auth`,
-  which hands the session tokens back to your domain; `/auth` then signs you in
-  and goes to `/admin`. If the managed broker returns to the Lovable homepage
-  instead of honoring the forward URL, the root layout detects the OAuth session
-  fragment and immediately relays it to `https://ammarai.com/auth` as a fallback.
-  If the broker has already consumed that fragment and opened `/admin` on the
-  Lovable-hosted site, that established session is relayed to the same canonical
-  auth route as a second fallback, so the CMS remains on `ammarai.com`.
+- On `*.lovable.app` / localhost (the preview) it uses Lovable's managed Google
+  sign-in — no setup needed there.
+- On your own domain (e.g. `ammarai.com`) it calls Google OAuth directly and
+  returns to `<your-origin>/auth`, which signs you in and goes to `/admin`.
 
-This lives in `src/lib/oauth-selfhost.ts`, `src/routes/auth.tsx` and
-`src/routes/auth.forward.tsx`. If you deploy on a domain other than
-`ammarai.com`, add that hostname to `ALLOWED_TARGET_HOSTS` in
-`src/routes/auth.forward.tsx`. Email/password sign-in needs no configuration.
+To enable Google sign-in on your own domain, configure your own Google
+credentials and whitelist your domain (one-time):
+
+1. **Lovable Cloud** → Users → Authentication Settings → Sign In Methods →
+   Google: expand the Google section and copy the **callback / redirect URL**
+   shown there.
+2. **Google Cloud Console** → create an OAuth **Client ID** (application type:
+   Web application) and paste that callback URL under Authorized redirect URIs.
+   Copy the resulting **Client ID** and **Secret**.
+3. Back in **Lovable Cloud** → Users → Authentication Settings → Sign In
+   Methods → Google: switch from managed credentials to your own and paste the
+   Client ID and Secret.
+4. **Lovable Cloud** → Users → Authentication Settings → Redirect URLs: add
+   `https://ammarai.com/**` (and `https://www.ammarai.com/**` if you use www).
+
+The code lives in `src/routes/auth.tsx`. Email/password sign-in needs no
+configuration.
 
 ---
 
