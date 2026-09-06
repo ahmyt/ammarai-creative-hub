@@ -1,9 +1,14 @@
 # Roadmap
 
-- [x] Add AI SEO Analyzer as a seventh flagship tool (URL / text / keyword analysis)
-  - [x] Tool data record + page content
-  - [x] Three report visuals for the interactive example (esimnow.net input)
-  - [x] Homepage flagship row, directory, search intent, cross-links
-- [x] Make same-server Plesk mail delivery automatically authentication-free on localhost port 25
-- [x] Normalize Plesk SMTP settings and expose safe effective-config diagnostics
-- [x] Record and show mail-server acceptance details for visitor confirmation emails (trace external delivery)
+## Done
+- Resume Lovable Cloud backend (was paused → login "failed to fetch"). Now healthy.
+- Point sitemap.xml + robots.txt at https://ammarai.com (was lovable.app).
+- Decouple self-hosted Google sign-in from the Lovable broker (native OAuth on ammarai.com; managed broker kept for preview).
+
+## User action needed (one-time, for Google sign-in on ammarai.com)
+- Google Cloud Console: create OAuth Client ID (Web) with the callback URL shown in Cloud → Auth Settings → Google.
+- Cloud → Auth Settings → Google: paste Client ID + Secret (use own credentials).
+- Cloud → Auth Settings → Redirect URLs: add https://ammarai.com/** (and https://www.ammarai.com/** if used).
+- Redeploy latest build to Plesk.
+
+Email/password login: works now, no setup needed.
