@@ -303,3 +303,20 @@
     transition-duration: 0.001ms !important;
   }
 }
+
+/* Content protection: block casual selection/copying when enabled */
+body.no-select {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+body.no-select input,
+body.no-select textarea,
+body.no-select select,
+body.no-select [contenteditable="true"] {
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  user-select: text;
+}
