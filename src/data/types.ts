@@ -149,5 +149,7 @@ export interface Page {
   comparisonNewTotal?: string;
   comparisonCtaLabel?: string;
   comparisonSecondaryLabel?: string;
+  /** Site-wide content protection (blocks copy, right-click and shortcuts) */
+  protectContent?: boolean;
 }
 
