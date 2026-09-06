@@ -1,14 +1,20 @@
-# Block copying and keyboard shortcuts across the site
+# Block copying and keyboard shortcuts across the site (with an on/off switch)
 
-Add a site-wide content-protection layer so visitors cannot easily copy text, right-click, drag images, or use common keyboard shortcuts.
+Add a site-wide content-protection layer, controlled from the admin area so you can switch it on or off at any time without a code change.
 
-## What visitors will experience
+## What visitors will experience (when it is ON)
 
 - Text cannot be selected or copied (copy/cut attempts are cancelled).
 - Right-click menu is disabled on all pages.
 - Images cannot be dragged out or saved by drag.
 - Blocked shortcuts: Ctrl/Cmd + C, X, A, S, P, U, and F12 / Ctrl+Shift+I, J, C (developer tools and view source).
 - Everything the site needs still works: links, buttons, the tool search box, the contact form, and the admin area.
+
+## The switch
+
+- In the admin area, under Pages -> Home, a "Protect content (block copy, right-click and shortcuts)" setting you can set to on or off.
+- Saved with the rest of the site content; visitors see the change on their next page load.
+- It ships turned on, and you can turn it off whenever you like.
 
 ## Important exceptions
 
