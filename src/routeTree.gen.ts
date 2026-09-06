@@ -26,7 +26,6 @@ import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as AdminArticlesRouteImport } from './routes/admin.articles'
 import { Route as AdminMessagesRouteImport } from './routes/admin.messages'
 import { Route as ApiContactRouteImport } from './routes/api/contact'
-import { Route as AuthForwardRouteImport } from './routes/auth.forward'
 import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as FeaturesIndexRouteImport } from './routes/features.index'
@@ -120,11 +119,6 @@ const ApiContactRoute = ApiContactRouteImport.update({
   path: '/api/contact',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthForwardRoute = AuthForwardRouteImport.update({
-  id: '/forward',
-  path: '/forward',
-  getParentRoute: () => AuthRoute,
-} as any)
 const BlogIndexRoute = BlogIndexRouteImport.update({
   id: '/blog/',
   path: '/blog/',
@@ -168,7 +162,7 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/admin': typeof AdminRouteWithChildren
   '/ai-tools': typeof AiToolsRoute
-  '/auth': typeof AuthRouteWithChildren
+  '/auth': typeof AuthRoute
   '/contact': typeof ContactRoute
   '/faq': typeof FaqRoute
   '/llms.txt': typeof LlmsDottxtRoute
@@ -179,7 +173,6 @@ export interface FileRoutesByFullPath {
   '/admin/articles': typeof AdminArticlesRoute
   '/admin/messages': typeof AdminMessagesRoute
   '/api/contact': typeof ApiContactRoute
-  '/auth/forward': typeof AuthForwardRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/features/$slug': typeof FeaturesSlugRoute
   '/admin/': typeof AdminIndexRoute
@@ -194,7 +187,7 @@ export interface FileRoutesByTo {
   '/$slug': typeof SlugRoute
   '/about': typeof AboutRoute
   '/ai-tools': typeof AiToolsRoute
-  '/auth': typeof AuthRouteWithChildren
+  '/auth': typeof AuthRoute
   '/contact': typeof ContactRoute
   '/faq': typeof FaqRoute
   '/llms.txt': typeof LlmsDottxtRoute
@@ -205,7 +198,6 @@ export interface FileRoutesByTo {
   '/admin/articles': typeof AdminArticlesRoute
   '/admin/messages': typeof AdminMessagesRoute
   '/api/contact': typeof ApiContactRoute
-  '/auth/forward': typeof AuthForwardRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/features/$slug': typeof FeaturesSlugRoute
   '/admin': typeof AdminIndexRoute
@@ -222,7 +214,7 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/admin': typeof AdminRouteWithChildren
   '/ai-tools': typeof AiToolsRoute
-  '/auth': typeof AuthRouteWithChildren
+  '/auth': typeof AuthRoute
   '/contact': typeof ContactRoute
   '/faq': typeof FaqRoute
   '/llms.txt': typeof LlmsDottxtRoute
@@ -233,7 +225,6 @@ export interface FileRoutesById {
   '/admin/articles': typeof AdminArticlesRoute
   '/admin/messages': typeof AdminMessagesRoute
   '/api/contact': typeof ApiContactRoute
-  '/auth/forward': typeof AuthForwardRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/features/$slug': typeof FeaturesSlugRoute
   '/admin/': typeof AdminIndexRoute
@@ -262,7 +253,6 @@ export interface FileRouteTypes {
     | '/admin/articles'
     | '/admin/messages'
     | '/api/contact'
-    | '/auth/forward'
     | '/blog/$slug'
     | '/features/$slug'
     | '/admin/'
@@ -288,7 +278,6 @@ export interface FileRouteTypes {
     | '/admin/articles'
     | '/admin/messages'
     | '/api/contact'
-    | '/auth/forward'
     | '/blog/$slug'
     | '/features/$slug'
     | '/admin'
@@ -315,7 +304,6 @@ export interface FileRouteTypes {
     | '/admin/articles'
     | '/admin/messages'
     | '/api/contact'
-    | '/auth/forward'
     | '/blog/$slug'
     | '/features/$slug'
     | '/admin/'
@@ -332,7 +320,7 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   AdminRoute: typeof AdminRouteWithChildren
   AiToolsRoute: typeof AiToolsRoute
-  AuthRoute: typeof AuthRouteWithChildren
+  AuthRoute: typeof AuthRoute
   ContactRoute: typeof ContactRoute
   FaqRoute: typeof FaqRoute
   LlmsDottxtRoute: typeof LlmsDottxtRoute
@@ -469,13 +457,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiContactRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/auth/forward': {
-      id: '/auth/forward'
-      path: '/forward'
-      fullPath: '/auth/forward'
-      preLoaderRoute: typeof AuthForwardRouteImport
-      parentRoute: typeof AuthRoute
-    }
     '/blog/': {
       id: '/blog/'
       path: '/blog'
@@ -546,23 +527,13 @@ const AdminRouteChildren: AdminRouteChildren = {
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
-interface AuthRouteChildren {
-  AuthForwardRoute: typeof AuthForwardRoute
-}
-
-const AuthRouteChildren: AuthRouteChildren = {
-  AuthForwardRoute: AuthForwardRoute,
-}
-
-const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   SlugRoute: SlugRoute,
   AboutRoute: AboutRoute,
   AdminRoute: AdminRouteWithChildren,
   AiToolsRoute: AiToolsRoute,
-  AuthRoute: AuthRouteWithChildren,
+  AuthRoute: AuthRoute,
   ContactRoute: ContactRoute,
   FaqRoute: FaqRoute,
   LlmsDottxtRoute: LlmsDottxtRoute,
