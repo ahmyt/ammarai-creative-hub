@@ -72,6 +72,11 @@ const pageHomeFields: FieldSpec[] = [
   { name: "comparisonNewTotal", label: "Comparison: right total", type: "text" },
   { name: "comparisonCtaLabel", label: "Comparison: primary button", type: "text" },
   { name: "comparisonSecondaryLabel", label: "Comparison: secondary button", type: "text" },
+  {
+    name: "protectContent",
+    label: "Protect content (block copy, right-click and shortcuts)",
+    type: "boolean",
+  },
 ];
 
 export const fieldSpecs: Record<ContentKind, FieldSpec[]> = {
