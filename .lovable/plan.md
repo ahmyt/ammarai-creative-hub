@@ -1,33 +1,55 @@
-# Point the sitemap at the production domain (ammarai.com)
+# Fix CMS login, decouple Google sign-in from Lovable, and point the sitemap at ammarai.com
 
-## Problem
-The sitemap (`src/routes/sitemap[.]xml.ts`) and `robots.txt` use the Lovable
-preview host `https://ammarai-creative-hub.lovable.app` as the base URL, but
-the production site is `https://ammarai.com`. Every other SEO surface already
-agrees on `ammarai.com`:
+## What I found
+- The "Failed to fetch" on login is caused by the **Lovable Cloud backend being
+  paused** — the browser can't reach the database/auth API at all. This breaks
+  email/password AND Google sign-in. (Unpublishing the app didn't cause this by
+  itself, but the backend is paused right now.)
+- `ammarai.com` is **not** in the auth redirect allow-list — only Lovable hosts
+  are. So even native Google sign-in to your domain is currently rejected.
+- Google sign-in on ammarai.com depends on the **published Lovable app**: its
+  OAuth "broker" lives at `ammarai-creative-hub.lovable.app/~oauth/initiate`.
+  With the app unpublished, that URL 404s — which is why you chose to decouple.
+- The sitemap (`src/routes/sitemap[.]xml.ts`) and `robots.txt` still use the
+  Lovable host while canonicals/og:url/llms.txt all use `ammarai.com`.
 
-- `src/lib/site.ts` → `SITE.url = "https://ammarai.com"`
-- `src/routes/llms[.]txt.ts` → `BASE_URL = "https://ammarai.com"`
-- `src/routes/index.tsx` → canonical + og:url use `SITE.url`
+## Part 1 — Restore login (unblock now)
+1. Resume the Lovable Cloud backend so database/auth calls succeed again. You
+   can do this from Cloud / project settings, or I can resume it on approval.
+2. After resume, email/password login works again immediately (no code change).
 
-So the sitemap's 109 URLs are the only place using the Lovable host, which
-mismatches the canonical domain Google sees.
+## Part 2 — Sitemap + robots base URL (SEO)
+3. `src/routes/sitemap[.]xml.ts`: `BASE_URL` → `https://ammarai.com`.
+4. `public/robots.txt`: `Sitemap:` → `https://ammarai.com/sitemap.xml`.
 
-## Change
+## Part 3 — Decouple Google sign-in from the Lovable host
+This switches self-hosted Google sign-in to **native** Supabase OAuth using
+**your own Google credentials**, so it no longer needs the Lovable-hosted broker.
 
-1. **`src/routes/sitemap[.]xml.ts`** — change
-   `const BASE_URL = "https://ammarai-creative-hub.lovable.app"` to
-   `const BASE_URL = "https://ammarai.com"`.
+**You do (one-time, in Google + Lovable dashboards):**
+5. In Google Cloud Console, create an OAuth **Client ID** (Web application) with
+   authorized redirect URI:
+   `https://jxobtlhajvcpyjcgktzj.supabase.co/auth/v1/callback`
+6. Copy the Client ID + Secret into Lovable Cloud → Users → Auth Settings →
+   Sign In Methods → Google (use your own credentials instead of managed).
 
-2. **`public/robots.txt`** — change the
-   `Sitemap: https://ammarai-creative-hub.lovable.app/sitemap.xml` line to
-   `Sitemap: https://ammarai.com/sitemap.xml`.
-
-No route list changes — the 109 entries (tools, use cases, blog posts,
-features, and static pages) are correct; only the host needs to change.
+**I do (code + auth config):**
+7. Whitelist `https://ammarai.com/**` (and `https://www.ammarai.com/**`) in the
+   auth redirect allow-list.
+8. `src/routes/auth.tsx`: on the self-hosted origin call native
+   `supabase.auth.signInWithOAuth({ provider: "google", options: { redirectTo: <origin>/admin } })`
+   instead of the broker. Keep `lovable.auth.signInWithOAuth` for the preview.
+9. Remove the broker plumbing that only existed for the Lovable host:
+   `src/lib/oauth-selfhost.ts` (broker), `src/routes/auth.forward.tsx`, and the
+   token-relay logic in `src/routes/__root.tsx` and `src/routes/admin.tsx`.
 
 ## Verify
-- `curl http://localhost:8080/sitemap.xml` and confirm all `<loc>` URLs now
-  start with `https://ammarai.com/`.
-- Confirm the XML is still valid and the URL count stays ~109.
-- Redeploy to Plesk so the production sitemap reflects the change.
+- After Part 1: login succeeds (email/password) with no "Failed to fetch".
+- `curl /sitemap.xml` → all `<loc>` start with `https://ammarai.com/`.
+- After Parts 2–3 deployed to Plesk + Google credentials added: "Continue with
+  Google" on `https://ammarai.com/auth` reaches Google and returns signed in to
+  `/admin`, with no dependency on the Lovable host.
+
+## Notes
+- Part 3 requires the Google credentials (steps 5–6) before native sign-in will
+  work; until then, email/password is the working login method.
