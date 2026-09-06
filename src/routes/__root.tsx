@@ -13,10 +13,6 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
-import { supabase } from "@/integrations/supabase/client";
-
-const PUBLISHED_LOVABLE_HOST = "ammarai-creative-hub.lovable.app";
-const SELF_HOSTED_AUTH_URL = "https://ammarai.com/auth";
 
 function NotFoundComponent() {
   return (
@@ -128,40 +124,6 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
-
-  useEffect(() => {
-    // The managed Google broker can return self-hosted sign-ins to the
-    // published Lovable root despite the requested forward URL. Relay that
-    // session fragment to the canonical site's auth route, which consumes it.
-    if (
-      window.location.hostname === PUBLISHED_LOVABLE_HOST &&
-      window.location.pathname === "/" &&
-      new URLSearchParams(window.location.hash.replace(/^#/, "")).has("access_token")
-    ) {
-      window.location.replace(`${SELF_HOSTED_AUTH_URL}${window.location.hash}`);
-      return;
-    }
-
-    // The broker may consume the URL fragment and establish the session on
-    // Lovable before navigating to /admin. Relay that established session too,
-    // so the CMS always opens on the canonical self-hosted domain.
-    if (
-      window.location.hostname === PUBLISHED_LOVABLE_HOST &&
-      window.location.pathname.startsWith("/admin")
-    ) {
-      void supabase.auth.getSession().then(({ data }) => {
-        const session = data.session;
-        if (!session) return;
-        const fragment = new URLSearchParams({
-          access_token: session.access_token,
-          refresh_token: session.refresh_token,
-          token_type: session.token_type,
-          expires_in: String(session.expires_in),
-        });
-        window.location.replace(`${SELF_HOSTED_AUTH_URL}#${fragment.toString()}`);
-      });
-    }
-  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>
