@@ -76,5 +76,6 @@ export const pages: Page[] = [
     comparisonNewTotal: "One subscription",
     comparisonCtaLabel: "Start free \u2014 no card required",
     comparisonSecondaryLabel: "Compare plans",
+    protectContent: true,
   },
 ];
