@@ -17,6 +17,8 @@ import sttDictation from "@/assets/demo-stt-dictation.mp3.asset.json";
 import sttMemo from "@/assets/demo-stt-memo.mp3.asset.json";
 import transcriptionInterview from "@/assets/demo-transcription-interview.mp3.asset.json";
 import transcriptionWalkthrough from "@/assets/demo-transcription-walkthrough.mp3.asset.json";
+import musicAdBed from "@/assets/demo-music-ad-bed.mp3.asset.json";
+import musicAmbientBed from "@/assets/demo-music-ambient-bed.mp3.asset.json";
 import sourceSneaker from "@/assets/i2v-source-sneaker.jpg";
 import sourceMountains from "@/assets/i2v-source-mountains.jpg";
 import imageOutWorkbench from "@/assets/imggen-out-workbench.jpg";
