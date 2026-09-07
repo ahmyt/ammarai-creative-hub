@@ -127,7 +127,7 @@ function RecommendedReading({ article }: { article: SyndicatedArticle }) {
             </ul>
           </>
         ) : null}
-        {content.posts.length === 0 ? null : null}
+        
       </Container>
     </Section>
   );
