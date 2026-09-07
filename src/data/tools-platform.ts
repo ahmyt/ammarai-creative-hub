@@ -724,6 +724,6 @@ export const platformTools: Tool[] = [
       },
     ],
     related: ["sound-studio", "ai-voice-generator", "ai-video-generator", "ai-ad-generator"],
-    hideDemoVideo: true,
+
   },
 ];
