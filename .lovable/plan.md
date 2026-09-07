@@ -1,30 +1,45 @@
-# Fix "Missing BABYLOVEGROWTH_API_KEY" on the Plesk deployment
+# Fix synced-article links pointing at the Lovable-hosted site
 
 ## Problem
 
-Clicking **Sync now** on ammarai.com (Plesk) now fails with:
+In synced blog articles, the "Recommended" links (and other internal links inside the article body) go to `https://ammarai-creative-hub.lovable.app/...` instead of `ammarai.com`.
 
-> Missing BABYLOVEGROWTH_API_KEY
+Confirmed cause: BabyLoveGrowth baked those absolute URLs into the article HTML when the site was still on the Lovable domain. Verified in the database — e.g. the article `knowledge-base-ai` contains `https://ammarai-creative-hub.lovable.app/features/brand-voice` inside its stored `content_html`. The sync code stores that HTML as-is, so the old domain is rendered verbatim on ammarai.com.
 
-Confirmed cause: `src/lib/babylovegrowth.server.ts` reads `process.env.BABYLOVEGROWTH_API_KEY` at call time. The key is stored in the Lovable secret store, so the preview has it — but the Plesk Node.js app environment does not. This is the same class of issue as the missing `SUPABASE_URL` / `SUPABASE_PUBLISHABLE_KEY` you just fixed.
+## Fix
 
-## Fix — your action on Plesk (no code change needed)
+Two parts: repair the already-synced articles, and make every future sync rewrite the domain automatically.
 
-1. In **Plesk → Websites & Domains → ammarai.com → Node.js → Custom environment variables**, add:
+### 1. Database migration — rewrite existing articles
 
-   - `BABYLOVEGROWTH_API_KEY` = your BabyLoveGrowth integration API key
+One-time update over `public.syndicated_articles` replacing the old domains inside `content_html` (and `content_markdown` for safety) with `https://ammarai.com`:
 
-   Use the same key value you originally provided for this integration (it's in your BabyLoveGrowth dashboard under Integrations / API keys).
+```sql
+UPDATE public.syndicated_articles
+SET content_html = replace(content_html, 'https://ammarai-creative-hub.lovable.app', 'https://ammarai.com'),
+    content_markdown = replace(content_markdown, 'https://ammarai-creative-hub.lovable.app', 'https://ammarai.com')
+WHERE content_html ILIKE '%ammarai-creative-hub.lovable.app%'
+   OR content_markdown ILIKE '%ammarai-creative-hub.lovable.app%';
+```
 
-2. **Restart the Node.js app** in Plesk so the new variable is loaded. No rebuild is required — this variable is read at runtime, not baked into the build.
+(Also covers the `id-preview--*.lovable.app` preview domain if any rows contain it.)
+
+### 2. Code — rewrite the domain on every sync
+
+`src/lib/babylovegrowth.server.ts`:
+- After HTML sanitization (and for markdown), replace any occurrence of the known old origins — `https://ammarai-creative-hub.lovable.app` and `https://id-preview--ab4a5e87-30cb-4379-b661-4f70b8317377.lovable.app` — with the production origin `https://ammarai.com` (from `SITE.url` in `src/lib/site.ts`).
+- This runs inside `syncArticles`, so both manual sync and cron sync produce clean links going forward.
+
+No changes to rendering, sanitization rules, or link structure — only the origin string is swapped.
 
 ## Verification
 
-- Sign in at `/auth` → `/admin/articles` → click **Sync now** → articles sync without the missing-key error.
-- Optional sanity check: the previous Supabase env fix plus this one means manual sync on Plesk needs exactly three server env vars: `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY`, `BABYLOVEGROWTH_API_KEY`.
+- Query the database to confirm no `syndicated_articles` rows still contain `lovable.app` links.
+- Open a synced article in the preview (e.g. the one with the "Recommended" section) and confirm the recommended links point to `ammarai.com/...`.
+- Typecheck with `bunx tsgo --noEmit`.
+- Deploy the new build to Plesk so ammarai.com picks up the fix (the migration itself applies immediately to both environments).
 
 ## Notes
 
-- I'll also add this variable to `SELF_HOSTING.md` step 3 so the Plesk env-var checklist is complete for future redeploys (small doc edit).
-- The automatic cron sync is unaffected — it runs on Lovable hosting where the key already exists.
-- The key stays server-only; it is never sent to the browser.
+- Links BabyLoveGrowth adds in the future (to new tools/pages) will keep working: they point at paths like `/features/...` that exist on ammarai.com.
+- The "Made with BabyLoveGrowth technology" attribution link is external and unaffected.
