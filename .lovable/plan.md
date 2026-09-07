@@ -11,8 +11,8 @@ Scope: only the **daily blog writer**. BabyLoveGrowth sync is unaffected (it alr
 In the `generate()` function only:
 - Endpoint: `https://api.openai.com/v1/chat/completions` (was the Lovable gateway).
 - Auth: `Bearer ${process.env["OPENAI_API_KEY"]}`; throw `Missing OPENAI_API_KEY` if absent.
-- Model: `gpt-4o-mini` by default; allow override via `process.env["OPENAI_MODEL"]` (e.g. `gpt-4o` for higher quality). Cheap model, good for a daily post; supports OpenAI structured outputs.
-- Keep the existing `response_format: { type: "json_schema", json_schema: { name, strict: true, schema } }` block unchanged — it is already OpenAI-compatible (all objects have `additionalProperties: false` and full `required` arrays).
+- Model: `gpt-5.6-sol` by default (the flagship OpenAI model you wanted — confirmed available directly via OpenAI's API with your own key); allow override via `process.env["OPENAI_MODEL"]` (e.g. `gpt-5.6-terra` for a cheaper near-flagship tier, or `gpt-5.4` if your account can't access the 5.6 family). Cost is negligible for ~1 post/day.
+- Keep the existing `response_format: { type: "json_schema", json_schema: { name, strict: true, schema } }` block unchanged — it is already OpenAI-compatible (all objects have `additionalProperties: false` and full `required` arrays). Note: `gpt-5.6-*` models use `max_completion_tokens` (not `max_tokens`) if a length cap is added later; the current call sets no cap, so no change needed now.
 - Response parsing stays the same (`choices[0].message.content`), including the ```` ```json ```` fence strip.
 - Error handling: keep 429 → "rate limit, try later"; drop the Lovable-only 402 path; surface any other non-OK status as `OpenAI request failed (status) writing about <tool>` so the cron/admin UI shows a clear message (per gateway error semantics, 429 is the only retryable case here — we do not auto-retry).
 
