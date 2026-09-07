@@ -121,10 +121,9 @@ async function generate(toolName: string, prompt: string): Promise<GeneratedPost
     }),
   });
 
-  if (response.status === 429) throw new Error("AI rate limit reached, try again later");
-  if (response.status === 402) throw new Error("AI credits exhausted");
+  if (response.status === 429) throw new Error("OpenAI rate limit reached, try again later");
   if (!response.ok) {
-    throw new Error(`AI gateway failed (${response.status}) writing about ${toolName}`);
+    throw new Error(`OpenAI request failed (${response.status}) writing about ${toolName}`);
   }
 
   const payload = (await response.json()) as {
