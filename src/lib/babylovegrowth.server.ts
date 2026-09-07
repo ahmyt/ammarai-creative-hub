@@ -2,6 +2,8 @@
 // public pages never call their rate-limited API.
 import sanitizeHtml from "sanitize-html";
 import { z } from "zod";
+import type { SupabaseClient } from "@supabase/supabase-js";
+import type { Database } from "@/integrations/supabase/types";
 
 const BASE_URL = "https://api.babylovegrowth.ai/api/integrations";
 const PAGE_SIZE = 50;
@@ -109,8 +111,9 @@ export interface SyncResult {
   errors: string[];
 }
 
-export async function syncArticles(): Promise<SyncResult> {
-  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+export async function syncArticles(
+  supabase: SupabaseClient<Database>,
+): Promise<SyncResult> {
   const result: SyncResult = { fetched: 0, upserted: 0, errors: [] };
 
   for (let page = 0; page < MAX_PAGES; page += 1) {
@@ -134,7 +137,7 @@ export async function syncArticles(): Promise<SyncResult> {
           published_at: article.publishedAt ?? article.created_at ?? null,
           synced_at: new Date().toISOString(),
         };
-        const { error } = await supabaseAdmin
+        const { error } = await supabase
           .from("syndicated_articles")
           .upsert(row as never, { onConflict: "slug" });
         if (error) {

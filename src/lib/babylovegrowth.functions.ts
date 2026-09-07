@@ -29,7 +29,7 @@ export const syncBabyLoveGrowthArticles = createServerFn({ method: "POST" })
   .handler(async ({ context }) => {
     await requireAdmin(context as unknown as AdminContext);
     const { syncArticles } = await import("@/lib/babylovegrowth.server");
-    return syncArticles();
+    return syncArticles(context.supabase);
   });
 
 export const getSyncSettings = createServerFn({ method: "GET" })
