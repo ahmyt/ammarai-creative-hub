@@ -58,17 +58,27 @@ interface GeneratedPost {
   faqs: { question: string; answer: string }[];
 }
 
+const GENERIC_FAILURE = "Something went wrong and the content wasn't generated.";
+const ALLOWED_MODEL_PREFIX = "gpt-5.6";
+
 async function generate(toolName: string, prompt: string): Promise<GeneratedPost> {
   const key = process.env["OPENAI_API_KEY"];
   if (!key) throw new Error("Missing OPENAI_API_KEY");
 
   const model = process.env["OPENAI_MODEL"]?.trim() || DEFAULT_MODEL;
+  if (!model.startsWith(ALLOWED_MODEL_PREFIX)) {
+    console.error(
+      `[daily-blog] refusing to generate: OPENAI_MODEL="${model}" is not a ${ALLOWED_MODEL_PREFIX} model`,
+    );
+    throw new Error(GENERIC_FAILURE);
+  }
 
   const response = await fetch(OPENAI_URL, {
     method: "POST",
     headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
     body: JSON.stringify({
       model,
+
       messages: [
         {
           role: "system",
