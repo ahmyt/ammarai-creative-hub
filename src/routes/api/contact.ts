@@ -298,7 +298,7 @@ export const Route = createFileRoute("/api/contact")({
           // Record that delivery was attempted and failed, so the CMS never
           // shows a misleading "no delivery recorded" for a fresh submission.
           const safe = safeEmailError(emailError);
-          await recordConfirmationOutcome(supabase, messageId, {
+          await recordConfirmationOutcome(messageId, {
             confirmation_status: "failed",
             confirmation_message_id: null,
             confirmation_response: null,
@@ -324,7 +324,7 @@ export const Route = createFileRoute("/api/contact")({
         // the stored message, so a submission can be traced in the mail log.
         // "sent" means the mail server accepted the handoff — not that the
         // recipient's provider delivered it.
-        const trackingError = await recordConfirmationOutcome(supabase, messageId, {
+        const trackingError = await recordConfirmationOutcome(messageId, {
           confirmation_status: confirmationSent ? "sent" : "failed",
           confirmation_message_id: confirmationMessageId,
           confirmation_response: confirmationResponse,
