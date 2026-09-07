@@ -1,13 +1,14 @@
-// Server-only: writes one SEO blog post per day about an AmmarAI tool using the
-// Lovable AI gateway, then stores it alongside the synced articles.
+// Server-only: writes one SEO blog post per day about an AmmarAI tool using
+// OpenAI directly (your own OPENAI_API_KEY), then stores it alongside the
+// synced articles. Self-hosted: no Lovable AI Gateway dependency.
 import sanitizeHtml from "sanitize-html";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/integrations/supabase/types";
 import { tools } from "@/data/tools";
 import { SITE } from "@/lib/site";
 
-const GATEWAY_URL = "https://ai.gateway.lovable.dev/v1/chat/completions";
-const MODEL = "google/gemini-2.5-flash";
+const OPENAI_URL = "https://api.openai.com/v1/chat/completions";
+const DEFAULT_MODEL = "gpt-5.6-sol";
 
 export interface DailyBlogResult {
   slug: string;
@@ -58,14 +59,16 @@ interface GeneratedPost {
 }
 
 async function generate(toolName: string, prompt: string): Promise<GeneratedPost> {
-  const key = process.env["LOVABLE_API_KEY"];
-  if (!key) throw new Error("Missing LOVABLE_API_KEY");
+  const key = process.env["OPENAI_API_KEY"];
+  if (!key) throw new Error("Missing OPENAI_API_KEY");
 
-  const response = await fetch(GATEWAY_URL, {
+  const model = process.env["OPENAI_MODEL"]?.trim() || DEFAULT_MODEL;
+
+  const response = await fetch(OPENAI_URL, {
     method: "POST",
     headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
     body: JSON.stringify({
-      model: MODEL,
+      model,
       messages: [
         {
           role: "system",
@@ -118,10 +121,9 @@ async function generate(toolName: string, prompt: string): Promise<GeneratedPost
     }),
   });
 
-  if (response.status === 429) throw new Error("AI rate limit reached, try again later");
-  if (response.status === 402) throw new Error("AI credits exhausted");
+  if (response.status === 429) throw new Error("OpenAI rate limit reached, try again later");
   if (!response.ok) {
-    throw new Error(`AI gateway failed (${response.status}) writing about ${toolName}`);
+    throw new Error(`OpenAI request failed (${response.status}) writing about ${toolName}`);
   }
 
   const payload = (await response.json()) as {
