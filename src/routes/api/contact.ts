@@ -50,15 +50,23 @@ type ConfirmationOutcome = {
 // failed write-back is never silent. Never throws — the message itself is
 // already stored, which is what matters most.
 const recordConfirmationOutcome = async (
-  supabase: ReturnType<typeof createClient<Database>>,
   messageId: string,
   outcome: ConfirmationOutcome,
 ): Promise<string | null> => {
-  // A direct table update can never work here: the public role cannot read
-  // contact messages, so the row filter matches nothing. A narrow database
-  // routine writes only the delivery fields instead.
+  // The delivery write-back runs server-side with privileged credentials only.
+  // The public/anon role must never be able to call this routine.
+  let supabaseAdmin: { rpc: unknown };
+  try {
+    ({ supabaseAdmin } = await import("@/integrations/supabase/client.server"));
+  } catch (importError) {
+    console.error("Delivery outcome write skipped: privileged client unavailable", {
+      messageId,
+      error: importError instanceof Error ? importError.message : "unknown",
+    });
+    return "privileged database client unavailable";
+  }
   const { data, error } = await (
-    supabase.rpc as unknown as (
+    supabaseAdmin.rpc as unknown as (
       fn: string,
       args: Record<string, unknown>,
     ) => Promise<{ data: boolean | null; error: { message: string } | null }>
