@@ -44,9 +44,15 @@ All your content, admin users, and sign-ins keep working as-is.
    - `VITE_SUPABASE_PROJECT_ID`
    - `SUPABASE_URL` = same as `VITE_SUPABASE_URL`
    - `SUPABASE_PUBLISHABLE_KEY` = same as `VITE_SUPABASE_PUBLISHABLE_KEY`
-   - `PORT` = the port Plesk routes to (e.g. `3000`)
-   - Re-run `npm run build` **after** setting `VITE_*` vars — they bake into the
-     client bundle at build time.
+    - `PORT` = the port Plesk routes to (e.g. `3000`)
+    - Re-run `npm run build` **after** setting `VITE_*` vars — they bake into the
+      client bundle at build time.
+    - For the **daily blog writer** (auto-generates one SEO post per day), add:
+      - `OPENAI_API_KEY` = your key from https://platform.openai.com (required)
+      - `OPENAI_MODEL` = optional; defaults to `gpt-5.6-sol`. Set to
+        `gpt-5.6-terra` or `gpt-5.4` if your account tier can't access 5.6-sol.
+      - Do **not** add `LOVABLE_API_KEY` — it is a managed, write-only secret
+        that cannot be exported, and the daily blog no longer uses it.
 4. **Routing.** TanStack Start serves all routes (SSR HTML + static assets) from
    one Node process. Configure Plesk to proxy all requests to `localhost:PORT`
    (Apache `ProxyPass` / nginx reverse proxy, or Passenger). Do not serve only
