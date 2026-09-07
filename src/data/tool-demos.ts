@@ -115,13 +115,13 @@ export const toolDemoMedia: Record<string, ToolDemoMedia[]> = {
     },
     {
       kind: "video",
-      url: textToVideoDemo2.url,
+      url: urlToVideoClipDemo.url,
       caption:
         "Sample output — one of the five short clips cut from the 45-minute podcast, opening on a hook with captions burned in for Reels and TikTok.",
     },
     {
       kind: "video",
-      url: avatarDemo.url,
+      url: urlToVideoAvatarDemo.url,
       caption:
         "Sample output — an influencer-style avatar delivering the written script on camera with natural lip-sync, expressions and captions.",
     },
