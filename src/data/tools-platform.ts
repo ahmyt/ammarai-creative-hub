@@ -404,15 +404,23 @@ export const platformTools: Tool[] = [
       {
         label: "Product ad from a URL",
         input:
-          "URL of a skincare product page. Format: 30-second vertical ad with avatar presenter, voiceover and captions.",
+          "https://esimnow.net — paste the product page link and ask for a 30-second vertical ad with voiceover, captions and an avatar presenter.",
         output:
-          "A finished vertical ad: avatar presenter delivering the product pitch, synced voiceover, burned-in captions and product imagery from the page.",
+          "A finished vertical ad: avatar presenter delivering the product pitch drawn from the page, synced voiceover, burned-in captions and product imagery — ready to post to Reels and TikTok.",
       },
       {
-        label: "Podcast to clips",
-        input: "45-minute interview video, request the five strongest moments as captioned vertical clips.",
+        label: "Long video to short clips",
+        input:
+          "Upload a 45-minute podcast interview and request the five strongest moments as captioned vertical clips.",
         output:
-          "Five short clips, each a self-contained moment with captions and a hook in the first two seconds, ready for Reels and TikTok.",
+          "Five short clips, each a self-contained moment with a hook in the first two seconds, captions burned in, and trimmed to the part that holds attention — ready for Reels, Shorts and TikTok.",
+      },
+      {
+        label: "Influencer-style avatar video from a script",
+        input:
+          "Write a script: \"Hey, I'm Taylor and I've been using this skincare serum for two weeks. Here's what actually changed for me…\" Choose an influencer-style avatar and a vertical format.",
+        output:
+          "A realistic influencer-style avatar delivers your script on camera with natural lip-sync and expressions, voiceover matching the tone, and captions — a branded creator-style video without booking a shoot.",
       },
     ],
     capabilities: [
