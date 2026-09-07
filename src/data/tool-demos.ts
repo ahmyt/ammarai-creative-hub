@@ -103,6 +103,26 @@ export const toolDemoMedia: Record<string, ToolDemoMedia[]> = {
       caption: "Sample output — a punchy ad cut with kinetic captions, ready to run as a paid variant.",
     },
   ],
+  "ai-url-to-video": [
+    {
+      kind: "video",
+      url: videoGeneratorDemo2.url,
+      caption:
+        "Sample output — a finished vertical ad built from the esimnow.net product page, with avatar presenter, voiceover and burned-in captions.",
+    },
+    {
+      kind: "video",
+      url: textToVideoDemo2.url,
+      caption:
+        "Sample output — one of the five short clips cut from the 45-minute podcast, opening on a hook with captions burned in for Reels and TikTok.",
+    },
+    {
+      kind: "video",
+      url: avatarDemo.url,
+      caption:
+        "Sample output — an influencer-style avatar delivering the written script on camera with natural lip-sync, expressions and captions.",
+    },
+  ],
   "ai-voice-generator": [
     {
       kind: "audio",
