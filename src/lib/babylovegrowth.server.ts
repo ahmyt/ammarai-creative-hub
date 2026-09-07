@@ -4,6 +4,24 @@ import sanitizeHtml from "sanitize-html";
 import { z } from "zod";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/integrations/supabase/types";
+import { SITE } from "@/lib/site";
+
+// BabyLoveGrowth baked absolute URLs into article HTML while the site lived on
+// Lovable-hosted domains. Rewrite those origins to the production domain on
+// every sync so internal links always point at the live site.
+const LEGACY_ORIGINS = [
+  "https://ammarai-creative-hub.lovable.app",
+  "https://id-preview--ab4a5e87-30cb-4379-b661-4f70b8317377.lovable.app",
+];
+
+function rewriteLegacyOrigins(text: string | null): string | null {
+  if (!text) return text;
+  let result = text;
+  for (const origin of LEGACY_ORIGINS) {
+    result = result.split(origin).join(SITE.url);
+  }
+  return result;
+}
 
 const BASE_URL = "https://api.babylovegrowth.ai/api/integrations";
 const PAGE_SIZE = 50;
@@ -127,8 +145,8 @@ export async function syncArticles(
           slug: article.slug,
           external_id: String(article.id),
           title: article.title ?? article.slug,
-          content_html: cleanHtml(article.content_html),
-          content_markdown: article.content_markdown ?? null,
+          content_html: rewriteLegacyOrigins(cleanHtml(article.content_html)),
+          content_markdown: rewriteLegacyOrigins(article.content_markdown ?? null),
           meta_description: article.meta_description ?? null,
           hero_image_url: article.hero_image_url ?? null,
           json_ld: asJson(article.jsonLd),
