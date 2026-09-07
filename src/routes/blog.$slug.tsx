@@ -9,6 +9,8 @@ import {
   syndicatedArticlesQuery,
   type SyndicatedArticle,
 } from "@/lib/articles";
+import { tools } from "@/data/tools";
+import { collapsibleFaqs } from "@/lib/article-html";
 import { Container, Section, BulletList } from "@/components/site/primitives";
 import { Breadcrumbs, breadcrumbJsonLd } from "@/components/site/Breadcrumbs";
 import { ExternalButton } from "@/components/site/Button";
