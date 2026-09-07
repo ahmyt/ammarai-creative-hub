@@ -181,7 +181,12 @@ function inlineMarkdown(value: string): string {
     .replace(/(^|[\s(])\*([^*\n]+)\*(?=[\s.,;:!?)]|$)/g, "$1<em>$2</em>")
     .replace(/`([^`]+)`/g, "<code>$1</code>")
     .replace(/\*\*/g, "")
-    .replace(/^#{1,6}\s+/gm, "");
+    .replace(/^#{1,6}\s+/gm, "")
+    // Turn any remaining bare URL into a real link (skips ones already inside an <a href="...">).
+    .replace(
+      /(^|[\s(])(https?:\/\/[^\s<>"')]*[^\s<>"').,;:!?])/g,
+      '$1<a href="$2">$2</a>',
+    );
 }
 
 /** Category-matched illustration bundled with the site. */
