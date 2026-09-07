@@ -67,7 +67,6 @@ function BlogPost() {
 
 function RecommendedReading({ article }: { article: SyndicatedArticle }) {
   const { data: articles } = useSuspenseQuery(syndicatedArticlesQuery);
-  const { data: content } = useSuspenseQuery(siteContentQuery);
   const category = articleCategory(article);
 
   const others = articles.filter((a) => !a.is_hidden && a.slug !== article.slug);
