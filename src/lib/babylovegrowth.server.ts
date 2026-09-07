@@ -23,6 +23,22 @@ function rewriteLegacyOrigins(text: string | null): string | null {
   return result;
 }
 
+// Remove "Made with BabyLoveGrowth Technology" attribution blocks that the API
+// appends to articles — both plain-text/markdown mentions and the HTML
+// container element wrapping them.
+function stripAttribution(text: string | null): string | null {
+  if (!text) return text;
+  let result = text;
+  // HTML: drop any element whose contents are just the attribution phrase.
+  result = result.replace(
+    /<(p|div|span|a|small|footer|aside|section)[^>]*>\s*(?:<[^>]+>\s*)*made\s+with\s+babylovegrowth[^<]*(?:<\/[^>]+>\s*)*<\/\1>/gi,
+    "",
+  );
+  // Any remaining inline mention (markdown or stray text).
+  result = result.replace(/made\s+with\s+babylovegrowth(\s+technology)?/gi, "");
+  return result;
+}
+
 const BASE_URL = "https://api.babylovegrowth.ai/api/integrations";
 const PAGE_SIZE = 50;
 const MAX_PAGES = 20;
@@ -145,8 +161,12 @@ export async function syncArticles(
           slug: article.slug,
           external_id: String(article.id),
           title: article.title ?? article.slug,
-          content_html: rewriteLegacyOrigins(cleanHtml(article.content_html)),
-          content_markdown: rewriteLegacyOrigins(article.content_markdown ?? null),
+          content_html: rewriteLegacyOrigins(
+            stripAttribution(cleanHtml(article.content_html)),
+          ),
+          content_markdown: rewriteLegacyOrigins(
+            stripAttribution(article.content_markdown ?? null),
+          ),
           meta_description: article.meta_description ?? null,
           hero_image_url: article.hero_image_url ?? null,
           json_ld: asJson(article.jsonLd),
