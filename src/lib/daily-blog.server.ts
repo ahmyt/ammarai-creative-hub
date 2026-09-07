@@ -139,28 +139,92 @@ function escapeHtml(value: string): string {
     .replace(/>/g, "&gt;");
 }
 
-function buildHtml(post: GeneratedPost): string {
-  const parts: string[] = [`<p>${escapeHtml(post.intro)}</p>`];
-  for (const section of post.sections) {
-    parts.push(`<h2>${escapeHtml(section.heading)}</h2>`);
-    for (const paragraph of section.paragraphs) parts.push(`<p>${escapeHtml(paragraph)}</p>`);
+/**
+ * The model sometimes returns Markdown emphasis inside plain-text fields.
+ * Convert it to real HTML so readers never see stray ** or __ markers.
+ */
+function inlineMarkdown(value: string): string {
+  return escapeHtml(value)
+    .replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2">$1</a>')
+    .replace(/\*\*\*([^*]+)\*\*\*/g, "<strong><em>$1</em></strong>")
+    .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
+    .replace(/__([^_]+)__/g, "<strong>$1</strong>")
+    .replace(/(^|[\s(])\*([^*\n]+)\*(?=[\s.,;:!?)]|$)/g, "$1<em>$2</em>")
+    .replace(/`([^`]+)`/g, "<code>$1</code>")
+    .replace(/\*\*/g, "")
+    .replace(/^#{1,6}\s+/gm, "");
+}
+
+/** Category-matched illustration bundled with the site. */
+const CATEGORY_IMAGES: Record<string, string> = {
+  "AI Writing": "/media/blog-cat-writing.jpg",
+  "AI Documents": "/media/blog-cat-writing.jpg",
+  "AI Email": "/media/blog-cat-writing.jpg",
+  "AI Chat": "/media/blog-cat-writing.jpg",
+  "AI Code": "/media/blog-cat-writing.jpg",
+  "AI Video": "/media/blog-cat-video.jpg",
+  "AI Vision": "/media/blog-cat-video.jpg",
+  "AI Voice": "/media/blog-cat-voice.jpg",
+  "AI Audio": "/media/blog-cat-voice.jpg",
+  "AI Transcription": "/media/blog-cat-voice.jpg",
+  "AI SEO": "/media/blog-cat-seo.jpg",
+  "AI Marketing": "/media/blog-cat-marketing.jpg",
+  "AI Social Media": "/media/blog-cat-marketing.jpg",
+  "AI E-commerce": "/media/blog-cat-marketing.jpg",
+  "AI Business": "/media/blog-cat-business.jpg",
+  "AI Productivity": "/media/blog-cat-business.jpg",
+  "AI Image": "/media/blog-cat-image.jpg",
+};
+
+function imageFor(category: string): string {
+  return CATEGORY_IMAGES[category] ?? "/media/blog-cat-business.jpg";
+}
+
+function figure(src: string, alt: string, caption: string): string {
+  return (
+    `<figure><img src="${src}" alt="${escapeHtml(alt)}" loading="lazy" width="1280" height="720" />` +
+    `<figcaption>${escapeHtml(caption)}</figcaption></figure>`
+  );
+}
+
+function buildHtml(post: GeneratedPost, toolName: string, image: string): string {
+  const parts: string[] = [`<p>${inlineMarkdown(post.intro)}</p>`];
+  post.sections.forEach((section, index) => {
+    parts.push(`<h2>${inlineMarkdown(section.heading)}</h2>`);
+    for (const paragraph of section.paragraphs) parts.push(`<p>${inlineMarkdown(paragraph)}</p>`);
     if (section.bullets?.length) {
       parts.push(
-        `<ul>${section.bullets.map((b) => `<li>${escapeHtml(b)}</li>`).join("")}</ul>`,
+        `<ul>${section.bullets.map((b) => `<li>${inlineMarkdown(b)}</li>`).join("")}</ul>`,
       );
     }
-  }
+    if (index === 1) {
+      parts.push(figure(image, `${toolName} in AmmarAI`, `${toolName} inside AmmarAI.`));
+    }
+  });
   if (post.faqs.length) {
     parts.push(`<h2>Frequently asked questions</h2>`);
     for (const faq of post.faqs) {
-      parts.push(`<h3>${escapeHtml(faq.question)}</h3><p>${escapeHtml(faq.answer)}</p>`);
+      parts.push(
+        `<h3>${inlineMarkdown(faq.question)}</h3><p>${inlineMarkdown(faq.answer)}</p>`,
+      );
     }
   }
   return sanitizeHtml(parts.join("\n"), {
-    allowedTags: [...sanitizeHtml.defaults.allowedTags, "h2", "h3"],
-    allowedAttributes: { a: ["href", "rel", "target"] },
+    allowedTags: [
+      ...sanitizeHtml.defaults.allowedTags,
+      "h2",
+      "h3",
+      "img",
+      "figure",
+      "figcaption",
+    ],
+    allowedAttributes: {
+      a: ["href", "rel", "target"],
+      img: ["src", "alt", "loading", "width", "height"],
+    },
   });
 }
+
 
 export async function writeDailyPost(
   supabase: SupabaseClient<Database>,
