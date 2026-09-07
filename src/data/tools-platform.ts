@@ -653,6 +653,13 @@ export const platformTools: Tool[] = [
         output:
           "A 30-second track with rising energy and a final lift timed for the CTA, ready to mix under the voiceover in Sound Studio.",
       },
+      {
+        label: "Course and podcast bed",
+        input: "Warm, minimal ambient bed with soft piano and pads, 60 seconds, no drums, stays out of the way of narration.",
+        output:
+          "A calm 60-second loopable bed that supports the voice without competing with it, ready to sit under lessons or a podcast intro.",
+      },
+
     ],
     capabilities: [
       {
