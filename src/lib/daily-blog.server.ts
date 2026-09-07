@@ -270,14 +270,16 @@ export async function writeDailyPost(
     : null;
 
   const now = new Date().toISOString();
+  const image = imageFor(tool.category);
   const row = {
     slug,
     external_id: `daily:${tool.slug}`,
     title: post.title,
-    content_html: buildHtml(post),
+    content_html: buildHtml(post, tool.name, image),
     content_markdown: null,
     meta_description: post.metaDescription,
-    hero_image_url: null,
+    hero_image_url: image,
+
     json_ld: {
       "@context": "https://schema.org",
       "@type": "Article",
