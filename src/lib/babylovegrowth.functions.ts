@@ -32,6 +32,15 @@ export const syncBabyLoveGrowthArticles = createServerFn({ method: "POST" })
     return syncArticles(context.supabase);
   });
 
+/** Writes today's AI blog post about one of our tools. */
+export const writeDailyBlogPost = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    await requireAdmin(context as unknown as AdminContext);
+    const { writeDailyPost } = await import("@/lib/daily-blog.server");
+    return writeDailyPost(context.supabase);
+  });
+
 export const getSyncSettings = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {

@@ -339,3 +339,36 @@ body.no-select [contenteditable="true"] {
   -moz-user-select: text;
   user-select: text;
 }
+
+/* Collapsible FAQ blocks inside articles */
+.prose-editorial .faq-list {
+  margin-top: 1.25rem;
+  border-top: 1px solid var(--border);
+}
+.prose-editorial .faq-item {
+  border-bottom: 1px solid var(--border);
+  padding: 0.9rem 0;
+}
+.prose-editorial .faq-item > summary {
+  cursor: pointer;
+  list-style: none;
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: flex-start;
+}
+.prose-editorial .faq-item > summary::-webkit-details-marker {
+  display: none;
+}
+.prose-editorial .faq-item > summary::after {
+  content: "+";
+  color: var(--accent);
+  transition: transform 0.2s ease;
+}
+.prose-editorial .faq-item[open] > summary::after {
+  transform: rotate(45deg);
+}
+.prose-editorial .faq-answer > :first-child {
+  margin-top: 0.65rem;
+}
