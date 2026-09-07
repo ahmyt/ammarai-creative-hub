@@ -56,7 +56,7 @@ export const Route = createFileRoute("/api/public/cron/babylovegrowth")({
           }
 
           const { syncArticles } = await import("@/lib/babylovegrowth.server");
-          const result = await syncArticles();
+          const result = await syncArticles(supabaseAdmin);
 
           await supabaseAdmin
             .from("sync_settings")
