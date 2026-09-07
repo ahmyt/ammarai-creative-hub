@@ -109,7 +109,7 @@ export const toolDemoMedia: Record<string, ToolDemoMedia[]> = {
   "ai-url-to-video": [
     {
       kind: "video",
-      url: videoGeneratorDemo2.url,
+      url: urlToVideoAdDemo.url,
       caption:
         "Sample output — a finished vertical ad built from the esimnow.net product page, with avatar presenter, voiceover and burned-in captions.",
     },
