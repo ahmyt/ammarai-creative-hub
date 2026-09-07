@@ -9,17 +9,11 @@
  */
 export function assetUrl(url: string): string {
   if (!url.startsWith("/__l5e/")) return url;
-  // Extract the trailing filename from the CDN path and serve it locally.
+  // Extract the trailing filename from the CDN path and serve the bundled
+  // local copy from /media/. Always returning the local path keeps SSR and
+  // client rendering identical (no hydration mismatch) and works on any
+  // origin — Lovable, localhost, or self-hosted (Plesk).
   const filename = url.split("/").pop();
   if (!filename) return url;
-  const localPath = `/media/${filename}`;
-  if (typeof window !== "undefined") {
-    const host = window.location.hostname;
-    if (host.endsWith(".lovable.app") || host === "localhost" || host === "127.0.0.1") {
-      return url; // on Lovable hosting, use the CDN path directly
-    }
-    return localPath; // self-hosted: serve the bundled local copy
-  }
-  // SSR: serve the local copy (works on any origin, including Plesk).
-  return localPath;
+  return `/media/${filename}`;
 }
