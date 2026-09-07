@@ -49,8 +49,13 @@ All your content, admin users, and sign-ins keep working as-is.
       client bundle at build time.
     - For the **daily blog writer** (auto-generates one SEO post per day), add:
       - `OPENAI_API_KEY` = your key from https://platform.openai.com (required)
-      - `OPENAI_MODEL` = optional; defaults to `gpt-5.6-sol`. Set to
-        `gpt-5.6-terra` or `gpt-5.4` if your account tier can't access 5.6-sol.
+      - `OPENAI_MODEL` = optional; defaults to `gpt-5.6-sol`. If set at all it
+        must be a `gpt-5.6-*` model (`gpt-5.6-sol`, `gpt-5.6-terra`,
+        `gpt-5.6-luna`). Any other value (e.g. `gpt-4o-mini`) now stops
+        generation with "Something went wrong and the content wasn't
+        generated." instead of quietly using a weaker model. Leaving it unset
+        is recommended.
+
       - Do **not** add `LOVABLE_API_KEY` — it is a managed, write-only secret
         that cannot be exported, and the daily blog no longer uses it.
 4. **Routing.** TanStack Start serves all routes (SSR HTML + static assets) from

@@ -58,17 +58,27 @@ interface GeneratedPost {
   faqs: { question: string; answer: string }[];
 }
 
+const GENERIC_FAILURE = "Something went wrong and the content wasn't generated.";
+const ALLOWED_MODEL_PREFIX = "gpt-5.6";
+
 async function generate(toolName: string, prompt: string): Promise<GeneratedPost> {
   const key = process.env["OPENAI_API_KEY"];
   if (!key) throw new Error("Missing OPENAI_API_KEY");
 
   const model = process.env["OPENAI_MODEL"]?.trim() || DEFAULT_MODEL;
+  if (!model.startsWith(ALLOWED_MODEL_PREFIX)) {
+    console.error(
+      `[daily-blog] refusing to generate: OPENAI_MODEL="${model}" is not a ${ALLOWED_MODEL_PREFIX} model`,
+    );
+    throw new Error(GENERIC_FAILURE);
+  }
 
   const response = await fetch(OPENAI_URL, {
     method: "POST",
     headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
     body: JSON.stringify({
       model,
+
       messages: [
         {
           role: "system",
@@ -121,18 +131,35 @@ async function generate(toolName: string, prompt: string): Promise<GeneratedPost
     }),
   });
 
-  if (response.status === 429) throw new Error("OpenAI rate limit reached, try again later");
   if (!response.ok) {
-    throw new Error(`OpenAI request failed (${response.status}) writing about ${toolName}`);
+    const detail = await response.text().catch(() => "");
+    console.error(
+      `[daily-blog] OpenAI request failed (${response.status}) for ${model} writing about ${toolName}: ${detail.slice(0, 500)}`,
+    );
+    throw new Error(GENERIC_FAILURE);
   }
 
   const payload = (await response.json()) as {
+    model?: string;
     choices?: { message?: { content?: string } }[];
   };
+
+  const served = payload.model ?? "";
+  if (!served.startsWith(ALLOWED_MODEL_PREFIX)) {
+    console.error(`[daily-blog] OpenAI served "${served}" instead of a ${ALLOWED_MODEL_PREFIX} model`);
+    throw new Error(GENERIC_FAILURE);
+  }
+
   const content = payload.choices?.[0]?.message?.content ?? "";
   const cleaned = content.replace(/^```(?:json)?|```$/g, "").trim();
-  return JSON.parse(cleaned) as GeneratedPost;
+  try {
+    return JSON.parse(cleaned) as GeneratedPost;
+  } catch {
+    console.error(`[daily-blog] could not parse ${served} output for ${toolName}`);
+    throw new Error(GENERIC_FAILURE);
+  }
 }
+
 
 function escapeHtml(value: string): string {
   return value
