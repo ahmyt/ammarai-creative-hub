@@ -131,18 +131,35 @@ async function generate(toolName: string, prompt: string): Promise<GeneratedPost
     }),
   });
 
-  if (response.status === 429) throw new Error("OpenAI rate limit reached, try again later");
   if (!response.ok) {
-    throw new Error(`OpenAI request failed (${response.status}) writing about ${toolName}`);
+    const detail = await response.text().catch(() => "");
+    console.error(
+      `[daily-blog] OpenAI request failed (${response.status}) for ${model} writing about ${toolName}: ${detail.slice(0, 500)}`,
+    );
+    throw new Error(GENERIC_FAILURE);
   }
 
   const payload = (await response.json()) as {
+    model?: string;
     choices?: { message?: { content?: string } }[];
   };
+
+  const served = payload.model ?? "";
+  if (!served.startsWith(ALLOWED_MODEL_PREFIX)) {
+    console.error(`[daily-blog] OpenAI served "${served}" instead of a ${ALLOWED_MODEL_PREFIX} model`);
+    throw new Error(GENERIC_FAILURE);
+  }
+
   const content = payload.choices?.[0]?.message?.content ?? "";
   const cleaned = content.replace(/^```(?:json)?|```$/g, "").trim();
-  return JSON.parse(cleaned) as GeneratedPost;
+  try {
+    return JSON.parse(cleaned) as GeneratedPost;
+  } catch {
+    console.error(`[daily-blog] could not parse ${served} output for ${toolName}`);
+    throw new Error(GENERIC_FAILURE);
+  }
 }
+
 
 function escapeHtml(value: string): string {
   return value
