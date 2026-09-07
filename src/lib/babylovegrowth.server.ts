@@ -161,8 +161,12 @@ export async function syncArticles(
           slug: article.slug,
           external_id: String(article.id),
           title: article.title ?? article.slug,
-          content_html: rewriteLegacyOrigins(cleanHtml(article.content_html)),
-          content_markdown: rewriteLegacyOrigins(article.content_markdown ?? null),
+          content_html: rewriteLegacyOrigins(
+            stripAttribution(cleanHtml(article.content_html)),
+          ),
+          content_markdown: rewriteLegacyOrigins(
+            stripAttribution(article.content_markdown ?? null),
+          ),
           meta_description: article.meta_description ?? null,
           hero_image_url: article.hero_image_url ?? null,
           json_ld: asJson(article.jsonLd),
