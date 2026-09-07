@@ -59,14 +59,16 @@ interface GeneratedPost {
 }
 
 async function generate(toolName: string, prompt: string): Promise<GeneratedPost> {
-  const key = process.env["LOVABLE_API_KEY"];
-  if (!key) throw new Error("Missing LOVABLE_API_KEY");
+  const key = process.env["OPENAI_API_KEY"];
+  if (!key) throw new Error("Missing OPENAI_API_KEY");
 
-  const response = await fetch(GATEWAY_URL, {
+  const model = process.env["OPENAI_MODEL"]?.trim() || DEFAULT_MODEL;
+
+  const response = await fetch(OPENAI_URL, {
     method: "POST",
     headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
     body: JSON.stringify({
-      model: MODEL,
+      model,
       messages: [
         {
           role: "system",
