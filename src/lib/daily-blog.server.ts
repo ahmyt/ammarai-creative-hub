@@ -6,6 +6,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/integrations/supabase/types";
 import { tools } from "@/data/tools";
 import { SITE } from "@/lib/site";
+import { getToolKeywords } from "@/data/tool-keywords";
 
 const OPENAI_URL = "https://api.openai.com/v1/chat/completions";
 const DEFAULT_MODEL = "gpt-5.6-sol";
@@ -265,19 +266,50 @@ export async function writeDailyPost(
 ): Promise<DailyBlogResult> {
   const tool = await pickTool(supabase);
 
-  const prompt = [
-    `Write a 1,100-1,400 word SEO blog post about AmmarAI's "${tool.name}" tool.`,
-    `Tool summary: ${tool.summary}`,
-    `Primary keyword: ${tool.name.toLowerCase()}. Search intent: people looking for how to do this with AI.`,
-    `Structure: an engaging intro (2-3 sentences), 5-7 sections with H2 headings, short paragraphs,`,
-    `at least two sections with practical bullet lists, and 5 frequently asked questions with 2-4 sentence answers.`,
-    `Mention AmmarAI naturally and reference the tool page at ${SITE.url}/${tool.slug}.`,
-    `Do not invent statistics, prices, customer names or guarantees. No emojis.`,
-    `The title must be under 60 characters and include the primary keyword.`,
-    `The metaDescription must be under 155 characters.`,
-  ].join(" ");
+  const kw = getToolKeywords(tool.slug);
+  let blogPrompt: string;
 
-  const post = await generate(tool.name, prompt);
+  if (kw) {
+    const relatedList = kw.relatedKeywords
+      .slice(0, 6)
+      .map((r) => `${r.keyword} (${r.volume.toLocaleString()}/mo)`)
+      .join(", ");
+    const questionList = kw.questions.slice(0, 5).map((q) => `- ${q}`).join("\n");
+
+    blogPrompt = [
+      `Write a 1,100-1,400 word SEO blog post about AmmarAI's "${tool.name}" tool.`,
+      `Tool summary: ${tool.summary}`,
+      ``,
+      `PRIMARY KEYWORD: "${kw.primaryKeyword}" (${kw.searchVolume.toLocaleString()} searches/month, difficulty ${kw.difficulty}/100).`,
+      `The title MUST include the primary keyword "${kw.primaryKeyword}" and be under 60 characters.`,
+      `The metaDescription MUST include the primary keyword and be under 155 characters.`,
+      `Use the primary keyword naturally in the intro, at least one H2 heading, and the conclusion — do not stuff.`,
+      ``,
+      `RELATED KEYWORDS (work these in naturally throughout the post): ${relatedList}.`,
+      ``,
+      `FAQ SECTION — answer these exact questions people search for (use them verbatim as the H3 question headings):`,
+      questionList,
+      ``,
+      `Structure: an engaging intro (2-3 sentences), 5-7 sections with H2 headings, short paragraphs,`,
+      `at least two sections with practical bullet lists, and 5 frequently asked questions with 2-4 sentence answers.`,
+      `Mention AmmarAI naturally and reference the tool page at ${SITE.url}/${tool.slug}.`,
+      `Do not invent statistics, prices, customer names or guarantees. No emojis.`,
+    ].join("\n");
+  } else {
+    blogPrompt = [
+      `Write a 1,100-1,400 word SEO blog post about AmmarAI's "${tool.name}" tool.`,
+      `Tool summary: ${tool.summary}`,
+      `Primary keyword: ${tool.name.toLowerCase()}. Search intent: people looking for how to do this with AI.`,
+      `Structure: an engaging intro (2-3 sentences), 5-7 sections with H2 headings, short paragraphs,`,
+      `at least two sections with practical bullet lists, and 5 frequently asked questions with 2-4 sentence answers.`,
+      `Mention AmmarAI naturally and reference the tool page at ${SITE.url}/${tool.slug}.`,
+      `Do not invent statistics, prices, customer names or guarantees. No emojis.`,
+      `The title must be under 60 characters and include the primary keyword.`,
+      `The metaDescription must be under 155 characters.`,
+    ].join(" ");
+  }
+
+  const post = await generate(tool.name, blogPrompt);
 
   const baseSlug = slugify(post.title) || `${tool.slug}-guide`;
   let slug = baseSlug;
