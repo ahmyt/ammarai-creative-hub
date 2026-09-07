@@ -50,15 +50,23 @@ type ConfirmationOutcome = {
 // failed write-back is never silent. Never throws — the message itself is
 // already stored, which is what matters most.
 const recordConfirmationOutcome = async (
-  supabase: ReturnType<typeof createClient<Database>>,
   messageId: string,
   outcome: ConfirmationOutcome,
 ): Promise<string | null> => {
-  // A direct table update can never work here: the public role cannot read
-  // contact messages, so the row filter matches nothing. A narrow database
-  // routine writes only the delivery fields instead.
+  // The delivery write-back runs server-side with privileged credentials only.
+  // The public/anon role must never be able to call this routine.
+  let supabaseAdmin: { rpc: unknown };
+  try {
+    ({ supabaseAdmin } = await import("@/integrations/supabase/client.server"));
+  } catch (importError) {
+    console.error("Delivery outcome write skipped: privileged client unavailable", {
+      messageId,
+      error: importError instanceof Error ? importError.message : "unknown",
+    });
+    return "privileged database client unavailable";
+  }
   const { data, error } = await (
-    supabase.rpc as unknown as (
+    supabaseAdmin.rpc as unknown as (
       fn: string,
       args: Record<string, unknown>,
     ) => Promise<{ data: boolean | null; error: { message: string } | null }>
@@ -290,7 +298,7 @@ export const Route = createFileRoute("/api/contact")({
           // Record that delivery was attempted and failed, so the CMS never
           // shows a misleading "no delivery recorded" for a fresh submission.
           const safe = safeEmailError(emailError);
-          await recordConfirmationOutcome(supabase, messageId, {
+          await recordConfirmationOutcome(messageId, {
             confirmation_status: "failed",
             confirmation_message_id: null,
             confirmation_response: null,
@@ -316,7 +324,7 @@ export const Route = createFileRoute("/api/contact")({
         // the stored message, so a submission can be traced in the mail log.
         // "sent" means the mail server accepted the handoff — not that the
         // recipient's provider delivered it.
-        const trackingError = await recordConfirmationOutcome(supabase, messageId, {
+        const trackingError = await recordConfirmationOutcome(messageId, {
           confirmation_status: confirmationSent ? "sent" : "failed",
           confirmation_message_id: confirmationMessageId,
           confirmation_response: confirmationResponse,
