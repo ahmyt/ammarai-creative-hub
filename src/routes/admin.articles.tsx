@@ -9,6 +9,7 @@ import {
   getSyncSettings,
   setSyncInterval,
   syncBabyLoveGrowthArticles,
+  writeDailyBlogPost,
 } from "@/lib/babylovegrowth.functions";
 
 const INTERVAL_OPTIONS = [1, 6, 12, 24, 48, 72] as const;
@@ -67,6 +68,16 @@ function AdminArticles() {
     onError: (error: Error) => setStatus(error.message),
   });
 
+  const runWriter = useServerFn(writeDailyBlogPost);
+  const writePost = useMutation({
+    mutationFn: () => runWriter({ data: undefined } as never),
+    onSuccess: (result) => {
+      setStatus(`Published "${result.title}" at /blog/${result.slug}`);
+      void queryClient.invalidateQueries({ queryKey: ["syndicated-articles"] });
+    },
+    onError: (error: Error) => setStatus(error.message),
+  });
+
   const toggleHidden = useMutation({
     mutationFn: async ({ id, hidden }: { id: string; hidden: boolean }) => {
       const { error } = await supabase
@@ -120,6 +131,14 @@ function AdminArticles() {
               ))}
             </select>
           </label>
+          <button
+            type="button"
+            onClick={() => writePost.mutate()}
+            disabled={writePost.isPending}
+            className="rounded-md px-4 py-2 text-xs font-semibold ring-1 ring-border hover:bg-background disabled:opacity-60"
+          >
+            {writePost.isPending ? "Writing…" : "Write today's post"}
+          </button>
           <button
             type="button"
             onClick={() => sync.mutate()}

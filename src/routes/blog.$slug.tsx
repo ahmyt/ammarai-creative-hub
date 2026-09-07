@@ -9,6 +9,8 @@ import {
   syndicatedArticlesQuery,
   type SyndicatedArticle,
 } from "@/lib/articles";
+import { tools } from "@/data/tools";
+import { collapsibleFaqs } from "@/lib/article-html";
 import { Container, Section, BulletList } from "@/components/site/primitives";
 import { Breadcrumbs, breadcrumbJsonLd } from "@/components/site/Breadcrumbs";
 import { ExternalButton } from "@/components/site/Button";
@@ -61,6 +63,73 @@ function BlogPost() {
   const { post, article } = Route.useLoaderData();
   if (!post && article) return <SyndicatedArticleView article={article} />;
   return <StaticPostView post={post!} />;
+}
+
+function RecommendedReading({ article }: { article: SyndicatedArticle }) {
+  const { data: articles } = useSuspenseQuery(syndicatedArticlesQuery);
+  const category = articleCategory(article);
+
+  const others = articles.filter((a) => !a.is_hidden && a.slug !== article.slug);
+  const sameCategory = others.filter((a) => articleCategory(a) === category);
+  const posts = [...sameCategory, ...others.filter((a) => !sameCategory.includes(a))].slice(0, 3);
+
+  const relatedTools = tools
+    .filter((tool) => tool.category === category)
+    .slice(0, 3)
+    .map((tool) => ({ slug: tool.slug, name: tool.name, summary: tool.summary }));
+
+  if (posts.length === 0 && relatedTools.length === 0) return null;
+
+  return (
+    <Section tone="sand">
+      <Container size="narrow">
+        <h2 className="text-2xl sm:text-3xl">Recommended for you</h2>
+        {posts.length > 0 ? (
+          <ul className="mt-5 border-t border-border">
+            {posts.map((r) => (
+              <li key={r.slug} className="border-b border-border py-4">
+                <Link
+                  to="/blog/$slug"
+                  params={{ slug: r.slug }}
+                  className="text-base font-semibold text-foreground transition-colors hover:text-accent"
+                >
+                  {r.title}
+                </Link>
+                {r.meta_description ? (
+                  <p className="mt-1.5 text-pretty text-sm leading-relaxed text-muted-foreground">
+                    {r.meta_description}
+                  </p>
+                ) : null}
+              </li>
+            ))}
+          </ul>
+        ) : null}
+
+        {relatedTools.length > 0 ? (
+          <>
+            <h3 className="mt-10 text-lg font-semibold">Tools to try next</h3>
+            <ul className="mt-4 grid gap-3 sm:grid-cols-3">
+              {relatedTools.map((tool) => (
+                <li key={tool.slug} className="rounded-xl bg-card p-4 ring-1 ring-border">
+                  <Link
+                    to="/$slug"
+                    params={{ slug: tool.slug }}
+                    className="text-sm font-semibold text-foreground transition-colors hover:text-accent"
+                  >
+                    {tool.name}
+                  </Link>
+                  <p className="mt-1.5 text-pretty text-xs leading-relaxed text-muted-foreground">
+                    {tool.summary}
+                  </p>
+                </li>
+              ))}
+            </ul>
+          </>
+        ) : null}
+        
+      </Container>
+    </Section>
+  );
 }
 
 function SyndicatedArticleView({ article }: { article: SyndicatedArticle }) {
@@ -133,10 +202,12 @@ function SyndicatedArticleView({ article }: { article: SyndicatedArticle }) {
         <Container size="narrow">
           <div
             className="prose-editorial syndicated-article"
-            dangerouslySetInnerHTML={{ __html: article.content_html ?? "" }}
+            dangerouslySetInnerHTML={{ __html: collapsibleFaqs(article.content_html ?? "") }}
           />
         </Container>
       </Section>
+
+      <RecommendedReading article={article} />
 
       <Section tone="ink" className="py-16">
         <Container className="text-center">
