@@ -1,13 +1,14 @@
-// Server-only: writes one SEO blog post per day about an AmmarAI tool using the
-// Lovable AI gateway, then stores it alongside the synced articles.
+// Server-only: writes one SEO blog post per day about an AmmarAI tool using
+// OpenAI directly (your own OPENAI_API_KEY), then stores it alongside the
+// synced articles. Self-hosted: no Lovable AI Gateway dependency.
 import sanitizeHtml from "sanitize-html";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/integrations/supabase/types";
 import { tools } from "@/data/tools";
 import { SITE } from "@/lib/site";
 
-const GATEWAY_URL = "https://ai.gateway.lovable.dev/v1/chat/completions";
-const MODEL = "google/gemini-2.5-flash";
+const OPENAI_URL = "https://api.openai.com/v1/chat/completions";
+const DEFAULT_MODEL = "gpt-5.6-sol";
 
 export interface DailyBlogResult {
   slug: string;
