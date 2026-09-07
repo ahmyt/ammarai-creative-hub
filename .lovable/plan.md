@@ -20,7 +20,7 @@ Everything else in the file (`pickTool`, `buildHtml`, `inlineMarkdown`, `imageFo
 
 ### 2. Secrets (Plesk + project)
 - You obtain an OpenAI API key at https://platform.openai.com (API keys section), with billing set up. You pay OpenAI directly per generated post.
-- Add to **Plesk Node.js environment variables**: `OPENAI_API_KEY` (required) and optionally `OPENAI_MODEL`. Restart the app.
+- Add to **Plesk Node.js environment variables**: `OPENAI_API_KEY` (required) and optionally `OPENAI_MODEL` (defaults to `gpt-5.6-sol`; set to `gpt-5.6-terra`/`gpt-5.4` if your account tier doesn't allow 5.6-sol). Restart the app.
 - For testing in this Lovable project, I will request `OPENAI_API_KEY` via the secure secret form (the same value you put on Plesk) so the writer works in preview too. It never appears in code or chat.
 
 ### 3. Documentation only
