@@ -150,7 +150,20 @@ export const toolDemoMedia: Record<string, ToolDemoMedia[]> = {
       caption: "Sample output — revision audio at a slightly slower pace with acronyms spoken out.",
     },
   ],
+  "ai-music-generator": [
+    {
+      kind: "audio",
+      url: musicAdBed.url,
+      caption: "Sample output — upbeat electronic bed that builds to a lift for the call to action.",
+    },
+    {
+      kind: "audio",
+      url: musicAmbientBed.url,
+      caption: "Sample output — warm minimal ambient bed, no drums, sitting comfortably under narration.",
+    },
+  ],
   "ai-speech-to-text": [
+
     {
       inputAudio: sttDictation.url,
       inputAudioLabel: "dictation-q4-priorities.mp3",
