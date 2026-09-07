@@ -23,6 +23,22 @@ function rewriteLegacyOrigins(text: string | null): string | null {
   return result;
 }
 
+// Remove "Made with BabyLoveGrowth Technology" attribution blocks that the API
+// appends to articles — both plain-text/markdown mentions and the HTML
+// container element wrapping them.
+function stripAttribution(text: string | null): string | null {
+  if (!text) return text;
+  let result = text;
+  // HTML: drop any element whose contents are just the attribution phrase.
+  result = result.replace(
+    /<(p|div|span|a|small|footer|aside|section)[^>]*>\s*(?:<[^>]+>\s*)*made\s+with\s+babylovegrowth[^<]*(?:<\/[^>]+>\s*)*<\/\1>/gi,
+    "",
+  );
+  // Any remaining inline mention (markdown or stray text).
+  result = result.replace(/made\s+with\s+babylovegrowth(\s+technology)?/gi, "");
+  return result;
+}
+
 const BASE_URL = "https://api.babylovegrowth.ai/api/integrations";
 const PAGE_SIZE = 50;
 const MAX_PAGES = 20;
