@@ -203,10 +203,12 @@ function SyndicatedArticleView({ article }: { article: SyndicatedArticle }) {
         <Container size="narrow">
           <div
             className="prose-editorial syndicated-article"
-            dangerouslySetInnerHTML={{ __html: article.content_html ?? "" }}
+            dangerouslySetInnerHTML={{ __html: collapsibleFaqs(article.content_html ?? "") }}
           />
         </Container>
       </Section>
+
+      <RecommendedReading article={article} />
 
       <Section tone="ink" className="py-16">
         <Container className="text-center">
